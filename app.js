@@ -2,9 +2,9 @@
   "use strict";
 
   const root = document.documentElement;
-  const navLinks = document.getElementById("navLinks");
+  const navLinks = document.getElementById("navLinks") || document.querySelector(".main-nav");
   const menuToggle = document.getElementById("menuToggle");
-  const themeToggle = document.getElementById("themeToggle");
+  const themeToggle = document.getElementById("themeToggle") || document.querySelector(".theme-toggle");
 
   document.querySelectorAll(".reveal").forEach((element) => {
     element.classList.add("visible");
@@ -62,4 +62,53 @@
       modal?.setAttribute("aria-hidden", "true");
     });
   });
+
+  // Pricing billing cycle switch.
+  const billingButtons = document.querySelectorAll("[data-billing]");
+  const priceBlocks = document.querySelectorAll("[data-plan-price]");
+  const billingStatus = document.getElementById("billingStatus");
+
+  function setBillingCycle(cycle) {
+    billingButtons.forEach((button) => {
+      const selected = button.dataset.billing === cycle;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+
+    priceBlocks.forEach((block) => {
+      const value = block.dataset[cycle];
+      const amount = block.querySelector("strong");
+      const note = block.querySelector("small");
+      if (!value || !amount || !note) return;
+
+      block.classList.add("is-changing");
+      window.setTimeout(() => {
+        amount.textContent = `NT$ ${Number(value).toLocaleString("zh-TW")}`;
+        note.textContent =
+          cycle === "annual"
+            ? `年繳優惠價・${block.dataset.annual === "120" ? "最低 50 位員工起" : "最低 100 位員工起"}`
+            : `月繳彈性價・${block.dataset.monthly === "140" ? "最低 50 位員工起" : "最低 100 位員工起"}`;
+        block.classList.remove("is-changing");
+      }, 150);
+    });
+
+    if (billingStatus) {
+      billingStatus.textContent =
+        cycle === "annual"
+          ? "目前顯示年繳優惠價，每月按年約計費。"
+          : "目前顯示月繳彈性價，可按月調整使用方案。";
+    }
+
+    localStorage.setItem("bombhr-billing-cycle", cycle);
+  }
+
+  billingButtons.forEach((button) => {
+    button.addEventListener("click", () => setBillingCycle(button.dataset.billing));
+  });
+
+  if (billingButtons.length) {
+    const savedCycle = localStorage.getItem("bombhr-billing-cycle");
+    setBillingCycle(savedCycle === "monthly" ? "monthly" : "annual");
+  }
+
 })();

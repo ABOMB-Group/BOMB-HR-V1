@@ -317,3 +317,109 @@ footer,
   transform: none !important;
   filter: none !important;
 }
+
+
+/* BOMB HR V1.0.1 — shared inner-page header compatibility */
+.site-header{
+  min-height:118px;
+  padding:0 max(24px,calc((100vw - var(--max))/2));
+  display:flex;
+  align-items:center;
+  gap:28px;
+}
+.site-header>.brand{display:flex;align-items:center;flex:0 0 auto}
+.site-header>.brand img{
+  width:300px;
+  height:88px;
+  object-fit:contain;
+  object-position:left center;
+}
+.main-nav{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:25px;
+}
+.main-nav a{
+  position:relative;
+  padding:38px 0 31px;
+  color:var(--text);
+  font-size:15px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.main-nav a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:100%;
+  bottom:20px;
+  height:3px;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--green),var(--violet));
+  transition:.25s;
+}
+.main-nav a:hover::after,
+.main-nav a.active::after{right:0}
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:0 0 auto;
+}
+.header-actions .btn{min-height:50px;padding:0 22px}
+.header-actions .theme-toggle{flex:0 0 50px}
+
+/* Functional billing switch */
+.pricing-switch button{
+  cursor:pointer;
+  transition:background .2s,color .2s,transform .2s;
+}
+.pricing-switch button:hover{transform:translateY(-1px)}
+.pricing-switch button:focus-visible{
+  outline:3px solid rgba(72,223,233,.35);
+  outline-offset:3px;
+}
+.billing-status{
+  margin:12px auto 0;
+  color:var(--muted);
+  font-size:12px;
+}
+.plan-price strong{
+  transition:opacity .16s ease,transform .16s ease;
+}
+.plan-price.is-changing strong{
+  opacity:.25;
+  transform:translateY(4px);
+}
+
+@media(max-width:1260px){
+  .site-header>.brand img{width:245px}
+  .main-nav{gap:16px}
+  .main-nav a{font-size:13px}
+  .header-actions .btn{padding:0 16px}
+}
+@media(max-width:1050px){
+  .site-header{
+    min-height:90px;
+    flex-wrap:wrap;
+    padding-top:8px;
+    padding-bottom:8px;
+  }
+  .site-header>.brand img{width:220px;height:70px}
+  .main-nav{
+    order:3;
+    width:100%;
+    overflow-x:auto;
+    padding:0 0 4px;
+  }
+  .main-nav a{padding:10px 0 12px}
+  .main-nav a::after{bottom:3px}
+  .header-actions{margin-left:auto}
+}
+@media(max-width:650px){
+  .site-header>.brand img{width:175px}
+  .header-actions .btn-primary{display:none}
+  .header-actions .btn-outline{padding:0 13px}
+  .main-nav{gap:18px}
+}

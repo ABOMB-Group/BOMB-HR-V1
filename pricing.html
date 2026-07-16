@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="BOMB HR 企業人力資源管理平台方案價格，依企業規模與需求彈性配置。" />
   <title>方案價格｜BOMB HR</title>
-  <link rel="stylesheet" href="style.css?v=1.0.0">
+  <link rel="stylesheet" href="style.css?v=1.0.1">
   <style>.reveal,[class~="reveal"]{opacity:1!important;visibility:visible!important;transform:none!important}</style>
 </head>
 <body>
@@ -25,7 +25,13 @@
         <span class="eyebrow">FLEXIBLE ENTERPRISE PRICING</span>
         <h1>從核心人資開始，<br><span>隨企業成長彈性擴充。</span></h1>
         <p>依員工規模、模組與服務需求配置，避免為不需要的功能支付成本。所有方案皆支援雲端部署、權限管理與資料匯出。</p>
-        <div class="pricing-switch" role="group" aria-label="計價方式"><button class="active" type="button">年繳方案 <b>節省 15%</b></button><button type="button">月繳方案</button></div>
+        <div class="pricing-switch" role="group" aria-label="計價方式">
+          <button class="active" type="button" data-billing="annual" aria-pressed="true">
+            年繳方案 <b>節省約 15%</b>
+          </button>
+          <button type="button" data-billing="monthly" aria-pressed="false">月繳方案</button>
+        </div>
+        <p class="billing-status" id="billingStatus" aria-live="polite">目前顯示年繳優惠價，每月按年約計費。</p>
       </div>
     </section>
 
@@ -33,20 +39,32 @@
       <div class="container pricing-page-grid">
         <article class="pricing-plan">
           <div class="plan-head"><span>STARTER</span><h2>Core</h2><p>適合正在建立標準人資流程的成長型企業。</p></div>
-          <div class="plan-price"><strong>NT$ 120</strong><span>/ 每位員工・月</span><small>最低 50 位員工起</small></div>
+          <div class="plan-price" data-plan-price data-annual="120" data-monthly="140">
+            <strong>NT$ 120</strong>
+            <span>/ 每位員工・月</span>
+            <small>年繳優惠價・最低 50 位員工起</small>
+          </div>
           <a class="btn btn-outline full" href="#pricing-contact">洽詢 Core</a>
           <ul><li>組織與人事資料管理</li><li>員工自助服務</li><li>出勤、假勤與加班</li><li>基本簽核流程</li><li>標準報表與資料匯出</li><li>Email 客戶支援</li></ul>
         </article>
         <article class="pricing-plan featured">
           <div class="plan-badge">最多企業選擇</div>
           <div class="plan-head"><span>PROFESSIONAL</span><h2>Growth</h2><p>適合需要整合人才、薪資與自動化流程的中大型企業。</p></div>
-          <div class="plan-price"><strong>NT$ 220</strong><span>/ 每位員工・月</span><small>最低 100 位員工起</small></div>
+          <div class="plan-price" data-plan-price data-annual="220" data-monthly="260">
+            <strong>NT$ 220</strong>
+            <span>/ 每位員工・月</span>
+            <small>年繳優惠價・最低 100 位員工起</small>
+          </div>
           <a class="btn btn-primary full" href="#pricing-contact">預約方案展示</a>
           <ul><li>包含 Core 全部功能</li><li>薪資與獎金計算</li><li>招募 ATS 與人才庫</li><li>績效 KPI／OKR／360 回饋</li><li>進階工作流程與表單設計</li><li>BI Dashboard 與 AI 洞察</li><li>優先技術支援</li></ul>
         </article>
         <article class="pricing-plan">
           <div class="plan-head"><span>ENTERPRISE</span><h2>Scale</h2><p>適合跨公司、跨地區與高資安要求的集團企業。</p></div>
-          <div class="plan-price"><strong>客製報價</strong><span>依導入範圍評估</span><small>支援集團與大量員工</small></div>
+          <div class="plan-price custom-price">
+            <strong>客製報價</strong>
+            <span>依導入範圍評估</span>
+            <small>年繳／月繳皆可依合約規劃</small>
+          </div>
           <a class="btn btn-outline full" href="#pricing-contact">聯絡企業顧問</a>
           <ul><li>包含 Growth 全部功能</li><li>多公司、多法人與多國管理</li><li>SSO、SCIM 與進階權限</li><li>專屬 API 與系統整合</li><li>私有雲／混合雲部署選項</li><li>專屬客戶成功經理</li><li>SLA 與導入治理服務</li></ul>
         </article>
@@ -88,5 +106,5 @@
     <a href="contact.html#line" class="float-line" aria-label="官方 LINE">LINE</a>
     <a href="contact.html#contactForm" class="float-demo" aria-label="預約 Demo">Demo</a>
   </div>
-  <script src="app.js?v=1.0.0"></script>
+  <script src="app.js?v=1.0.1"></script>
 </body></html>
