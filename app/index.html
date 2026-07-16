@@ -1749,7 +1749,6 @@ function submitLeave(){
 
   saveLeaveApplications();
   renderLeaveApplications();
-initSmartDemo();
   document.getElementById('successApplicationNo').textContent=applicationNo;
   document.getElementById('successLeaveType').textContent=type;
   document.getElementById('successLeavePeriod').textContent=startDate.replaceAll('-','/')+'–'+endDate.replaceAll('-','/');
@@ -1824,7 +1823,7 @@ function openLeaveDetail(index){
 function closeLeaveDetail(){document.getElementById('leaveDetailModal').classList.remove('show')}
 
 
-/* ===== Smart Demo Date & Time V1.0.2 ===== */
+/* ===== Smart Demo Date & Time V1.0.3 ===== */
 const zhWeeks=['日','一','二','三','四','五','六'];
 let calendarCursor=new Date();
 calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1);
@@ -2009,6 +2008,8 @@ function showDemoModeOnce(){
 }
 
 function initSmartDemo(){
+  if(window.__bombhrSmartDemoRunning)return;
+  window.__bombhrSmartDemoRunning=true;
   const now=new Date();
   calendarCursor=new Date(now.getFullYear(),now.getMonth(),1);
   selectedCalendarDate=new Date(now);
@@ -2024,8 +2025,16 @@ function initSmartDemo(){
   window.setInterval(updateLiveDateTime,1000);
 }
 
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.__bombhrSmartDemoStarted){
+    window.__bombhrSmartDemoStarted=true;
+    initSmartDemo();
+  }
+});
+
 loadLeaveApplications();
 renderLeaveApplications();
+initSmartDemo();
 
 initModules();calcLeave();calcOT();
 
