@@ -1,0 +1,15 @@
+{
+  "name": "BOMB HR Employee App",
+  "short_name": "BOMB HR",
+  "description": "BOMB HR 員工自助服務、打卡、排班與申請平台",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": [
+    {"src": "app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

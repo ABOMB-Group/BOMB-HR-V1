@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="BOMB HR 企業登入入口">
+  <meta name="theme-color" content="#061020">
+  <title>BOMB HR｜企業登入</title>
+  <link rel="icon" href="assets/bombhr-logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css?v=1.0.2">
+  <style>.reveal,[class~="reveal"]{opacity:1!important;visibility:visible!important;transform:none!important}</style>
+</head>
+<body class="login-page">
+  <div class="space-bg" aria-hidden="true">
+    <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
+    <span class="star s4"></span><span class="star s5"></span><span class="star s6"></span>
+  </div>
+  <header class="site-header" id="siteHeader">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="返回 BOMB HR 官網">
+        <img src="assets/bombhr-logo.png" alt="BOMB HR 人資管理系統">
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="登入頁導覽">
+        <a href="index.html">返回官網</a>
+        <a href="contact.html">聯絡客服</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="contact.html" class="btn btn-demo">預約 Demo</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="切換明暗模式">◐</button>
+        <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="login-main">
+    <section class="login-shell">
+      <div class="login-brand-panel">
+        <div class="login-brand-content">
+          <img class="login-brand-logo" src="assets/bombhr-logo.png" alt="BOMB HR">
+          <h1>企業服務<br><span>安全登入入口</span></h1>
+          <p>依照您的使用身分選擇服務，進入員工自助平台或企業管理後台。</p>
+        </div>
+        <div class="login-brand-foot"><i></i>Enterprise Workforce Platform</div>
+      </div>
+
+      <div class="login-choice-panel">
+        <span class="eyebrow">BOMB HR Enterprise Login</span>
+        <h2>選擇登入身分</h2>
+        <p>目前為前端展示入口。正式帳號驗證、權限與資料串接，將於後端系統建置時完成。</p>
+
+        <div class="login-option-list">
+          <a class="login-option" href="app/">
+            <div class="login-option-icon">♙</div>
+            <div><h3>員工服務平台</h3><p>打卡、請假、加班、班表、簽核、薪資單與個人資料。</p></div>
+            <span class="login-option-arrow">→</span>
+          </a>
+          <a class="login-option" href="admin/">
+            <div class="login-option-icon">▦</div>
+            <div><h3>企業管理後台</h3><p>組織、人事、出勤、薪資、權限、報表與營運分析。</p></div>
+            <span class="login-option-arrow">→</span>
+          </a>
+        </div>
+
+        <div class="login-help">
+          帳號或登入遇到問題？前往 <a href="contact.html#line">官方 LINE 客服</a>
+          或 <a href="contact.html#contactForm">聯絡我們</a>。
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="app.js?v=1.0.2"></script>
+</body>
+</html>
