@@ -1,0 +1,13 @@
+.interactive-item{cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease}
+.interactive-item:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--brand) 58%,var(--line));box-shadow:0 12px 28px rgba(50,55,120,.10)}
+.interactive-item:focus-visible{outline:3px solid rgba(99,91,255,.22);outline-offset:2px}
+.table-wrap tbody tr.interactive-item:hover{transform:none;background:color-mix(in srgb,var(--brand) 5%,var(--surface));box-shadow:inset 3px 0 var(--brand)}
+.click-hint{display:inline-flex;align-items:center;gap:4px;color:var(--brand);font-size:10px;font-weight:700;opacity:0;transform:translateX(-4px);transition:.18s}
+.interactive-item:hover .click-hint{opacity:1;transform:none}
+.day.interactive-item:hover{position:relative;z-index:2;background:color-mix(in srgb,var(--brand) 5%,var(--surface))}
+.tree-node.interactive-item.active{box-shadow:inset 3px 0 var(--brand)}
+.mini-chart i,.attendance-bar i{cursor:pointer;transition:filter .18s,transform .18s}.mini-chart i:hover{filter:brightness(1.16);transform:scaleX(1.04)}.attendance-bar i:hover{filter:brightness(1.15)}
+.setting-row.interactive-item:hover{transform:none;background:var(--surface2)}
+.panel[data-panel-action] .panel-head:after{content:'查看詳情 →';color:var(--brand);font-size:10px;font-weight:700}
+.ui-feedback{position:absolute;inset:auto 10px 8px auto;padding:3px 7px;border-radius:99px;background:var(--brand);color:#fff;font-size:8px;opacity:0;transition:.18s}.interactive-item:hover .ui-feedback{opacity:1}
+@media (prefers-reduced-motion:reduce){.interactive-item,.click-hint,.mini-chart i{transition:none!important}}

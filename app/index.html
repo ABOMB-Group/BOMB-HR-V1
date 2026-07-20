@@ -1,318 +1,2053 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" data-theme="dark">
+
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="BOMB HR — 打造企業人力資源管理的智慧中樞。整合人員、流程、數據與智慧分析的企業級 HRM SaaS。" />
-  <meta name="theme-color" content="#061020" />
-  <title>BOMB HR｜企業智慧人力資源管理平台</title>
-  <link rel="icon" href="assets/bombhr-logo.png" type="image/png" />
-  <link rel="stylesheet" href="style.css?v=1.0.2">
-  <style>.reveal,[class~="reveal"]{opacity:1!important;visibility:visible!important;transform:none!important}</style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#07111f" name="theme-color"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="BOMB HR"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="../assets/bombhr-logo.png"/>
+<title>BOMB HR｜員工打卡 APP V9</title>
+<style>
+:root{
+  --bg:#f6f8fc;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --surface-3:#eef3fb;
+  --text:#111827;
+  --muted:#718096;
+  --line:#e5eaf2;
+  --blue:#2f6df6;
+  --blue-2:#6d4aff;
+  --green:#20c77a;
+  --purple:#8b5cf6;
+  --orange:#ff8a24;
+  --shadow:0 16px 42px rgba(15,23,42,.10);
+  --soft-shadow:0 8px 24px rgba(15,23,42,.07);
+  --nav:rgba(255,255,255,.94);
+}
+body.dark{
+  --bg:#07111f;
+  --surface:#0d1828;
+  --surface-2:#111d30;
+  --surface-3:#152238;
+  --text:#f8fafc;
+  --muted:#95a3b8;
+  --line:#1d2a3d;
+  --shadow:0 18px 46px rgba(0,0,0,.32);
+  --soft-shadow:0 10px 28px rgba(0,0,0,.22);
+  --nav:rgba(10,21,37,.94);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif;background:var(--bg);color:var(--text)}
+body{transition:.25s background,.25s color}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{
+  width:100%;
+  max-width:430px;
+  height:100dvh;
+  margin:auto;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+.statusbar{
+  height:42px;
+  flex:0 0 42px;
+  padding:12px 18px 0;
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  font-weight:900;
+}
+.main{flex:1;min-height:0;position:relative;overflow:hidden}
+.view{
+  display:none;
+  height:100%;
+  overflow-y:auto;
+  padding:18px 18px 30px;
+  scrollbar-width:none;
+}
+.view::-webkit-scrollbar{display:none}
+.view.active{display:block}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:19px;
+}
+.topbar h1,.topbar h2{margin:0}
+.topbar h1{font-size:26px;letter-spacing:-.5px}
+.topbar h2{font-size:23px}
+.topbar small{
+  display:block;
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  line-height:1.55;
+}
+.actions{display:flex;gap:9px}
+.icon-btn{
+  width:42px;height:42px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--surface);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  box-shadow:var(--soft-shadow);
+}
+.icon-btn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:22px;
+  margin-bottom:20px;
+  border-radius:24px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 80% 33%,rgba(255,255,255,.22) 0 8%,rgba(255,255,255,.10) 9% 20%,rgba(255,255,255,.04) 21% 31%,transparent 32%),
+    linear-gradient(135deg,#2f6df6 0%,#5746f7 58%,#8b4cf6 100%);
+  box-shadow:0 18px 38px rgba(66,78,240,.30);
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  width:180px;height:180px;
+  right:-40px;bottom:-78px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.15),transparent 66%);
+}
+.hero small{opacity:.9;font-weight:800}
+.hero h2{font-size:35px;margin:8px 0 12px;letter-spacing:.3px}
+.hero-location{font-size:13px;font-weight:700}
+.hero-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:18px;
+  padding:9px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.15);
+  font-size:12px;
+  font-weight:900;
+}
+.dot{width:9px;height:9px;border-radius:50%;background:#58e5a6;box-shadow:0 0 0 6px rgba(88,229,166,.13)}
+.section-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:19px 0 12px;
+}
+.section-line h3{margin:0;font-size:17px}
+.section-line button{border:0;background:none;color:var(--blue);font-weight:900;font-size:12px}
+.card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:21px;
+  padding:17px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+.status-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.status-card{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:15px;
+}
+.status-card .row{display:flex;align-items:center;gap:10px}
+.status-icon{
+  width:40px;height:40px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  font-size:18px;
+  flex:0 0 auto;
+}
+.status-card.in .status-icon{background:var(--green)}
+.status-card.out .status-icon{background:#778196}
+.status-card b{font-size:13px}
+.status-card strong{display:block;font-size:17px;margin-top:13px}
+.pill{
+  display:inline-block;
+  margin-top:8px;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  background:rgba(32,199,122,.12);
+  color:var(--green);
+}
+.status-card.out .pill{background:var(--surface-3);color:var(--muted)}
+.task-list{display:grid;gap:0}
+.task{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+.task:last-child{border-bottom:0}
+.task-icon{
+  width:40px;height:40px;
+  border-radius:13px;
+  background:var(--surface-3);
+  display:grid;
+  place-items:center;
+  color:var(--blue);
+  flex:0 0 auto;
+}
+.task-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.task-copy{flex:1;min-width:0}
+.task-copy b{display:block;font-size:13px}
+.task-copy small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.task-state{
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.task-state.blue{background:rgba(47,109,246,.12);color:var(--blue)}
+.task-state.purple{background:rgba(139,92,246,.12);color:var(--purple)}
+.task-state.gray{background:var(--surface-3);color:var(--muted)}
+.punch-ring{
+  width:226px;height:226px;
+  margin:20px auto 24px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  position:relative;
+  background:radial-gradient(circle,rgba(32,199,122,.14) 0 45%,transparent 46%);
+}
+.punch-ring:before,.punch-ring:after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+}
+.punch-ring:before{inset:18px;border:2px solid rgba(32,199,122,.35)}
+.punch-ring:after{inset:42px;border:2px solid rgba(32,199,122,.7);box-shadow:0 0 34px rgba(32,199,122,.28)}
+.punch-core{
+  width:120px;height:120px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#0bb56d,#22d889);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  z-index:2;
+  box-shadow:0 16px 34px rgba(32,199,122,.34),inset 0 1px 0 rgba(255,255,255,.3);
+}
+.punch-core b{font-size:17px}.punch-core small{display:block;margin-top:4px;font-size:12px}
+.secondary{
+  width:100%;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--text);
+  padding:14px;
+  border-radius:15px;
+  font-weight:900;
+}
+.punch-meta{
+  display:grid;
+  gap:12px;
+  margin-top:18px;
+}
+.punch-meta .meta-row{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+  font-size:12px;
+}
+.punch-meta .meta-row:last-child{border-bottom:0}
+.punch-meta span{color:var(--muted)}
+.calendar-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.calendar-head button{border:0;background:none;color:var(--text);font-size:20px}
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:7px;
+  text-align:center;
+  font-size:12px;
+}
+.calendar b{padding:6px;color:var(--muted)}
+.day{padding:9px 2px;border-radius:10px}
+.day.shift{background:rgba(47,109,246,.10);color:var(--blue);font-weight:800}
+.day.today{background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;font-weight:900}
+.timeline{display:grid;gap:12px}
+.timeline-item{
+  display:grid;
+  grid-template-columns:58px 1fr;
+  gap:12px;
+  align-items:start;
+}
+.timeline-time{font-size:12px;font-weight:900;color:var(--muted);padding-top:3px}
+.timeline-content{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:13px;
+}
+.timeline-content b{display:block;font-size:13px}
+.timeline-content small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+.profile-card{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:18px;
+  background:linear-gradient(135deg,#14233a,#253b5f);
+  color:#fff;
+  border-radius:22px;
+  margin-bottom:16px;
+}
+.avatar{
+  width:68px;height:68px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#2f6df6,#7c3aed);
+  font-size:27px;
+  font-weight:900;
+}
+.profile-card h3{margin:0 0 5px;font-size:20px}
+.profile-card p{margin:0;opacity:.78;font-size:12px}
+.menu-list{display:grid;gap:0}
+.menu-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+.menu-row:last-child{border-bottom:0}
+.menu-row svg{width:21px;height:21px;stroke:var(--muted);fill:none;stroke-width:2}
+.menu-row b{font-size:13px}
+.menu-row span{margin-left:auto;color:var(--muted);font-size:12px}
+.nav{
+  height:82px;
+  flex:0 0 82px;
+  background:var(--nav);
+  backdrop-filter:blur(20px);
+  border-top:1px solid var(--line);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:7px 10px max(8px,env(safe-area-inset-bottom));
+}
+.nav button{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  border-radius:18px;
+  font-size:11px;
+  font-weight:900;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  transition:.2s;
+}
+.nav button.active{
+  color:var(--blue);
+  background:linear-gradient(135deg,rgba(47,109,246,.14),rgba(109,74,255,.10));
+}
+.nav svg{
+  width:24px;height:24px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.toast{
+  position:absolute;
+  left:18px;right:18px;bottom:96px;
+  background:#111827;
+  color:#fff;
+  padding:13px 15px;
+  border-radius:14px;
+  text-align:center;
+  opacity:0;
+  transform:translateY(12px);
+  transition:.25s;
+  pointer-events:none;
+  z-index:30;
+}
+.toast.show{opacity:1;transform:none}
+@media(min-width:700px){
+  body{padding:24px;background:#dfe7f5}
+  body.dark{background:#020617}
+  .app{height:calc(100dvh - 48px);border-radius:34px;box-shadow:0 25px 80px rgba(0,0,0,.28)}
+}
+
+.system-icons{display:flex;align-items:center;gap:6px}
+.system-icons svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.system-icons svg:last-child{width:25px;height:14px}
+.method-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+.method-card{border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:16px;padding:14px;text-align:left}
+.method-card.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,109,246,.10)}
+.method-card .method-icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:#fff;font-size:20px;margin-bottom:10px}
+.method-card:nth-child(1) .method-icon{background:linear-gradient(135deg,#0ea5e9,#2563eb)}
+.method-card:nth-child(2) .method-icon{background:linear-gradient(135deg,#10b981,#2dd4bf)}
+.method-card:nth-child(3) .method-icon{background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.method-card:nth-child(4) .method-icon{background:linear-gradient(135deg,#f59e0b,#fb923c)}
+.method-card b{display:block;font-size:13px}.method-card small{display:block;color:var(--muted);font-size:10px;line-height:1.45;margin-top:5px}
+.method-panel{margin-top:14px;padding:14px;border-radius:16px;background:var(--surface-2);border:1px solid var(--line)}
+.method-panel b{display:block;font-size:13px}.method-panel small{display:block;color:var(--muted);font-size:11px;line-height:1.55;margin-top:5px}
+.month-records{display:grid;gap:11px}
+.record-item{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.record-item:last-child{border-bottom:0}
+.record-date{font-size:11px;color:var(--muted);line-height:1.45}
+.record-main{min-width:0}
+.record-time{font-size:13px;font-weight:900}
+.record-desc{font-size:12px;color:var(--text);line-height:1.55;margin-top:4px}
+.method-label{display:inline-block;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;margin-right:5px}
+.method-nfc{background:rgba(16,185,129,.14);color:#10b981}
+.method-wifi{background:rgba(14,165,233,.14);color:#0ea5e9}
+.method-qr{background:rgba(124,58,237,.14);color:#7c3aed}
+.method-gps{background:rgba(245,158,11,.16);color:#f59e0b}
+.method-manual{background:rgba(239,68,68,.14);color:#ef4444}
+.record-type{font-size:11px;color:var(--muted);margin-top:5px}
+
+
+.profile-card{position:relative}
+.avatar-wrap{position:relative;flex:0 0 auto}
+.avatar{
+  overflow:hidden;
+  cursor:pointer;
+  position:relative;
+  border:0;
+  padding:0;
+  color:#fff;
+  flex:0 0 auto;
+}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+.avatar-edit{
+  position:absolute;
+  right:-4px;
+  bottom:-4px;
+  width:29px;height:29px;
+  border-radius:50%;
+  border:3px solid #14233a;
+  background:linear-gradient(135deg,#2f6df6,#7c3aed);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  box-shadow:0 6px 16px rgba(0,0,0,.28);
+  cursor:pointer;
+}
+.avatar-edit svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.sheet-overlay{
+  position:absolute;
+  inset:0;
+  z-index:100;
+  background:rgba(2,6,23,.66);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+}
+.sheet-overlay.show{display:flex}
+.bottom-sheet{
+  width:100%;
+  background:var(--surface);
+  border-radius:26px 26px 0 0;
+  padding:10px 18px calc(22px + env(safe-area-inset-bottom));
+  box-shadow:0 -20px 50px rgba(0,0,0,.28);
+  animation:sheetUp .25s ease;
+}
+.sheet-handle{width:44px;height:5px;border-radius:999px;background:var(--line);margin:0 auto 16px}
+.bottom-sheet h3{margin:0 0 5px;font-size:18px}
+.bottom-sheet p{margin:0 0 16px;color:var(--muted);font-size:12px;line-height:1.6}
+.sheet-action{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:14px 2px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+}
+.sheet-action:last-of-type{border-bottom:0}
+.sheet-action svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:2}
+.sheet-action strong{display:block;font-size:14px}
+.sheet-action small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.sheet-action.danger svg,.sheet-action.danger strong{color:var(--danger);stroke:var(--danger)}
+.sheet-cancel{
+  width:100%;
+  margin-top:12px;
+  border:1px solid var(--line);
+  background:var(--surface-2);
+  color:var(--text);
+  padding:13px;
+  border-radius:14px;
+  font-weight:900;
+}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+
+.subview{
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:40;
+  background:var(--bg);
+  overflow-y:auto;
+  padding:18px 18px 30px;
+  scrollbar-width:none;
+}
+.subview::-webkit-scrollbar{display:none}
+.subview.active{display:block}
+.subview-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+}
+.subview-head h2{margin:0;font-size:22px}
+.back-btn{
+  width:40px;height:40px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:var(--surface);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  box-shadow:var(--soft-shadow);
+}
+.back-btn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-bottom:7px}
+.form-group input,.form-group select{
+  width:100%;
+  border:1px solid var(--line);
+  background:var(--surface-2);
+  color:var(--text);
+  border-radius:14px;
+  padding:13px;
+  outline:none;
+}
+.save-btn{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:14px;
+  color:#fff;
+  font-weight:900;
+  background:linear-gradient(90deg,var(--blue),var(--blue-2));
+  box-shadow:0 12px 26px rgba(47,109,246,.24);
+}
+.toggle-list{display:grid;gap:0}
+.toggle-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+.toggle-row:last-child{border-bottom:0}
+.toggle-copy{flex:1}
+.toggle-copy b{display:block;font-size:13px}
+.toggle-copy small{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:4px}
+.switch{
+  position:relative;
+  width:48px;height:28px;
+  flex:0 0 48px;
+}
+.switch input{display:none}
+.switch span{
+  position:absolute;inset:0;
+  border-radius:999px;
+  background:#cbd5e1;
+  transition:.2s;
+}
+.switch span:after{
+  content:"";
+  position:absolute;
+  width:22px;height:22px;
+  left:3px;top:3px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+  transition:.2s;
+}
+.switch input:checked + span{background:var(--blue)}
+.switch input:checked + span:after{transform:translateX(20px)}
+.radio-list{display:grid;gap:10px}
+.radio-option{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--surface-2);
+}
+.radio-option input{accent-color:var(--blue)}
+.about-logo{
+  width:82px;height:82px;
+  margin:8px auto 14px;
+  border-radius:24px;
+  background:linear-gradient(135deg,#2f6df6,#7c3aed);
+  display:grid;
+  place-items:center;
+  color:#fff;
+  font-size:32px;
+  font-weight:900;
+}
+.about{text-align:center}
+.about h3{margin:0 0 6px}
+.about p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
+.device-actions{display:grid;gap:10px;margin-top:14px}
+.danger-btn{
+  width:100%;
+  border:1px solid rgba(239,68,68,.3);
+  background:rgba(239,68,68,.08);
+  color:#ef4444;
+  border-radius:14px;
+  padding:13px;
+  font-weight:900;
+}
+
+
+.module-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.module-card,.apply-card{border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:17px;padding:15px;text-align:left}.module-icon,.apply-icon{width:44px;height:44px;border-radius:14px;color:#fff;display:grid;place-items:center;font-size:20px;margin-bottom:11px}.module-card:nth-child(1) .module-icon{background:linear-gradient(135deg,#0ea5e9,#2563eb)}.module-card:nth-child(2) .module-icon{background:linear-gradient(135deg,#10b981,#2dd4bf)}.module-card:nth-child(3) .module-icon{background:linear-gradient(135deg,#7c3aed,#a855f7)}.module-card:nth-child(4) .module-icon{background:linear-gradient(135deg,#f59e0b,#fb923c)}.module-card b,.apply-card b{display:block;font-size:14px}.module-card small,.apply-card small{display:block;color:var(--muted);font-size:10px;line-height:1.45;margin-top:5px}.apply-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.apply-card:first-child .apply-icon{background:linear-gradient(135deg,#2f6df6,#6d4aff)}.apply-card:last-child .apply-icon{background:linear-gradient(135deg,#ff7a1a,#f59e0b)}
+.file-list{display:grid;gap:8px;margin-top:10px}.file-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}.file-item b{font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-item button{border:0;background:none;color:var(--danger);font-weight:900}
+.readonly-note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:11px}
+
+
+.leave-reason-card{
+  position:relative;
+  margin-top:16px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+}
+.leave-reason-card label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+  color:var(--text);
+  font-size:13px;
+  font-weight:900;
+}
+.leave-reason-card label small{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:700;
+}
+.leave-reason-card textarea{
+  width:100%;
+  min-height:120px;
+  resize:vertical;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px 15px;
+  background:var(--surface);
+  color:var(--text);
+  outline:none;
+  line-height:1.7;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.leave-reason-card textarea:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 4px rgba(47,109,246,.10);
+}
+.leave-submit-wrap{
+  margin-top:18px;
+  padding:14px;
+  border-radius:20px;
+  background:linear-gradient(135deg,rgba(47,109,246,.10),rgba(109,74,255,.10));
+  border:1px solid rgba(109,74,255,.16);
+}
+.leave-submit-btn{
+  width:100%;
+  border:0;
+  border-radius:16px;
+  padding:16px 18px;
+  color:#fff;
+  font-weight:900;
+  font-size:15px;
+  letter-spacing:.2px;
+  background:linear-gradient(90deg,#2f6df6,#6d4aff);
+  box-shadow:0 14px 30px rgba(47,109,246,.28);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+}
+.leave-submit-btn:active{transform:scale(.985)}
+.leave-submit-note{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:10px;
+  text-align:center;
+  line-height:1.5;
+}
+
+
+.calendar .day{
+  border:0;
+  background:transparent;
+  color:var(--text);
+  font:inherit;
+  min-height:36px;
+  display:grid;
+  place-items:center;
+  transition:.18s ease;
+}
+.calendar button.day{cursor:pointer}
+.calendar .day.shift{
+  background:rgba(47,109,246,.10);
+  color:var(--blue);
+  font-weight:800;
+}
+.calendar .day.today{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 8px 18px rgba(47,109,246,.25);
+}
+.calendar .day.selected-day:not(.today){
+  outline:2px solid var(--blue);
+  outline-offset:-2px;
+}
+.calendar .muted-day{
+  color:var(--muted);
+  opacity:.42;
+}
+.calendar-detail{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:16px;
+  padding-top:15px;
+  border-top:1px solid var(--line);
+}
+.calendar-detail small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:4px;
+}
+.calendar-detail b{font-size:13px}
+.calendar-detail span{
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(47,109,246,.12);
+  color:var(--blue);
+  font-size:10px;
+  font-weight:900;
+}
+.calendar-shift-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:12px;
+  padding:13px;
+  border-radius:15px;
+  background:var(--surface2);
+  border:1px solid var(--line);
+}
+.calendar-shift-icon{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;
+}
+.calendar-shift-card b{display:block;font-size:13px}
+.calendar-shift-card small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+}
+
+
+.apply-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;margin-bottom:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface2)}
+.apply-tab{border:0;border-radius:12px;padding:11px 10px;background:transparent;color:var(--muted);font-size:12px;font-weight:900}
+.apply-tab.active{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 8px 18px rgba(47,109,246,.22)}
+.leave-pane{display:none}.leave-pane.active{display:block}
+.application-list{display:grid;gap:12px}
+.application-card{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:17px;padding:15px;text-align:left;box-shadow:var(--soft-shadow)}
+.application-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.application-head b{display:block;font-size:14px}.application-head small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.application-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.application-meta div{padding:10px;border-radius:12px;background:var(--surface2)}.application-meta span{display:block;color:var(--muted);font-size:9px;margin-bottom:4px}.application-meta strong{font-size:11px}
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.status-review{background:rgba(245,158,11,.14);color:#f59e0b}.status-approved{background:rgba(32,199,122,.14);color:var(--green)}.status-rejected{background:rgba(239,68,68,.14);color:var(--red)}
+.modal-overlay{position:absolute;inset:0;z-index:130;display:none;place-items:center;padding:22px;background:rgba(2,6,23,.72);backdrop-filter:blur(8px)}.modal-overlay.show{display:grid}
+.result-modal{width:100%;max-width:360px;border:1px solid var(--line);border-radius:24px;padding:22px;background:var(--surface);box-shadow:0 28px 70px rgba(0,0,0,.34)}
+.result-icon{width:74px;height:74px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:34px;background:linear-gradient(145deg,#15b76c,#2bd68e);box-shadow:0 16px 32px rgba(32,199,122,.28)}
+.result-modal h3{margin:0;text-align:center;font-size:20px}.result-modal>p{margin:8px 0 18px;text-align:center;color:var(--muted);font-size:11px;line-height:1.6}
+.result-summary{padding:14px;border-radius:16px;background:var(--surface2);border:1px solid var(--line)}.result-summary .info-row{padding:10px 0}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.modal-actions button{border-radius:14px;padding:13px 10px;font-weight:900}
+.progress-list{display:grid;gap:0}.progress-step{position:relative;display:grid;grid-template-columns:28px 1fr;gap:11px;padding-bottom:18px}.progress-step:last-child{padding-bottom:0}.progress-step:before{content:"";position:absolute;left:13px;top:26px;bottom:0;width:2px;background:var(--line)}.progress-step:last-child:before{display:none}
+.progress-dot{width:28px;height:28px;z-index:1;border-radius:50%;display:grid;place-items:center;background:var(--surface3);color:var(--muted);font-size:11px;font-weight:900}.progress-step.done .progress-dot{background:var(--green);color:#fff}.progress-step.current .progress-dot{background:#f59e0b;color:#fff}
+.progress-copy b{display:block;font-size:12px}.progress-copy small{display:block;color:var(--muted);font-size:10px;margin-top:4px;line-height:1.5}
+.detail-note{margin-top:14px;padding:12px;border-radius:13px;background:rgba(239,68,68,.08);color:var(--red);font-size:11px;line-height:1.6}
+
+
+.form-group label .optional-badge{
+  display:inline-block;
+  margin-left:6px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:var(--surface3);
+  color:var(--muted);
+  font-size:9px;
+  font-weight:900;
+  vertical-align:middle;
+}
+
+
+.website-link-card{
+  display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:14px;
+  border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(135deg,rgba(47,109,246,.10),rgba(109,74,255,.08));
+  color:var(--text);text-decoration:none
+}
+.website-link-icon{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;
+  font-size:20px;font-weight:900;flex:0 0 auto
+}
+.website-link-card b{display:block;font-size:13px}
+.website-link-card small{display:block;color:var(--muted);font-size:10px;margin-top:4px;line-height:1.5}
+.website-link-card .arrow{margin-left:auto;color:var(--blue);font-weight:900}
+.demo-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+  background:rgba(47,109,246,.12);color:var(--blue);font-size:10px;font-weight:900;margin-top:10px
+}
+
+
+
+.demo-modal{
+  position:absolute;inset:0;z-index:260;display:none;place-items:center;
+  padding:24px;background:rgba(2,6,23,.78);backdrop-filter:blur(10px)
+}
+.demo-modal.show{display:grid}
+.demo-modal-card{
+  width:100%;max-width:360px;padding:24px;border-radius:24px;
+  border:1px solid var(--line);background:var(--surface);
+  box-shadow:0 30px 80px rgba(0,0,0,.38);text-align:center
+}
+.demo-modal-icon{
+  width:68px;height:68px;margin:0 auto 16px;border-radius:20px;
+  display:grid;place-items:center;font-size:30px;color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--blue2))
+}
+.demo-modal-card h3{margin:0 0 8px;font-size:20px}
+.demo-modal-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.8}
+.demo-modal-list{
+  margin:18px 0;padding:14px;border-radius:16px;background:var(--surface2);
+  text-align:left;display:grid;gap:9px;font-size:11px
+}
+.demo-modal-list span:before{content:"✓";color:var(--green);font-weight:900;margin-right:8px}
+.demo-modal-card button{
+  width:100%;border:0;border-radius:14px;padding:13px;color:#fff;
+  font-weight:900;background:linear-gradient(135deg,var(--blue),var(--blue2))
+}
+</style>
 </head>
-<body>
-  <div class="space-bg" aria-hidden="true">
-    <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
-    <span class="star s4"></span><span class="star s5"></span><span class="star s6"></span>
-    <span class="star s7"></span><span class="star s8"></span><span class="star s9"></span>
-  </div>
-
-  <header class="site-header" id="siteHeader">
-    <div class="container nav">
-      <a class="brand" href="index.html" aria-label="BOMB HR 首頁">
-        <img src="assets/bombhr-logo.png" alt="BOMB HR 人資管理系統" />
-      </a>
-
-      <nav class="nav-links" id="navLinks" aria-label="主要導覽"><a class="active" href="index.html">首頁</a><a href="products.html">產品功能</a><a href="dashboard.html">平台介面</a><a href="#app-download">下載 APP</a><a href="solutions.html">解決方案</a><a href="pricing.html">方案價格</a><a href="case-studies.html">成功案例</a><a href="resources.html">資源中心</a><a href="about.html">關於我們</a><a href="contact.html">聯絡我們</a></nav>
-
-      <div class="nav-actions">
-        <a href="login.html" class="btn btn-login">企業登入</a><a href="contact.html" class="btn btn-demo">預約 Demo</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="切換明暗模式">◐</button>
-        <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
+<body class="dark">
+<div class="app">
+<div class="statusbar">
+<span id="statusTime">9:41</span>
+<span class="system-icons">
+<svg viewbox="0 0 24 24"><path d="M3 18h2v3H3zM7 15h2v6H7zM11 12h2v9h-2zM15 9h2v12h-2z"></path></svg>
+<svg viewbox="0 0 24 24"><path d="M4 9c4.6-4 11.4-4 16 0"></path><path d="M7 12c2.9-2.5 7.1-2.5 10 0"></path><path d="M10 15c1.2-1 2.8-1 4 0"></path><circle cx="12" cy="18" r="1"></circle></svg>
+<svg viewbox="0 0 28 14"><rect height="12" rx="3" width="23" x="1" y="1"></rect><path d="M26 5v4"></path><rect fill="currentColor" height="8" rx="1.5" stroke="none" width="17" x="3" y="3"></rect></svg>
+</span>
+</div>
+<div class="main">
+<section class="view active" id="homeView">
+<div class="topbar">
+<div>
+<h1 id="dynamicGreeting">早安，Vika 👋</h1>
+<small id="homeTodayDate">2026 年 7 月 15 日（二）</small>
+</div>
+<div class="actions">
+<button class="icon-btn" onclick="toast('目前沒有新通知')">
+<svg viewbox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+</button>
+<button class="icon-btn" onclick="toggleTheme()">
+<svg viewbox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5 8.5 8.5 0 1 0 20.5 14.3Z"></path></svg>
+</button>
+</div>
+</div>
+<div class="hero">
+<small>目前時間</small>
+<h2 id="heroClock">10:45:26</h2>
+<div class="hero-location">⌖ 台中總公司</div>
+<div class="hero-chip"><span class="dot"></span>已進入打卡範圍</div>
+</div>
+<div class="section-line"><h3>今日狀態</h3><button onclick="switchView('punchView',document.querySelector('[data-view=punchView]'))">查看紀錄 ›</button></div>
+<div class="card">
+<div class="status-grid">
+<div class="status-card in">
+<div class="row"><div class="status-icon">↑</div><b>上班打卡</b></div>
+<strong id="homeInTime">08:58</strong>
+<span class="pill">正常</span>
+</div>
+<div class="status-card out">
+<div class="row"><div class="status-icon">↓</div><b>下班打卡</b></div>
+<strong id="homeOutTime">--:--</strong>
+<span class="pill">尚未打卡</span>
+</div>
+</div>
+</div>
+<div class="section-line"><h3>待辦事項</h3><button onclick="toast('已顯示全部待辦')">查看全部 ›</button></div>
+<div class="card task-list">
+<div class="task">
+<div class="task-icon"><svg viewbox="0 0 24 24"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg></div>
+<div class="task-copy"><b>提交工作日報</b><small>每日 18:00 前提交</small></div>
+<span class="task-state blue">進行中</span>
+</div>
+<div class="task">
+<div class="task-icon"><svg viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="5"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg></div>
+<div class="task-copy"><b>專案會議</b><small>今天 14:00–15:00</small></div>
+<span class="task-state purple">即將開始</span>
+</div>
+<div class="task">
+<div class="task-icon"><svg viewbox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12a9 9 0 1 1-5.3-8.2"></path></svg></div>
+<div class="task-copy"><b>填寫問卷調查</b><small>福利滿意度調查</small></div>
+<span class="task-state gray">待處理</span>
+</div>
+</div>
+</section>
+<section class="view" id="punchView">
+<div class="topbar">
+<div><h2>打卡</h2><small id="punchTodayDate">2026 年 7 月 15 日</small></div>
+<button class="icon-btn" onclick="toggleTheme()">
+<svg viewbox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5 8.5 8.5 0 1 0 20.5 14.3Z"></path></svg>
+</button>
+</div>
+<div class="card">
+<div class="punch-ring">
+<button class="punch-core" id="punchCore" onclick="punch()">
+<div><b>上班打卡</b><small id="punchClock">08:58:26</small></div>
+</button>
+</div>
+<button class="secondary" onclick="toast('目前位於台中總公司')">⌖ 台中總公司</button>
+<div class="punch-meta">
+<div class="meta-row"><span>上班時間</span><b>09:00</b></div>
+<div class="meta-row"><span>下班時間</span><b>18:00</b></div>
+<div class="meta-row"><span>目前驗證</span><b id="activeMethodText">WiFi + GPS</b></div>
+</div>
+</div>
+<div class="section-line"><h3 id="recordMonthTitle">選擇驗證方式</h3><button onclick="toast('正式 APP 會自動判斷可用方式')">自動判斷</button></div>
+<div class="card">
+<div class="method-grid">
+<button class="method-card active" onclick="selectMethod('WiFi',this)">
+<div class="method-icon">⌁</div>
+<b>WiFi 驗證</b>
+<small>連線公司指定網路後打卡</small>
+</button>
+<button class="method-card" onclick="selectMethod('NFC',this)">
+<div class="method-icon">◉</div>
+<b>NFC 感應</b>
+<small>靠近公司 NFC 標籤完成驗證</small>
+</button>
+<button class="method-card" onclick="selectMethod('QR Code',this)">
+<div class="method-icon">▦</div>
+<b>QR Code</b>
+<small>掃描公司動態 QR Code</small>
+</button>
+<button class="method-card" onclick="selectMethod('GPS',this)">
+<div class="method-icon">⌖</div>
+<b>手動 GPS</b>
+<small>確認位置範圍後手動打卡</small>
+</button>
+</div>
+<div class="method-panel" id="methodPanel">
+<b id="methodPanelTitle">WiFi 驗證成功</b>
+<small id="methodPanelText">目前已連線 BOMB_OFFICE，可進行打卡。</small>
+</div>
+</div>
+<div class="section-line"><h3>2026 年 7 月打卡明細</h3><button onclick="toast('已顯示本月全部紀錄')">全部紀錄</button></div>
+<div class="card month-records" id="dynamicMonthRecords">
+<div class="record-item">
+<div class="record-date">2026/07/15<br/>星期三</div>
+<div class="record-main">
+<div class="record-time">08:28:06</div>
+<div class="record-desc"><span class="method-label method-nfc">NFC 感應</span>完成上班打卡</div>
+<div class="record-type">台中總公司・一樓員工入口</div>
+</div>
+</div>
+<div class="record-item">
+<div class="record-date">2026/07/15<br/>星期三</div>
+<div class="record-main">
+<div class="record-time">18:02:16</div>
+<div class="record-desc"><span class="method-label method-nfc">NFC 感應</span>完成下班打卡</div>
+<div class="record-type">台中總公司・一樓員工入口</div>
+</div>
+</div>
+<div class="record-item">
+<div class="record-date">2026/07/14<br/>星期二</div>
+<div class="record-main">
+<div class="record-time">08:36:33</div>
+<div class="record-desc"><span class="method-label method-manual">審核補卡</span>完成上班打卡</div>
+<div class="record-type">補卡申請已由主管核准</div>
+</div>
+</div>
+<div class="record-item">
+<div class="record-date">2026/07/14<br/>星期二</div>
+<div class="record-main">
+<div class="record-time">18:05:41</div>
+<div class="record-desc"><span class="method-label method-wifi">WiFi 驗證</span>完成下班打卡</div>
+<div class="record-type">BOMB_OFFICE</div>
+</div>
+</div>
+<div class="record-item">
+<div class="record-date">2026/07/13<br/>星期一</div>
+<div class="record-main">
+<div class="record-time">08:55:12</div>
+<div class="record-desc"><span class="method-label method-qr">QR Code</span>完成上班打卡</div>
+<div class="record-type">台中總公司・動態 QR Code</div>
+</div>
+</div>
+<div class="record-item">
+<div class="record-date">2026/07/13<br/>星期一</div>
+<div class="record-main">
+<div class="record-time">18:01:02</div>
+<div class="record-desc"><span class="method-label method-gps">手動 GPS</span>完成下班打卡</div>
+<div class="record-type">距離公司 12 公尺・位置驗證通過</div>
+</div>
+</div>
+</div>
+</section>
+<section class="view" id="scheduleView">
+<div class="topbar"><div><h2>排班</h2><small>月曆、福利與申請</small></div><button class="icon-btn" onclick="toggleTheme()">◐</button></div>
+<div class="card">
+<div class="calendar-head"><button onclick="changeCalendarMonth(-1)">‹</button><b id="calendarMonthTitle">2026 年 7 月</b><button onclick="changeCalendarMonth(1)">›</button></div>
+<div class="calendar" id="dynamicCalendar">
+<b>日</b><b>一</b><b>二</b><b>三</b><b>四</b><b>五</b><b>六</b>
+<span class="day muted-day">28</span>
+<span class="day muted-day">29</span>
+<span class="day muted-day">30</span>
+<button class="day" onclick="selectCalendarDay(1,this)">1</button>
+<button class="day shift" onclick="selectCalendarDay(2,this)">2</button>
+<button class="day shift" onclick="selectCalendarDay(3,this)">3</button>
+<button class="day" onclick="selectCalendarDay(4,this)">4</button>
+<button class="day" onclick="selectCalendarDay(5,this)">5</button>
+<button class="day shift" onclick="selectCalendarDay(6,this)">6</button>
+<button class="day shift" onclick="selectCalendarDay(7,this)">7</button>
+<button class="day shift" onclick="selectCalendarDay(8,this)">8</button>
+<button class="day shift" onclick="selectCalendarDay(9,this)">9</button>
+<button class="day shift" onclick="selectCalendarDay(10,this)">10</button>
+<button class="day" onclick="selectCalendarDay(11,this)">11</button>
+<button class="day" onclick="selectCalendarDay(12,this)">12</button>
+<button class="day shift" onclick="selectCalendarDay(13,this)">13</button>
+<button class="day shift" onclick="selectCalendarDay(14,this)">14</button>
+<button class="day shift today selected-day" onclick="selectCalendarDay(15,this)">15</button>
+<button class="day shift" onclick="selectCalendarDay(16,this)">16</button>
+<button class="day shift" onclick="selectCalendarDay(17,this)">17</button>
+<button class="day" onclick="selectCalendarDay(18,this)">18</button>
+<button class="day" onclick="selectCalendarDay(19,this)">19</button>
+<button class="day shift" onclick="selectCalendarDay(20,this)">20</button>
+<button class="day shift" onclick="selectCalendarDay(21,this)">21</button>
+<button class="day shift" onclick="selectCalendarDay(22,this)">22</button>
+<button class="day shift" onclick="selectCalendarDay(23,this)">23</button>
+<button class="day shift" onclick="selectCalendarDay(24,this)">24</button>
+<button class="day" onclick="selectCalendarDay(25,this)">25</button>
+<button class="day" onclick="selectCalendarDay(26,this)">26</button>
+<button class="day shift" onclick="selectCalendarDay(27,this)">27</button>
+<button class="day shift" onclick="selectCalendarDay(28,this)">28</button>
+<button class="day shift" onclick="selectCalendarDay(29,this)">29</button>
+<button class="day shift" onclick="selectCalendarDay(30,this)">30</button>
+<button class="day shift" onclick="selectCalendarDay(31,this)">31</button>
+<span class="day muted-day">1</span>
+</div>
+<div class="calendar-detail">
+<div>
+<small>選取日期</small>
+<b id="selectedDateText">2026 年 7 月 15 日（三）</b>
+</div>
+<span id="selectedShiftBadge">一般班</span>
+</div>
+<div class="calendar-shift-card">
+<div class="calendar-shift-icon">▦</div>
+<div>
+<b id="selectedShiftTitle">一般班 09:00–18:00</b>
+<small id="selectedShiftMeta">台中總公司・休息 12:00–13:00</small>
+</div>
+</div>
+</div>
+<div class="section-line"><h3>福利</h3></div>
+<div class="module-grid">
+<button class="module-card" data-module="payroll" onclick="openSubview('salarySubview')"><div class="module-icon">$</div><b>薪資表</b><small>查看本期薪資與明細</small></button>
+<button class="module-card" data-module="benefits" onclick="openSubview('benefitsSubview')"><div class="module-icon">♡</div><b>員工福利</b><small>補助、特約與優惠</small></button>
+<button class="module-card" data-module="announcements" onclick="openSubview('announcementSubview')"><div class="module-icon">◈</div><b>公司公告</b><small>重要通知與政策</small></button>
+<button class="module-card" data-module="training" onclick="openSubview('trainingSubview')"><div class="module-icon">▤</div><b>教育訓練</b><small>課程與完成進度</small></button>
+<button class="module-card hidden" data-module="aiAssistant" onclick="toast('AI 助理模組尚未開放')"><div class="module-icon">AI</div><b>AI 助理</b><small>本公司智慧助理</small></button>
+</div>
+<div class="section-line"><h3>申請</h3></div>
+<div class="apply-grid"><button class="apply-card" onclick="openSubview('leaveSubview')"><div class="apply-icon">✓</div><b>請假申請</b><small>依企業假別規則提出申請</small></button><button class="apply-card" onclick="openSubview('overtimeSubview')"><div class="apply-icon">＋</div><b>加班申請</b><small>填寫日期、時間與原因</small></button></div>
+</section>
+<section class="view" id="myView">
+<div class="topbar">
+<div><h2>我的</h2><small>個人資料與帳號設定</small></div>
+<button class="icon-btn" onclick="toggleTheme()">
+<svg viewbox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5 8.5 8.5 0 1 0 20.5 14.3Z"></path></svg>
+</button>
+</div>
+<div class="profile-card">
+<div class="avatar-wrap">
+<button aria-label="更換大頭照" class="avatar" id="profileAvatar" onclick="openAvatarSheet()">
+<span id="avatarInitial">V</span>
+<img alt="員工大頭照" class="hidden" id="avatarImage"/>
+</button>
+<button aria-label="編輯大頭照" class="avatar-edit" onclick="openAvatarSheet()">
+<svg viewbox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg>
+</button>
+</div>
+<div><h3>Vika</h3><p>產品企劃部・員工編號 VIKA001</p></div>
+</div>
+<div class="card menu-list">
+<button class="menu-row" onclick="openSubview('profileSubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
+<svg viewbox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg><b>個人資料</b><span>›</span>
+</button>
+<button class="menu-row" onclick="openSubview('securitySubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
+<svg viewbox="0 0 24 24"><rect height="10" rx="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><b>帳號安全</b><span>›</span>
+</button>
+<button class="menu-row" onclick="openSubview('notificationSubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
+<svg viewbox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><b>通知設定</b><span>›</span>
+</button>
+<button class="menu-row" onclick="openSubview('deviceSubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
+<svg viewbox="0 0 24 24"><rect height="20" rx="2" width="12" x="6" y="2"></rect><path d="M10 18h4"></path></svg><b>裝置管理</b><span>已綁定</span>
+</button>
+<button class="menu-row" onclick="openSubview('appearanceSubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
+<svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path></svg><b>外觀設定</b><span id="themeLabel">深色</span>
+</button>
+<button class="menu-row" onclick="openSubview('languageSubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
+<svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15 15 0 0 1 0 20"></path><path d="M12 2a15 15 0 0 0 0 20"></path></svg><b>語言設定</b><span id="languageLabel">繁體中文</span>
+</button>
+<button class="menu-row" onclick="openSubview('aboutSubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
+<svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8h.01M11 12h1v4h1"></path></svg><b>關於我們</b><span>›</span>
+</button>
+</div>
+<a aria-label="返回 BOMB HR 官方網站" class="website-link-card" href="../index.html">
+<span class="website-link-icon">B</span>
+<span>
+<b>返回 BOMB HR 官方網站</b>
+<small>查看產品介紹、模組方案與企業服務</small>
+</span>
+<span class="arrow">›</span>
+</a>
+<div class="demo-badge">● Employee APP Demo V1.0</div>
+</section>
+</div>
+<section class="subview" id="leaveSubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('leaveSubview')">‹</button>
+<h2>請假</h2>
+</div>
+<div class="apply-tabs">
+<button class="apply-tab active" onclick="switchLeavePane('leaveFormPane',this)">提出申請</button>
+<button class="apply-tab" onclick="switchLeavePane('leaveRecordPane',this)">申請紀錄</button>
+</div>
+<div class="leave-pane active" id="leaveFormPane">
+<div class="card">
+<div class="form-group">
+<label>假別</label>
+<select id="leaveType">
+<option>事假</option><option>病假</option><option>婚假</option><option>喪假</option>
+<option>產假</option><option>陪產假</option><option>公假</option><option>教召</option>
+<option>旅遊假</option><option>事外</option><option>病外</option><option>年假／特休</option>
+</select>
+<div class="readonly-note">事外：事假外出後仍會返回公司上班；病外：病假外出後仍會返回公司上班。</div>
+</div>
+<div class="form-group"><label>開始日期</label><input id="leaveStartDate" type="date" value="2026-07-20"/></div>
+<div class="form-group"><label>開始時間</label><input id="leaveStartTime" type="time" value="09:00"/></div>
+<div class="form-group"><label>結束日期</label><input id="leaveEndDate" type="date" value="2026-07-22"/></div>
+<div class="form-group"><label>結束時間</label><input id="leaveEndTime" type="time" value="18:00"/></div>
+<div class="info-row"><span>自動計算</span><b id="leaveDuration">3 天／24 小時</b></div>
+<div class="form-group">
+<label>工作代理人 <span class="optional-badge">選填</span></label>
+<select id="leaveAgent">
+<option value="">請選擇代理人（若無可略過）</option>
+<option>王小明</option>
+<option>陳怡君</option>
+<option>林志豪</option>
+</select>
+<div class="readonly-note">未選擇代理人時仍可直接送出申請。</div>
+</div>
+<div class="leave-reason-card">
+<label>請假原因 <small>請簡要說明申請內容</small></label>
+<textarea id="leaveReason" placeholder="例如：家庭旅遊、身體不適、私人事務等">家庭旅遊</textarea>
+</div>
+<div class="form-group" style="margin-top:16px">
+<label>附件上傳（收據、證明文件等）</label>
+<input accept=".jpg,.jpeg,.png,.pdf" id="leaveFiles" multiple="" type="file"/>
+</div>
+<div class="file-list" id="leaveFileList"></div>
+<div class="leave-submit-wrap">
+<button class="leave-submit-btn" onclick="submitLeave()"><span>✓</span><span>送出請假申請</span></button>
+<div class="leave-submit-note">送出後將依企業設定的簽核流程進行審核</div>
+</div>
+</div>
+</div>
+<div class="leave-pane" id="leaveRecordPane">
+<div class="application-list" id="leaveApplicationList"></div>
+</div>
+</section>
+<section class="subview" id="overtimeSubview"><div class="subview-head"><button class="back-btn" onclick="closeSubview('overtimeSubview')">‹</button><h2>加班申請</h2></div><div class="card"><div class="form-group"><label>加班日期</label><input type="date" value="2026-07-18"/></div><div class="form-group"><label>開始時間</label><input id="otStart" type="time" value="18:30"/></div><div class="form-group"><label>結束時間</label><input id="otEnd" type="time" value="21:30"/></div><div class="info-row"><span>加班時數</span><b id="otHours">3 小時</b></div><div class="form-group"><label>加班原因</label><textarea>專案上線前測試與文件整理</textarea></div><button class="primary" onclick="submitOvertime()">送出加班申請</button></div></section>
+<section class="subview" id="salarySubview"><div class="subview-head"><button class="back-btn" onclick="closeSubview('salarySubview')">‹</button><h2>薪資表</h2></div><div class="card"><div class="info-row"><span id="salaryMonthLabel">2026 年 6 月實領</span><b style="font-size:22px">TWD 57,000</b></div><div class="info-row"><span>本薪</span><b>56,000</b></div><div class="info-row"><span>津貼</span><b>3,000</b></div><div class="info-row"><span>扣款</span><b>-2,000</b></div></div><div class="readonly-note">薪資模組可由後台開關控制。</div></section>
+<section class="subview" id="benefitsSubview"><div class="subview-head"><button class="back-btn" onclick="closeSubview('benefitsSubview')">‹</button><h2>員工福利</h2></div><div class="card"><div class="task"><div class="task-copy"><b>年度旅遊補助</b><small>每人最高 TWD 8,000</small></div></div><div class="task"><div class="task-copy"><b>特約餐廳</b><small>員工出示識別可享優惠</small></div></div></div></section>
+<section class="subview" id="announcementSubview"><div class="subview-head"><button class="back-btn" onclick="closeSubview('announcementSubview')">‹</button><h2>公司公告</h2></div><div class="card"><div class="task"><div class="task-copy"><b>7/18 員工大會通知</b><small>下午 3:00 線上會議</small></div></div><div class="task"><div class="task-copy"><b>颱風期間出勤提醒</b><small>依公司最新公告為準</small></div></div></div></section>
+<section class="subview" id="trainingSubview"><div class="subview-head"><button class="back-btn" onclick="closeSubview('trainingSubview')">‹</button><h2>教育訓練</h2></div><div class="card"><div class="task"><div class="task-copy"><b>資訊安全基礎課程</b><small>完成率 80%</small></div><span class="task-state blue">繼續學習</span></div><div class="task"><div class="task-copy"><b>職場性騷擾防治</b><small>尚未開始</small></div></div></div></section>
+<section class="subview" id="profileSubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('profileSubview')"><svg viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+<h2>個人資料</h2>
+</div>
+<div class="card">
+<div class="form-group"><label>姓名</label><input disabled="" id="profileName" value="Vika"/></div>
+<div class="form-group"><label>員工編號</label><input disabled="" value="VIKA001"/></div>
+<div class="form-group"><label>部門</label><input disabled="" id="profileDepartment" value="產品企劃部"/></div>
+<div class="form-group"><label>職稱</label><input disabled="" value="產品企劃專員"/></div>
+<div class="form-group"><label>聯絡電話</label><input id="profilePhone" value="0912-345-678"/></div>
+<div class="form-group"><label>Email</label><input id="profileEmail" value="vika@bombhr.com"/></div>
+<div class="form-group"><label>緊急聯絡人</label><input id="profileEmergency" value="王小明"/></div>
+<div class="form-group"><label>緊急聯絡電話</label><input id="profileEmergencyPhone" value="0911-222-333"/></div>
+<button class="save-btn" onclick="saveProfile()">儲存可修改資料</button>
+<button class="secondary" onclick="requestHRChange()" style="margin-top:10px">申請人事資料變更</button>
+<div style="margin-top:12px;color:var(--muted);font-size:11px;line-height:1.6">
+        姓名、員工編號、部門與職稱由人事主檔管理，員工無法直接修改。
       </div>
-    </div>
-  </header>
+</div>
+</section>
+<section class="subview" id="securitySubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('securitySubview')"><svg viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+<h2>帳號安全</h2>
+</div>
+<div class="card">
+<div class="form-group"><label>目前密碼</label><input id="currentPassword" placeholder="請輸入目前密碼" type="password"/></div>
+<div class="form-group"><label>新密碼</label><input id="newPassword" placeholder="至少 8 個字元" type="password"/></div>
+<div class="form-group"><label>確認新密碼</label><input id="confirmPassword" placeholder="再次輸入新密碼" type="password"/></div>
+<button class="save-btn" onclick="changePassword()">更新密碼</button>
+</div>
+<div class="card toggle-list">
+<div class="toggle-row">
+<div class="toggle-copy"><b>生物辨識登入</b><small>使用 Face ID 或指紋快速登入</small></div>
+<label class="switch"><input checked="" id="biometricToggle" onchange="saveSetting('biometric',this.checked)" type="checkbox"/><span></span></label>
+</div>
+<div class="toggle-row">
+<div class="toggle-copy"><b>新裝置登入通知</b><small>有新裝置登入時立即通知</small></div>
+<label class="switch"><input checked="" id="newDeviceToggle" onchange="saveSetting('newDevice',this.checked)" type="checkbox"/><span></span></label>
+</div>
+</div>
+</section>
+<section class="subview" id="notificationSubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('notificationSubview')"><svg viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+<h2>通知設定</h2>
+</div>
+<div class="card toggle-list">
+<div class="toggle-row"><div class="toggle-copy"><b>打卡提醒</b><small>上班與下班時間提醒</small></div><label class="switch"><input checked="" id="clockNotify" onchange="saveSetting('clockNotify',this.checked)" type="checkbox"/><span></span></label></div>
+<div class="toggle-row"><div class="toggle-copy"><b>排班異動</b><small>班表被修改時通知</small></div><label class="switch"><input checked="" id="scheduleNotify" onchange="saveSetting('scheduleNotify',this.checked)" type="checkbox"/><span></span></label></div>
+<div class="toggle-row"><div class="toggle-copy"><b>請假簽核</b><small>申請結果與進度通知</small></div><label class="switch"><input checked="" id="leaveNotify" onchange="saveSetting('leaveNotify',this.checked)" type="checkbox"/><span></span></label></div>
+<div class="toggle-row"><div class="toggle-copy"><b>公司公告</b><small>重要公告與活動提醒</small></div><label class="switch"><input checked="" id="announcementNotify" onchange="saveSetting('announcementNotify',this.checked)" type="checkbox"/><span></span></label></div>
+<div class="toggle-row"><div class="toggle-copy"><b>薪資通知</b><small>薪資明細開放時通知</small></div><label class="switch"><input id="salaryNotify" onchange="saveSetting('salaryNotify',this.checked)" type="checkbox"/><span></span></label></div>
+</div>
+</section>
+<section class="subview" id="deviceSubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('deviceSubview')"><svg viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+<h2>裝置管理</h2>
+</div>
+<div class="card">
+<div class="info-line"><span>目前裝置</span><b>iPhone 17 Pro</b></div>
+<div class="info-line"><span>系統版本</span><b>iOS 28.0</b></div>
+<div class="info-line"><span>裝置 ID</span><b>BHR-7F8A-92C1</b></div>
+<div class="info-line"><span>首次綁定</span><b id="deviceBoundDate">2026/07/15 09:12</b></div>
+<div class="info-line"><span>單一裝置限制</span><b style="color:var(--green)">已啟用</b></div>
+<div class="info-line"><span>偽造定位</span><b style="color:var(--green)">未偵測</b></div>
+</div>
+<div class="device-actions">
+<button class="save-btn" onclick="requestDeviceChange()">申請更換裝置</button>
+<button class="danger-btn" onclick="requestDeviceUnbind()">申請解除綁定</button>
+</div>
+</section>
+<section class="subview" id="appearanceSubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('appearanceSubview')"><svg viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+<h2>外觀設定</h2>
+</div>
+<div class="card radio-list">
+<label class="radio-option"><input name="themeMode" onchange="setThemeMode('light')" type="radio" value="light"/><span><b>淺色模式</b><small style="display:block;color:var(--muted);margin-top:3px">適合明亮環境</small></span></label>
+<label class="radio-option"><input name="themeMode" onchange="setThemeMode('dark')" type="radio" value="dark"/><span><b>深色模式</b><small style="display:block;color:var(--muted);margin-top:3px">降低夜間使用亮度</small></span></label>
+<label class="radio-option"><input name="themeMode" onchange="setThemeMode('system')" type="radio" value="system"/><span><b>跟隨系統</b><small style="display:block;color:var(--muted);margin-top:3px">依裝置外觀自動切換</small></span></label>
+</div>
+</section>
+<section class="subview" id="languageSubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('languageSubview')"><svg viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+<h2>語言設定</h2>
+</div>
+<div class="card radio-list">
+<label class="radio-option"><input checked="" name="language" onchange="setLanguage(this.value)" type="radio" value="繁體中文"/><span>繁體中文</span></label>
+<label class="radio-option"><input name="language" onchange="setLanguage(this.value)" type="radio" value="简体中文"/><span>简体中文</span></label>
+<label class="radio-option"><input name="language" onchange="setLanguage(this.value)" type="radio" value="English"/><span>English</span></label>
+<label class="radio-option"><input name="language" onchange="setLanguage(this.value)" type="radio" value="日本語"/><span>日本語</span></label>
+<label class="radio-option"><input name="language" onchange="setLanguage(this.value)" type="radio" value="한국어"/><span>한국어</span></label>
+</div>
+</section>
+<section class="subview" id="aboutSubview">
+<div class="subview-head">
+<button class="back-btn" onclick="closeSubview('aboutSubview')"><svg viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+<h2>關於我們</h2>
+</div>
+<div class="card about">
+<div class="about-logo">B</div>
+<h3>BOMB HR</h3>
+<p>The Intelligent Hub for Enterprise Workforce Management.</p>
+<div class="info-line" style="margin-top:18px"><span>APP 版本</span><b>2.0.0</b></div>
+<div class="info-line"><span>前端 DEMO</span><b>V1.0</b></div>
+<div class="info-line"><span>服務狀態</span><b style="color:var(--green)">正常</b></div>
+</div>
+</section>
+<nav class="nav">
+<button class="active" data-view="homeView" onclick="switchView('homeView',this)">
+<svg viewbox="0 0 24 24"><path d="M3.7 10.8 12 4l8.3 6.8"></path><path d="M5.5 9.7v10h13v-10"></path><path d="M9.4 19.7v-6h5.2v6"></path></svg>
+<span>首頁</span>
+</button>
+<button data-view="punchView" onclick="switchView('punchView',this)">
+<svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="8.7"></circle><path d="M12 7.6v4.8l3.2 1.9"></path></svg>
+<span>打卡</span>
+</button>
+<button data-view="scheduleView" onclick="switchView('scheduleView',this)">
+<svg viewbox="0 0 24 24"><rect height="15.3" rx="2.6" width="17" x="3.5" y="5.2"></rect><path d="M7.7 3.2v4.1M16.3 3.2v4.1M3.5 9.5h17"></path><path d="M8 13.2h.01M12 13.2h.01M16 13.2h.01"></path></svg>
+<span>排班</span>
+</button>
+<button data-view="myView" onclick="switchView('myView',this)">
+<svg viewbox="0 0 24 24"><circle cx="12" cy="8.1" r="3.6"></circle><path d="M4.8 20.2c.7-4 3.2-6.1 7.2-6.1s6.5 2.1 7.2 6.1"></path></svg>
+<span>我的</span>
+</button>
+</nav>
+<input accept="image/*" class="hidden" id="galleryInput" type="file"/>
+<input accept="image/*" capture="user" class="hidden" id="cameraInput" type="file"/>
+<div class="sheet-overlay" id="avatarSheet" onclick="sheetBackdrop(event)">
+<div class="bottom-sheet">
+<div class="sheet-handle"></div>
+<h3>更換大頭照</h3>
+<p>可以從相簿選擇照片、使用手機拍照，或移除目前照片。照片會自動裁切成正方形並壓縮保存。</p>
+<button class="sheet-action" onclick="chooseGallery()">
+<svg viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="4"></rect><circle cx="8.5" cy="9" r="1.5"></circle><path d="m21 15-5-5L5 20"></path></svg>
+<span><strong>從相簿選擇</strong><small>選擇手機或電腦中的圖片</small></span>
+</button>
+<button class="sheet-action" onclick="chooseCamera()">
+<svg viewbox="0 0 24 24"><path d="M4 7h3l2-3h6l2 3h3v13H4Z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+<span><strong>使用相機拍照</strong><small>手機開啟前鏡頭拍攝大頭照</small></span>
+</button>
+<button class="sheet-action danger" onclick="removeAvatar()">
+<svg viewbox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6"></path></svg>
+<span><strong>移除目前照片</strong><small>恢復顯示姓名縮寫</small></span>
+</button>
+<button class="sheet-cancel" onclick="closeAvatarSheet()">取消</button>
+</div>
+</div>
+<div class="modal-overlay" id="leaveSuccessModal">
+<div class="result-modal">
+<div class="result-icon">✓</div>
+<h3>請假申請已送出</h3>
+<p>申請已進入簽核流程，可隨時至「申請紀錄」查看進度。</p>
+<div class="result-summary">
+<div class="info-row"><span>申請編號</span><b id="successApplicationNo"></b></div>
+<div class="info-row"><span>假別</span><b id="successLeaveType"></b></div>
+<div class="info-row"><span>申請期間</span><b id="successLeavePeriod"></b></div>
+<div class="info-row"><span>目前狀態</span><b style="color:#f59e0b">主管審核中</b></div>
+</div>
+<div class="modal-actions">
+<button class="secondary" onclick="closeLeaveSuccess()">返回申請</button>
+<button class="primary" onclick="viewSubmittedLeave()">查看申請紀錄</button>
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="leaveDetailModal">
+<div class="result-modal">
+<h3 id="detailLeaveTitle"></h3>
+<p id="detailApplicationNo"></p>
+<div class="result-summary">
+<div class="info-row"><span>申請期間</span><b id="detailLeavePeriod"></b></div>
+<div class="info-row"><span>請假合計</span><b id="detailLeaveDuration"></b></div>
+<div class="info-row"><span>代理人</span><b id="detailLeaveAgent"></b></div>
+<div class="info-row"><span>目前狀態</span><b id="detailLeaveStatus"></b></div>
+</div>
+<div class="section-line"><h3>簽核進度</h3></div>
+<div class="progress-list" id="leaveProgressList"></div>
+<div class="detail-note hidden" id="leaveRejectReason"></div>
+<button class="secondary" onclick="closeLeaveDetail()" style="margin-top:16px">關閉</button>
+</div>
+</div>
 
-  <main>
-    <section class="hero" id="home">
-      <div class="wave-grid" aria-hidden="true"></div>
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <span class="enterprise-badge">BOMB HR Enterprise</span>
-          <h1>打造企業人力資源管理的<br><span>智慧中樞</span></h1>
-          <p>
-            整合人員、流程、數據與智能分析，協助企業提升管理效率，
-            降低成本，驅動組織成長。
-          </p>
+<div class="demo-modal" id="demoModeModal">
+<div class="demo-modal-card">
+<div class="demo-modal-icon">B</div>
+<h3>歡迎使用 BOMB HR Demo</h3>
+<p>目前為展示模式，畫面中的日期、時間與月曆會自動依照你的裝置同步更新。</p>
+<div class="demo-modal-list">
+<span>即時日期與時間</span>
+<span>完整動態月份月曆</span>
+<span>相對日期打卡紀錄</span>
+<span>自動更新申請與薪資月份</span>
+</div>
+<button onclick="closeDemoMode()">我知道了</button>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+const companyModules={payroll:true,benefits:true,announcements:true,training:true,aiAssistant:false};
+let punchState=0,leaveAttachments=[];
+let activeMethod='WiFi';
+function selectMethod(method,btn){
+  activeMethod=method;
+  document.querySelectorAll('.method-card').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  const title=document.getElementById('methodPanelTitle');
+  const text=document.getElementById('methodPanelText');
+  const active=document.getElementById('activeMethodText');
+  if(method==='WiFi'){
+    title.textContent='WiFi 驗證成功';
+    text.textContent='目前已連線 BOMB_OFFICE，可進行打卡。';
+    active.textContent='WiFi + GPS';
+  }else if(method==='NFC'){
+    title.textContent='NFC 感應待命';
+    text.textContent='請將手機靠近公司 NFC 標籤，感應成功後即可打卡。';
+    active.textContent='NFC 感應';
+  }else if(method==='QR Code'){
+    title.textContent='QR Code 掃描待命';
+    text.textContent='請掃描公司現場動態 QR Code，驗證成功後即可打卡。';
+    active.textContent='QR Code';
+  }else{
+    title.textContent='GPS 定位完成';
+    text.textContent='目前距離台中總公司 15 公尺，位於允許打卡範圍內。';
+    active.textContent='手動 GPS';
+  }
+  toast('已切換至 '+method+' 驗證');
+}
 
-          <div class="hero-actions">
-            <a href="#contact" class="btn btn-primary"><span>▣</span>立即預約 Demo</a>
-            <button class="btn btn-outline" data-modal-open="videoModal"><span>▷</span>觀看產品介紹</button>
-          </div>
+function switchView(id,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===btn));
+  const view=document.getElementById(id);
+  if(view)view.scrollTop=0;
+}
+function nowTime(){return new Date().toLocaleTimeString('zh-TW',{hour12:false})}
+function tick(){
+  const d=new Date();
+  document.getElementById('heroClock').textContent=nowTime();
+  document.getElementById('punchClock').textContent=nowTime();
+  document.getElementById('statusTime').textContent=d.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const mode=document.body.classList.contains('dark')?'dark':'light';
+  localStorage.setItem('bombhr-theme',mode);
+  document.querySelector('meta[name="theme-color"]').setAttribute('content',mode==='dark'?'#07111f':'#f6f8fc');
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function punch(){
+  const core=document.getElementById('punchCore');
+  const time=nowTime().slice(0,5);
+  if(punchState===0){
+    punchState=1;
+    core.innerHTML='<div><b>下班打卡</b><small>'+nowTime()+'</small></div>';
+    document.getElementById('homeInTime').textContent=time;
+    toast(activeMethod+' 驗證完成，上班打卡成功');
+  }else if(punchState===1){
+    punchState=2;
+    core.innerHTML='<div><b>今日完成</b><small>'+nowTime()+'</small></div>';
+    core.disabled=true;
+    core.style.opacity='.68';
+    document.getElementById('homeOutTime').textContent=time;
+    toast(activeMethod+' 驗證完成，下班打卡成功');
+  }
+}
 
-          <div class="kpi-row">
-            <div class="kpi">
-              <i>▦</i>
-              <div><strong>500+</strong><span>企業客戶</span></div>
-            </div>
-            <div class="kpi">
-              <i>♙</i>
-              <div><strong>50,000+</strong><span>使用人數</span></div>
-            </div>
-            <div class="kpi">
-              <i>⌁</i>
-              <div><strong class="accent">98%</strong><span>客戶滿意度</span></div>
-            </div>
-            <div class="kpi">
-              <i>◇</i>
-              <div><strong>ISO 27001</strong><span>資安認證</span></div>
-            </div>
-          </div>
-        </div>
+function openAvatarSheet(){
+  document.getElementById('avatarSheet').classList.add('show');
+}
+function closeAvatarSheet(){
+  document.getElementById('avatarSheet').classList.remove('show');
+}
+function sheetBackdrop(event){
+  if(event.target.id==='avatarSheet') closeAvatarSheet();
+}
+function chooseGallery(){
+  closeAvatarSheet();
+  document.getElementById('galleryInput').click();
+}
+function chooseCamera(){
+  closeAvatarSheet();
+  document.getElementById('cameraInput').click();
+}
+function processAvatarFile(file){
+  if(!file) return;
 
-        <div class="device-stage">
-          <div class="glow glow-a"></div>
-          <div class="glow glow-b"></div>
+  if(!file.type || !file.type.startsWith('image/')){
+    toast('請選擇 JPG、PNG 或其他圖片檔案');
+    return;
+  }
 
-          <div class="laptop">
-            <div class="laptop-screen">
-              <div class="app-shell">
-                <aside class="app-sidebar">
-                  <div class="app-logo">A</div>
-                  <span class="active">⌂</span><span>♙</span><span>◎</span><span>▦</span><span>◫</span><span>⚙</span>
-                </aside>
-                <section class="app-main">
-                  <div class="app-head">
-                    <div><small>歡迎回來，王小明！</small><b>企業營運總覽</b></div>
-                    <div class="mini-profile">王</div>
-                  </div>
-                  <div class="mini-stats">
-                    <div><span>出勤率</span><b>96.5%</b><i class="blue"></i></div>
-                    <div><span>在職人數</span><b>1,248</b><i class="violet"></i></div>
-                    <div><span>待辦任務</span><b class="danger">32</b><i class="orange"></i></div>
-                    <div><span>本月工時</span><b>1,962</b><i class="cyan"></i></div>
-                  </div>
-                  <div class="dashboard-grid">
-                    <div class="chart-panel">
-                      <div class="panel-title">人員趨勢</div>
-                      <div class="bar-chart">
-                        <i style="height:34%"></i><i style="height:43%"></i><i style="height:55%"></i>
-                        <i style="height:68%"></i><i style="height:72%"></i><i style="height:84%"></i>
-                      </div>
-                    </div>
-                    <div class="donut-panel">
-                      <div class="panel-title">員工結構</div>
-                      <div class="donut"></div>
-                    </div>
-                  </div>
-                  <div class="task-panel">
-                    <div class="panel-title">待處理事項</div>
-                    <p>◉ 變更組織職務資料</p>
-                    <p>◉ 完成月度出勤核對</p>
-                    <p>◉ 審核新人到職文件</p>
-                  </div>
-                </section>
-              </div>
-            </div>
-            <div class="laptop-base"></div>
-          </div>
+  if(file.size > 15 * 1024 * 1024){
+    toast('原始圖片請勿超過 15MB');
+    return;
+  }
 
-          <div class="tablet">
-            <div class="tablet-screen">
-              <div class="tablet-head">功能總覽</div>
-              <div class="tablet-grid">
-                <span>▦<b>組織管理</b></span><span>♙<b>人事管理</b></span>
-                <span>◫<b>出勤管理</b></span><span>◎<b>薪資管理</b></span>
-                <span>⌁<b>績效管理</b></span><span>•••<b>更多功能</b></span>
-              </div>
-            </div>
-          </div>
+  const reader = new FileReader();
 
-          <div class="phone">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="phone-user"><span>王</span><b>王小明</b><small>人資部／經理</small></div>
-              <div class="phone-grid">
-                <span>⌁<b>打卡</b></span><span>◫<b>請假</b></span>
-                <span>▣<b>薪資單</b></span><span>♧<b>福利</b></span>
-              </div>
-            </div>
-          </div>
+  reader.onerror = function(){
+    toast('照片讀取失敗，請重新選擇');
+  };
 
-          <div class="reflection"></div>
-        </div>
+  reader.onload = function(event){
+    const sourceImage = new Image();
+
+    sourceImage.onerror = function(){
+      toast('照片格式無法讀取，請更換圖片');
+    };
+
+    sourceImage.onload = function(){
+      try{
+        const outputSize = 512;
+        const canvas = document.createElement('canvas');
+        canvas.width = outputSize;
+        canvas.height = outputSize;
+
+        const context = canvas.getContext('2d');
+        if(!context){
+          toast('瀏覽器不支援圖片處理');
+          return;
+        }
+
+        const sourceWidth = sourceImage.naturalWidth || sourceImage.width;
+        const sourceHeight = sourceImage.naturalHeight || sourceImage.height;
+        const cropSize = Math.min(sourceWidth, sourceHeight);
+        const sourceX = (sourceWidth - cropSize) / 2;
+        const sourceY = (sourceHeight - cropSize) / 2;
+
+        context.clearRect(0, 0, outputSize, outputSize);
+        context.drawImage(
+          sourceImage,
+          sourceX,
+          sourceY,
+          cropSize,
+          cropSize,
+          0,
+          0,
+          outputSize,
+          outputSize
+        );
+
+        const compressedData = canvas.toDataURL('image/jpeg', 0.82);
+
+        // Render first so the user immediately sees the result.
+        renderAvatar(compressedData);
+
+        try{
+          localStorage.setItem('bombhr-avatar', compressedData);
+          toast('大頭照已更新並儲存');
+        }catch(storageError){
+          // Some private browsers or full storage may reject LocalStorage.
+          toast('照片已顯示，但瀏覽器無法保存；重新整理後可能消失');
+        }
+      }catch(error){
+        console.error(error);
+        toast('照片處理失敗，請重新選擇');
+      }
+    };
+
+    sourceImage.src = event.target.result;
+  };
+
+  reader.readAsDataURL(file);
+}
+function renderAvatar(data){
+  const img = document.getElementById('avatarImage');
+  const initial = document.getElementById('avatarInitial');
+
+  if(!img || !initial) return;
+
+  if(data){
+    img.onload = function(){
+      img.classList.remove('hidden');
+      initial.classList.add('hidden');
+    };
+    img.onerror = function(){
+      img.classList.add('hidden');
+      initial.classList.remove('hidden');
+      toast('大頭照載入失敗');
+    };
+    img.src = data;
+
+    // Cached images may already be complete before onload runs.
+    if(img.complete && img.naturalWidth > 0){
+      img.classList.remove('hidden');
+      initial.classList.add('hidden');
+    }
+  }else{
+    img.removeAttribute('src');
+    img.classList.add('hidden');
+    initial.classList.remove('hidden');
+  }
+}
+function removeAvatar(){
+  localStorage.removeItem('bombhr-avatar');
+  renderAvatar('');
+  closeAvatarSheet();
+  toast('大頭照已移除');
+}
+document.getElementById('galleryInput').addEventListener('change',function(){
+  processAvatarFile(this.files[0]);
+  this.value='';
+});
+document.getElementById('cameraInput').addEventListener('change',function(){
+  processAvatarFile(this.files[0]);
+  this.value='';
+});
+renderAvatar(localStorage.getItem('bombhr-avatar')||'');
+
+
+function openSubview(id){
+  document.getElementById(id).classList.add('active');
+}
+function closeSubview(id){
+  document.getElementById(id).classList.remove('active');
+}
+function saveProfile(){
+  const data={
+    phone:document.getElementById('profilePhone').value.trim(),
+    email:document.getElementById('profileEmail').value.trim(),
+    emergency:document.getElementById('profileEmergency').value.trim(),
+    emergencyPhone:document.getElementById('profileEmergencyPhone').value.trim()
+  };
+  localStorage.setItem('bombhr-profile-contact',JSON.stringify(data));
+  toast('聯絡資料已儲存');
+}
+function requestHRChange(){
+  toast('人事資料變更申請已送出，等待 HR 審核');
+}
+function changePassword(){
+  const current=document.getElementById('currentPassword').value;
+  const next=document.getElementById('newPassword').value;
+  const confirm=document.getElementById('confirmPassword').value;
+  if(!current||!next||!confirm){toast('請完整填寫密碼欄位');return}
+  if(next.length<8){toast('新密碼至少需要 8 個字元');return}
+  if(next!==confirm){toast('兩次輸入的新密碼不同');return}
+  document.getElementById('currentPassword').value='';
+  document.getElementById('newPassword').value='';
+  document.getElementById('confirmPassword').value='';
+  toast('密碼已更新');
+}
+function saveSetting(key,value){
+  localStorage.setItem('bombhr-'+key,String(value));
+  toast('設定已儲存');
+}
+function requestDeviceChange(){toast('換機申請已送出，等待 HR 核准')}
+function requestDeviceUnbind(){toast('解除綁定申請已送出')}
+function setThemeMode(mode){
+  localStorage.setItem('bombhr-theme-mode',mode);
+  if(mode==='system'){
+    const dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.body.classList.toggle('dark',dark);
+  }else{
+    document.body.classList.toggle('dark',mode==='dark');
+  }
+  document.getElementById('themeLabel').textContent=mode==='dark'?'深色':mode==='light'?'淺色':'跟隨系統';
+  toast('外觀設定已更新');
+}
+function setLanguage(language){
+  localStorage.setItem('bombhr-language',language);
+  document.getElementById('languageLabel').textContent=language;
+  toast('語言已切換為 '+language);
+}
+function loadMySettings(){
+  const profileRaw=localStorage.getItem('bombhr-profile-contact');
+  if(profileRaw){
+    try{
+      const p=JSON.parse(profileRaw);
+      document.getElementById('profilePhone').value=p.phone||'';
+      document.getElementById('profileEmail').value=p.email||'';
+      document.getElementById('profileEmergency').value=p.emergency||'';
+      document.getElementById('profileEmergencyPhone').value=p.emergencyPhone||'';
+    }catch(e){}
+  }
+  const keys=['biometric','newDevice','clockNotify','scheduleNotify','leaveNotify','announcementNotify','salaryNotify'];
+  keys.forEach(k=>{
+    const el=document.getElementById(k==='biometric'?'biometricToggle':k==='newDevice'?'newDeviceToggle':k);
+    const saved=localStorage.getItem('bombhr-'+k);
+    if(el&&saved!==null)el.checked=saved==='true';
+  });
+  const mode=localStorage.getItem('bombhr-theme-mode')||'dark';
+  const modeRadio=document.querySelector('input[name="themeMode"][value="'+mode+'"]');
+  if(modeRadio)modeRadio.checked=true;
+  document.getElementById('themeLabel').textContent=mode==='dark'?'深色':mode==='light'?'淺色':'跟隨系統';
+
+  const language=localStorage.getItem('bombhr-language')||'繁體中文';
+  const languageRadio=document.querySelector('input[name="language"][value="'+language+'"]');
+  if(languageRadio)languageRadio.checked=true;
+  document.getElementById('languageLabel').textContent=language;
+}
+
+
+
+
+
+function initModules(){document.querySelectorAll('[data-module]').forEach(el=>el.classList.toggle('hidden',!companyModules[el.dataset.module]))}
+function calcLeave(){const s=new Date(document.getElementById('leaveStartDate').value+'T'+document.getElementById('leaveStartTime').value),e=new Date(document.getElementById('leaveEndDate').value+'T'+document.getElementById('leaveEndTime').value);if(isNaN(s)||isNaN(e)||e<=s){document.getElementById('leaveDuration').textContent='請確認日期時間';return}const hrs=(e-s)/36e5,days=Math.ceil(hrs/24);document.getElementById('leaveDuration').textContent=days+' 天／'+(days*8)+' 小時'}
+['leaveStartDate','leaveStartTime','leaveEndDate','leaveEndTime'].forEach(id=>document.getElementById(id).addEventListener('change',calcLeave));
+document.getElementById('leaveFiles').addEventListener('change',function(){[...this.files].forEach(f=>leaveAttachments.push(f));renderFiles();this.value=''});
+function renderFiles(){const box=document.getElementById('leaveFileList');box.innerHTML='';leaveAttachments.forEach((f,i)=>{const row=document.createElement('div');row.className='file-item';row.innerHTML='<b>'+f.name+'（'+Math.ceil(f.size/1024)+'KB）</b><button onclick="removeFile('+i+')">移除</button>';box.appendChild(row)})}
+function removeFile(i){leaveAttachments.splice(i,1);renderFiles()}
+function submitLeave(){
+  const reason=document.getElementById('leaveReason').value.trim();
+  if(!reason){toast('請填寫請假原因');document.getElementById('leaveReason').focus();return}
+
+  const type=document.getElementById('leaveType').value;
+  const startDate=document.getElementById('leaveStartDate').value;
+  const endDate=document.getElementById('leaveEndDate').value;
+  const agent=document.getElementById('leaveAgent').value || '未指定';
+  const duration=document.getElementById('leaveDuration').textContent;
+  const applicationNo='LV'+Date.now().toString().slice(-12);
+
+  leaveApplications.unshift({
+    id:applicationNo,type,start:startDate,end:endDate,duration,agent,reason,
+    status:'review',statusText:'主管審核中',
+    submitted:new Date().toLocaleString('zh-TW',{hour12:false}),
+    rejectReason:''
+  });
+
+  saveLeaveApplications();
+  renderLeaveApplications();
+  document.getElementById('successApplicationNo').textContent=applicationNo;
+  document.getElementById('successLeaveType').textContent=type;
+  document.getElementById('successLeavePeriod').textContent=startDate.replaceAll('-','/')+'–'+endDate.replaceAll('-','/');
+  document.getElementById('leaveSuccessModal').classList.add('show');
+}
+function calcOT(){const s=document.getElementById('otStart').value,e=document.getElementById('otEnd').value;if(!s||!e)return;const [sh,sm]=s.split(':').map(Number),[eh,em]=e.split(':').map(Number);let m=eh*60+em-(sh*60+sm);if(m<0)m+=1440;document.getElementById('otHours').textContent=(m/60).toFixed(1).replace('.0','')+' 小時'}
+['otStart','otEnd'].forEach(id=>document.getElementById(id).addEventListener('change',calcOT));
+function submitOvertime(){toast('加班申請已送出，等待主管審核');closeSubview('overtimeSubview')}
+
+let leaveApplications=[
+  {id:'LV202607150001',type:'旅遊假',start:'2026-07-20',end:'2026-07-22',duration:'3 天／24 小時',agent:'王小明',reason:'家庭旅遊',status:'review',statusText:'主管審核中',submitted:'2026/07/15 10:30',rejectReason:''},
+  {id:'LV202607080014',type:'病假',start:'2026-07-09',end:'2026-07-09',duration:'1 天／8 小時',agent:'陳怡君',reason:'身體不適',status:'approved',statusText:'已核准',submitted:'2026/07/08 19:24',rejectReason:''},
+  {id:'LV202607020006',type:'事假',start:'2026-07-03',end:'2026-07-03',duration:'0.5 天／4 小時',agent:'林志豪',reason:'私人事務',status:'rejected',statusText:'已退回',submitted:'2026/07/02 16:05',rejectReason:'附件資料不足，請補充說明後重新送出。'}
+];
+
+function loadLeaveApplications(){
+  const saved=localStorage.getItem('bombhr-leave-applications');
+  if(saved){try{leaveApplications=JSON.parse(saved)}catch(e){}}
+}
+function saveLeaveApplications(){localStorage.setItem('bombhr-leave-applications',JSON.stringify(leaveApplications))}
+function switchLeavePane(id,button){
+  document.querySelectorAll('#leaveSubview .leave-pane').forEach(p=>p.classList.toggle('active',p.id===id));
+  document.querySelectorAll('#leaveSubview .apply-tab').forEach(t=>t.classList.toggle('active',t===button));
+  if(id==='leaveRecordPane')renderLeaveApplications();
+}
+function statusClass(status){return status==='approved'?'status-approved':status==='rejected'?'status-rejected':'status-review'}
+function renderLeaveApplications(){
+  const list=document.getElementById('leaveApplicationList');
+  if(!list)return;
+  list.innerHTML=leaveApplications.map((item,index)=>`
+    <button class="application-card" onclick="openLeaveDetail(${index})">
+      <div class="application-head">
+        <div><b>${item.type}申請</b><small>${item.id}・${item.submitted}</small></div>
+        <span class="status-badge ${statusClass(item.status)}">${item.statusText}</span>
       </div>
-    </section>
-
-    <section class="feature-band" id="features">
-      <div class="container feature-grid">
-        <article class="feature-card"><div class="icon-box">♙</div><div><h3>組織管理</h3><p><b>多公司、多部門、職位</b>主管代理與員工層級架構管理。</p></div><span>›</span></article>
-        <article class="feature-card"><div class="icon-box">♙</div><div><h3>人事管理</h3><p>員工主檔、任職資料、異動、離職、復職與完整身分資料。</p></div><span>›</span></article>
-        <article class="feature-card"><div class="icon-box">◇</div><div><h3>身份與安全</h3><p><b>裝置綁定</b>、生物辨識、GPS、Wi-Fi、NFC、動態 QR 與風險偵測。</p></div><span>›</span></article>
-        <article class="feature-card"><div class="icon-box">▣</div><div><h3>出勤管理</h3><p>上下班、外出、外勤、離線打卡、異常判定與自動關帳。</p></div><span>›</span></article>
-        <article class="feature-card"><div class="icon-box">⌘</div><div><h3>排班管理</h3><p><b>班別、預排偏好</b>、自動排班、換班與發布異動管理。</p></div><span>›</span></article>
-        <article class="feature-card"><div class="icon-box">◫</div><div><h3>假勤與加班</h3><p><b>假別額度</b>、請假、補卡、補休與加班申請及成本控管。</p></div><span>›</span></article>
-        <article class="feature-card"><div class="icon-box">◎</div><div><h3>薪資管理</h3><p><b>薪資編輯</b>、公式、版本、試算、調整、關帳與薪資單。</p></div><span>›</span></article>
-        <article class="feature-card"><div class="icon-box">♧</div><div><h3>人才發展</h3><p><b>教育訓練</b>、技能矩陣、績效、人才盤點與招募管理。</p></div><span>›</span></article>
+      <div class="application-meta">
+        <div><span>申請期間</span><strong>${item.start.replaceAll('-','/')}–${item.end.replaceAll('-','/')}</strong></div>
+        <div><span>請假合計</span><strong>${item.duration}</strong></div>
       </div>
-    </section>
+    </button>`).join('');
+}
+function closeLeaveSuccess(){document.getElementById('leaveSuccessModal').classList.remove('show')}
+function viewSubmittedLeave(){
+  closeLeaveSuccess();
+  switchLeavePane('leaveRecordPane',document.querySelector('#leaveSubview .apply-tab:nth-child(2)'));
+}
+function openLeaveDetail(index){
+  const item=leaveApplications[index];
+  document.getElementById('detailLeaveTitle').textContent=item.type+'申請';
+  document.getElementById('detailApplicationNo').textContent='申請編號：'+item.id;
+  document.getElementById('detailLeavePeriod').textContent=item.start.replaceAll('-','/')+'–'+item.end.replaceAll('-','/');
+  document.getElementById('detailLeaveDuration').textContent=item.duration;
+  document.getElementById('detailLeaveAgent').textContent=item.agent || '未指定';
+  const status=document.getElementById('detailLeaveStatus');
+  status.textContent=item.statusText;
+  status.style.color=item.status==='approved'?'var(--green)':item.status==='rejected'?'var(--red)':'#f59e0b';
 
-    <section class="app-download-section" id="app-download">
-      <div class="container app-download-grid">
-        <div class="app-download-copy">
-          <span class="section-kicker">BOMB HR EMPLOYEE APP</span>
-          <h2>工作所需，一支手機就能完成。</h2>
-          <p>員工可隨時處理打卡、班表、請假、加班、補卡、公告與個人服務。支援裝置綁定與位置驗證，讓日常人資流程更安全、更直覺。</p>
-          <div class="app-capabilities">
-            <span>✓ 裝置綁定與定位打卡</span><span>✓ 班表與營運月曆</span>
-            <span>✓ 請假、加班與補卡</span><span>✓ 深色／淺色模式</span>
-          </div>
-          <div class="app-download-actions">
-            <a class="btn btn-primary" href="app/?install=1">安裝 Employee Web App</a>
-            <a class="btn btn-outline" href="app/">立即體驗 Demo</a>
-          </div>
-          <div class="store-row" aria-label="行動應用程式商店狀態">
-            <button class="store-badge" type="button" data-coming-soon="App Store"><i>●</i><span><small>Download on the</small><b>App Store</b></span><em>即將推出</em></button>
-            <button class="store-badge" type="button" data-coming-soon="Google Play"><i>▶</i><span><small>GET IT ON</small><b>Google Play</b></span><em>即將推出</em></button>
-          </div>
-          <p class="install-note">目前可安裝 Web App 版本；iOS 與 Android 商店版將於正式上架後開放。</p>
-        </div>
-        <div class="app-download-visual">
-          <div class="app-visual-glow"></div>
-          <img src="assets/employee-app-showcase.png" alt="BOMB HR Employee App 手機介面展示" loading="lazy">
-          <div class="app-status-card"><span>●</span><div><b>Employee App Demo</b><small>可安裝・支援手機與桌面</small></div></div>
-        </div>
+  const progress=document.getElementById('leaveProgressList');
+  if(item.status==='approved'){
+    progress.innerHTML='<div class="progress-step done"><div class="progress-dot">✓</div><div class="progress-copy"><b>申請已送出</b><small>'+item.submitted+'</small></div></div><div class="progress-step done"><div class="progress-dot">✓</div><div class="progress-copy"><b>主管已核准</b><small>2026/07/08 20:10</small></div></div><div class="progress-step done"><div class="progress-dot">✓</div><div class="progress-copy"><b>HR 已完成登錄</b><small>2026/07/09 08:42</small></div></div>';
+  }else if(item.status==='rejected'){
+    progress.innerHTML='<div class="progress-step done"><div class="progress-dot">✓</div><div class="progress-copy"><b>申請已送出</b><small>'+item.submitted+'</small></div></div><div class="progress-step current"><div class="progress-dot">!</div><div class="progress-copy"><b>主管退回申請</b><small>請依退回原因修正後重新送出</small></div></div>';
+  }else{
+    progress.innerHTML='<div class="progress-step done"><div class="progress-dot">✓</div><div class="progress-copy"><b>申請已送出</b><small>'+item.submitted+'</small></div></div><div class="progress-step current"><div class="progress-dot">2</div><div class="progress-copy"><b>主管審核中</b><small>等待直屬主管處理</small></div></div><div class="progress-step"><div class="progress-dot">3</div><div class="progress-copy"><b>HR 登錄</b><small>主管核准後自動進入下一關</small></div></div>';
+  }
+
+  const reject=document.getElementById('leaveRejectReason');
+  reject.classList.toggle('hidden',!item.rejectReason);
+  reject.textContent=item.rejectReason?'退回原因：'+item.rejectReason:'';
+  document.getElementById('leaveDetailModal').classList.add('show');
+}
+function closeLeaveDetail(){document.getElementById('leaveDetailModal').classList.remove('show')}
+
+
+/* ===== Smart Demo Date & Time V1.0.3 ===== */
+const zhWeeks=['日','一','二','三','四','五','六'];
+let calendarCursor=new Date();
+calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1);
+let selectedCalendarDate=new Date();
+
+function pad2(value){return String(value).padStart(2,'0')}
+function formatSlashDate(date){
+  return date.getFullYear()+'/'+pad2(date.getMonth()+1)+'/'+pad2(date.getDate());
+}
+function formatZhDate(date,withWeek=true){
+  return date.getFullYear()+' 年 '+(date.getMonth()+1)+' 月 '+date.getDate()+' 日'+
+    (withWeek?'（'+zhWeeks[date.getDay()]+'）':'');
+}
+function formatTime(date,seconds=true){
+  return pad2(date.getHours())+':'+pad2(date.getMinutes())+(seconds?':'+pad2(date.getSeconds()):'');
+}
+function greetingForHour(hour){
+  if(hour<5)return '夜深了';
+  if(hour<11)return '早安';
+  if(hour<14)return '午安';
+  if(hour<18)return '下午好';
+  return '晚安';
+}
+function addDays(date,days){
+  const copy=new Date(date);
+  copy.setDate(copy.getDate()+days);
+  return copy;
+}
+function monthNameOffset(offset){
+  const date=new Date();
+  date.setMonth(date.getMonth()+offset);
+  return date.getFullYear()+' 年 '+(date.getMonth()+1)+' 月';
+}
+
+function updateLiveDateTime(){
+  const now=new Date();
+  const status=document.getElementById('statusTime');
+  const hero=document.getElementById('heroClock');
+  const punch=document.getElementById('punchClock');
+  const homeDate=document.getElementById('homeTodayDate');
+  const punchDate=document.getElementById('punchTodayDate');
+  const greeting=document.getElementById('dynamicGreeting');
+
+  if(status)status.textContent=formatTime(now,false);
+  if(hero)hero.textContent=formatTime(now,true);
+  if(punch)punch.textContent=formatTime(now,true);
+  if(homeDate)homeDate.textContent=formatZhDate(now,true);
+  if(punchDate)punchDate.textContent=formatZhDate(now,false);
+  if(greeting)greeting.textContent=greetingForHour(now.getHours())+'，Vika 👋';
+}
+
+function buildAttendanceRecords(){
+  const container=document.getElementById('dynamicMonthRecords');
+  const title=document.getElementById('recordMonthTitle');
+  if(!container)return;
+
+  const now=new Date();
+  if(title)title.textContent=now.getFullYear()+' 年 '+(now.getMonth()+1)+' 月打卡明細';
+
+  const samples=[
+    {offset:0,time:'08:28:06',method:'NFC 感應',cls:'method-nfc',action:'完成上班打卡',place:'台中總公司・一樓員工入口'},
+    {offset:0,time:'18:02:16',method:'NFC 感應',cls:'method-nfc',action:'完成下班打卡',place:'台中總公司・一樓員工入口'},
+    {offset:-1,time:'08:36:33',method:'審核補卡',cls:'method-manual',action:'完成上班打卡',place:'補卡申請已由主管核准'},
+    {offset:-1,time:'18:05:41',method:'WiFi 驗證',cls:'method-wifi',action:'完成下班打卡',place:'BOMB_OFFICE'},
+    {offset:-2,time:'08:55:12',method:'QR Code',cls:'method-qr',action:'完成上班打卡',place:'台中總公司・動態 QR Code'},
+    {offset:-2,time:'18:01:02',method:'手動 GPS',cls:'method-gps',action:'完成下班打卡',place:'距離公司 12 公尺・位置驗證通過'}
+  ];
+
+  container.innerHTML=samples.map(item=>{
+    const date=addDays(now,item.offset);
+    return `<div class="record-item">
+      <div class="record-date">${formatSlashDate(date)}<br>星期${zhWeeks[date.getDay()]}</div>
+      <div class="record-main">
+        <div class="record-time">${item.time}</div>
+        <div class="record-desc"><span class="method-label ${item.cls}">${item.method}</span>${item.action}</div>
+        <div class="record-type">${item.place}</div>
       </div>
-    </section>
+    </div>`;
+  }).join('');
+}
 
-    <section class="security-section" id="solutions">
-      <div class="container security-grid">
-        <div class="server-visual">
-          <div class="server-rack rack-a"></div>
-          <div class="server-rack rack-b"></div>
-          <div class="server-rack rack-c"></div>
-          <div class="server-rack rack-d"></div>
-          <div class="shield">
-            <div class="shield-inner">▣</div>
-          </div>
-          <div class="security-floor"></div>
-        </div>
+function renderCalendar(){
+  const grid=document.getElementById('dynamicCalendar');
+  const title=document.getElementById('calendarMonthTitle');
+  if(!grid)return;
 
-        <div class="security-copy">
-          <span class="section-kicker">SECURITY & INFRASTRUCTURE</span>
-          <h2>企業級基礎架構與安全防護</h2>
-          <p>採用高可用性架構與多層資安防護機制，確保企業資料安全無虞。</p>
+  const year=calendarCursor.getFullYear();
+  const month=calendarCursor.getMonth();
+  if(title)title.textContent=year+' 年 '+(month+1)+' 月';
 
-          <div class="security-list">
-            <div><i>⌁</i><b>高可用架構</b><span>99.9% 系統可用性</span></div>
-            <div><i>▣</i><b>資料加密</b><span>AES-256 加密技術</span></div>
-            <div><i>☁</i><b>多地備援</b><span>異地備援與自動備份</span></div>
-            <div><i>♙</i><b>權限控管</b><span>細緻化權限管理</span></div>
-            <div><i>◎</i><b>稽核追蹤</b><span>完整操作紀錄</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const prevDays=new Date(year,month,0).getDate();
+  const today=new Date();
 
-    <section class="detail-section" id="pricing">
-      <div class="container">
-        <div class="section-heading">
-          <span class="section-kicker">FLEXIBLE PLANS</span>
-          <h2>依企業規模與需求彈性導入</h2>
-          <p>從核心人事、出勤到完整人才管理，採模組化方式規劃最合適的方案。</p>
-        </div>
+  let html='<b>日</b><b>一</b><b>二</b><b>三</b><b>四</b><b>五</b><b>六</b>';
 
-        <div class="pricing-grid">
-          <article class="price-card">
-            <span>CORE</span><h3>核心人事版</h3><p>適合建立一致人事資料與組織管理流程。</p>
-            <ul><li>組織與員工主檔</li><li>權限與簽核流程</li><li>員工自助服務</li></ul>
-            <a href="#contact" class="btn btn-outline full">洽詢方案</a>
-          </article>
-          <article class="price-card featured">
-            <div class="popular">企業推薦</div>
-            <span>ENTERPRISE</span><h3>企業整合版</h3><p>整合人事、出勤、薪酬與人才發展的完整平台。</p>
-            <ul><li>完整 HRM 模組</li><li>多公司多據點管理</li><li>API 與企業系統整合</li></ul>
-            <a href="#contact" class="btn btn-primary full">預約 Demo</a>
-          </article>
-          <article class="price-card">
-            <span>CUSTOM</span><h3>客製專案版</h3><p>針對複雜組織、特殊流程與大型系統整合需求。</p>
-            <ul><li>專屬導入顧問</li><li>客製流程與報表</li><li>進階資安與部署選項</li></ul>
-            <a href="#contact" class="btn btn-outline full">聯絡顧問</a>
-          </article>
-        </div>
-      </div>
-    </section>
+  for(let i=firstDay-1;i>=0;i--){
+    html+=`<span class="day muted-day">${prevDays-i}</span>`;
+  }
 
-    <section class="about-section" id="about">
-      <div class="container about-grid">
-        <div class="about-copy">
-          <span class="section-kicker">ABOUT BOMB HR</span>
-          <h2>讓人力資源管理，成為企業成長引擎。</h2>
-          <p>BOMB HR 以打造企業智慧人力資源管理平台為核心，透過統一資料、流程自動化與即時分析，協助管理團隊掌握組織脈動。</p>
-          <div class="about-points">
-            <span>✓ 企業級 SaaS 架構</span>
-            <span>✓ 模組化彈性導入</span>
-            <span>✓ 支援多公司與多據點</span>
-            <span>✓ 完整權限與稽核機制</span>
-          </div>
-        </div>
-        <div class="about-dashboard">
-          <div class="data-card big"><small>Workforce Intelligence</small><strong>即時掌握組織人力</strong><div class="line-chart"></div></div>
-          <div class="data-card"><small>Automation</small><strong>流程自動化</strong><b>3.2×</b></div>
-          <div class="data-card"><small>Experience</small><strong>員工體驗</strong><b>98%</b></div>
-        </div>
-      </div>
-    </section>
+  for(let day=1;day<=daysInMonth;day++){
+    const date=new Date(year,month,day);
+    const isToday=date.toDateString()===today.toDateString();
+    const isSelected=date.toDateString()===selectedCalendarDate.toDateString();
+    const isWorkday=date.getDay()!==0&&date.getDay()!==6;
+    const classes=['day'];
+    if(isWorkday)classes.push('shift');
+    if(isToday)classes.push('today');
+    if(isSelected)classes.push('selected-day');
+    html+=`<button class="${classes.join(' ')}" onclick="selectCalendarDate('${year}-${pad2(month+1)}-${pad2(day)}',this)">${day}</button>`;
+  }
 
-    <section class="contact-section" id="contact">
-      <div class="container contact-box">
-        <div>
-          <span class="section-kicker">BOOK A DEMO</span>
-          <h2>準備好打造企業人力資源管理的智慧中樞了嗎？</h2>
-          <p>留下聯絡資訊，我們將依企業規模與需求安排產品展示與導入建議。</p>
-        </div>
-        <form id="demoForm">
-          <input required name="company" placeholder="公司名稱" />
-          <input required name="name" placeholder="聯絡人姓名" />
-          <input required type="email" name="email" placeholder="公司 Email" />
-          <button class="btn btn-primary" type="submit">送出預約需求</button>
-        </form>
-      </div>
-    </section>
-  </main>
+  const totalCells=firstDay+daysInMonth;
+  const trailing=(7-(totalCells%7))%7;
+  for(let day=1;day<=trailing;day++){
+    html+=`<span class="day muted-day">${day}</span>`;
+  }
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <img src="assets/bombhr-logo.png" alt="BOMB HR" />
-        <p>The Intelligent Hub for Enterprise Workforce Management.</p>
-      </div>
-      <div><h4>產品</h4><a href="products.html">功能模組</a><a href="#app-download">下載 Employee App</a><a href="solutions.html">解決方案</a><a href="pricing.html">方案價格</a>
-        <a href="case-studies.html">成功案例</a></div>
-      <div><h4>企業</h4><a href="#about">關於我們</a><a href="#contact">預約 Demo</a><a href="#contact">聯絡我們</a></div>
-      <div><h4>法務</h4><a href="#">隱私權政策</a><a href="#">服務條款</a><a href="#">資訊安全</a></div>
-    </div>
-    <div class="container copyright">© <span id="year"></span> BOMB HR. All rights reserved.</div>
-  </footer>
+  grid.innerHTML=html;
+}
 
-  <div class="modal" id="videoModal" aria-hidden="true">
-    <div class="modal-backdrop" data-modal-close></div>
-    <div class="modal-card">
-      <button class="modal-close" data-modal-close>×</button>
-      <div class="video-placeholder">
-        <div class="play">▶</div>
-        <h3>BOMB HR 產品介紹</h3>
-        <p>此區可替換為正式產品影片或 YouTube／Vimeo 連結。</p>
-      </div>
-    </div>
-  </div>
+function changeCalendarMonth(delta){
+  calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+delta,1);
+  renderCalendar();
+}
 
-  <div class="toast" id="toast">預約需求已送出，我們將盡快與你聯絡。</div>
+function selectCalendarDate(dateString,button){
+  selectedCalendarDate=new Date(dateString+'T12:00:00');
+  document.querySelectorAll('#dynamicCalendar button.day').forEach(el=>el.classList.remove('selected-day'));
+  if(button)button.classList.add('selected-day');
 
-  <div class="floating-contact" aria-label="快速聯絡">
-    <a href="contact.html#line" class="float-line" aria-label="官方 LINE">LINE</a>
-    <a href="contact.html#contactForm" class="float-demo" aria-label="預約 Demo">Demo</a>
-  </div>
-  <script src="app.js?v=1.0.2"></script>
+  const badge=document.getElementById('selectedShiftBadge');
+  const title=document.getElementById('selectedShiftTitle');
+  const meta=document.getElementById('selectedShiftMeta');
+  const selected=document.getElementById('selectedDateText');
+  if(selected)selected.textContent=formatZhDate(selectedCalendarDate,true);
+
+  const isWorkday=selectedCalendarDate.getDay()!==0&&selectedCalendarDate.getDay()!==6;
+  if(isWorkday){
+    if(badge)badge.textContent='一般班';
+    if(title)title.textContent='一般班 09:00–18:00';
+    if(meta)meta.textContent='台中總公司・休息 12:00–13:00';
+  }else{
+    if(badge)badge.textContent='休假日';
+    if(title)title.textContent='今日無排定班別';
+    if(meta)meta.textContent='如有臨時排班，將由主管另行通知';
+  }
+}
+
+function updateDynamicBusinessDates(){
+  const now=new Date();
+  const salary=document.getElementById('salaryMonthLabel');
+  if(salary)salary.textContent=monthNameOffset(-1)+'實領';
+
+  const bound=document.getElementById('deviceBoundDate');
+  if(bound){
+    const boundDate=addDays(now,-30);
+    bound.textContent=formatSlashDate(boundDate)+' 09:12';
+  }
+
+  const leaveStart=document.getElementById('leaveStartDate');
+  const leaveEnd=document.getElementById('leaveEndDate');
+  if(leaveStart&&leaveEnd&&!leaveStart.dataset.dynamicInitialized){
+    const start=addDays(now,5);
+    const end=addDays(now,7);
+    leaveStart.value=start.getFullYear()+'-'+pad2(start.getMonth()+1)+'-'+pad2(start.getDate());
+    leaveEnd.value=end.getFullYear()+'-'+pad2(end.getMonth()+1)+'-'+pad2(end.getDate());
+    leaveStart.dataset.dynamicInitialized='1';
+    if(typeof calcLeave==='function')calcLeave();
+  }
+}
+
+function closeDemoMode(){
+  document.getElementById('demoModeModal')?.classList.remove('show');
+  localStorage.setItem('bombhr-demo-intro-seen','true');
+}
+function showDemoModeOnce(){
+  if(localStorage.getItem('bombhr-demo-intro-seen')!=='true'){
+    window.setTimeout(()=>document.getElementById('demoModeModal')?.classList.add('show'),450);
+  }
+}
+
+function initSmartDemo(){
+  if(window.__bombhrSmartDemoRunning)return;
+  window.__bombhrSmartDemoRunning=true;
+  const now=new Date();
+  calendarCursor=new Date(now.getFullYear(),now.getMonth(),1);
+  selectedCalendarDate=new Date(now);
+  updateLiveDateTime();
+  buildAttendanceRecords();
+  renderCalendar();
+  selectCalendarDate(
+    now.getFullYear()+'-'+pad2(now.getMonth()+1)+'-'+pad2(now.getDate()),
+    document.querySelector('#dynamicCalendar .today')
+  );
+  updateDynamicBusinessDates();
+  showDemoModeOnce();
+  window.setInterval(updateLiveDateTime,1000);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.__bombhrSmartDemoStarted){
+    window.__bombhrSmartDemoStarted=true;
+    initSmartDemo();
+  }
+});
+
+loadLeaveApplications();
+renderLeaveApplications();
+initSmartDemo();
+
+initModules();calcLeave();calcOT();
+
+if(localStorage.getItem('bombhr-theme')==='light')document.body.classList.remove('dark');
+loadMySettings();
+tick();
+setInterval(tick,1000);
+</script>
+<script src="pwa-install.js"></script>
 </body>
 </html>
