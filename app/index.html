@@ -1583,6 +1583,9 @@ function processAvatarFile(file){
 
         try{
           localStorage.setItem('bombhr-avatar', compressedData);
+          const sharedPhotos=JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}');
+          sharedPhotos.AB00128=compressedData;
+          localStorage.setItem('bombhr-employee-profile-photos',JSON.stringify(sharedPhotos));
           toast('大頭照已更新並儲存');
         }catch(storageError){
           // Some private browsers or full storage may reject LocalStorage.
@@ -1630,6 +1633,7 @@ function renderAvatar(data){
 }
 function removeAvatar(){
   localStorage.removeItem('bombhr-avatar');
+  try{const sharedPhotos=JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}');delete sharedPhotos.AB00128;localStorage.setItem('bombhr-employee-profile-photos',JSON.stringify(sharedPhotos))}catch(e){}
   renderAvatar('');
   closeAvatarSheet();
   toast('大頭照已移除');
@@ -1642,7 +1646,9 @@ document.getElementById('cameraInput').addEventListener('change',function(){
   processAvatarFile(this.files[0]);
   this.value='';
 });
-renderAvatar(localStorage.getItem('bombhr-avatar')||'');
+function getSharedEmployeeAvatar(){try{return JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}').AB00128||''}catch(e){return ''}}
+renderAvatar(getSharedEmployeeAvatar()||localStorage.getItem('bombhr-avatar')||'');
+window.addEventListener('storage',e=>{if(e.key==='bombhr-employee-profile-photos')renderAvatar(getSharedEmployeeAvatar())});
 
 
 function openSubview(id){

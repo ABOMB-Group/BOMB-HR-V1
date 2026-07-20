@@ -1,0 +1,15 @@
+.modal:has(.payroll-item-wrap) .modal-card{width:min(1500px,97vw);max-height:94vh}
+.payroll-item-summary{display:grid;grid-template-columns:repeat(3,minmax(130px,1fr)) auto;gap:10px;align-items:stretch;margin-bottom:14px}
+.payroll-item-summary>div{display:flex;flex-direction:column;gap:5px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2,#f7f9fc)}
+.payroll-item-summary small{color:var(--muted);font-size:12px}.payroll-item-summary b{font-size:19px}.payroll-item-summary button{min-height:54px}
+.payroll-item-wrap{max-height:55vh;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.payroll-item-wrap::-webkit-scrollbar{width:10px;height:10px}.payroll-item-wrap::-webkit-scrollbar-track{background:transparent}.payroll-item-wrap::-webkit-scrollbar-thumb{background:linear-gradient(135deg,#6674f4,#8b5cf6);border:2px solid var(--panel);border-radius:999px}
+.payroll-item-table{width:100%;min-width:1480px;border-collapse:separate;border-spacing:0;font-size:13px}
+.payroll-item-table th{position:sticky;top:0;z-index:2;padding:11px 9px;text-align:left;white-space:nowrap;background:var(--panel-2,#f4f6fa);border-bottom:1px solid var(--line);color:var(--muted)}
+.payroll-item-table th small{display:block;margin-top:3px;font-weight:400;font-size:10px}.payroll-item-table td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.payroll-item-table tbody tr:hover{background:color-mix(in srgb,var(--primary,#635bff) 5%,transparent)}
+.payroll-item-table input:not([type=checkbox]),.payroll-item-table select{box-sizing:border-box;width:100%;min-width:112px;height:36px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.payroll-item-table [data-payroll-field=name]{min-width:140px;font-weight:650}.payroll-item-table [data-payroll-field=method],.payroll-item-table [data-payroll-field=source]{min-width:165px}.payroll-item-table input[type=checkbox]{width:17px;height:17px;accent-color:var(--primary,#635bff)}
+.payroll-item-delete{border:0;background:transparent;color:#dc5264;cursor:pointer;font-weight:650;padding:8px}.payroll-item-delete:hover{background:rgba(220,82,100,.1);border-radius:8px}
+.payroll-item-legend{display:flex;flex-wrap:wrap;gap:16px;margin:13px 2px 9px;color:var(--muted);font-size:12px}.payroll-item-legend span{display:flex;align-items:center;gap:6px}.payroll-item-legend i{width:8px;height:8px;border-radius:50%}.payroll-item-legend .income{background:#4f7cff}.payroll-item-legend .deduction{background:#f59e0b}.payroll-item-legend .employer{background:#8b5cf6}
+@media(max-width:760px){.payroll-item-summary{grid-template-columns:repeat(2,1fr)}.payroll-item-summary button{grid-column:1/-1}.modal:has(.payroll-item-wrap) .modal-card{width:96vw}}
