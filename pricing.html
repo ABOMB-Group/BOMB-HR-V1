@@ -9,13 +9,12 @@
   <style>.reveal,[class~="reveal"]{opacity:1!important;visibility:visible!important;transform:none!important}</style>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="index.html"><img src="assets/bombhr-logo.png" alt="BOMB HR 人資管理系統 Logo"></a>
-    <nav class="main-nav" aria-label="主要導覽">
-      <a href="products.html">產品功能</a><a href="dashboard.html">平台介面</a><a href="solutions.html">解決方案</a><a class="active" href="pricing.html">方案價格</a>
-        <a href="case-studies.html">成功案例</a><a href="resources.html">資源中心</a><a href="about.html">關於我們</a>
-    </nav>
-    <div class="header-actions"><button class="theme-toggle" type="button" aria-label="切換深淺色">◐</button><a class="btn btn-outline" href="contact.html">登入</a><a class="btn btn-primary" href="#pricing-contact">預約展示</a></div>
+  <header class="site-header" id="siteHeader">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="BOMB HR 首頁"><img src="assets/bombhr-logo.png" alt="BOMB HR 人資管理系統"></a>
+      <nav class="nav-links" id="navLinks" aria-label="主要導覽"><a href="index.html">首頁</a><a href="products.html">產品功能</a><a href="dashboard.html">平台介面</a><a href="index.html#app-download">下載 APP</a><a href="solutions.html">解決方案</a><a class="active" href="pricing.html">方案價格</a><a href="case-studies.html">成功案例</a><a href="resources.html">資源中心</a><a href="about.html">關於我們</a><a href="contact.html">聯絡我們</a></nav>
+      <div class="nav-actions"><a href="login.html" class="btn btn-login">企業登入</a><a href="#pricing-contact" class="btn btn-demo">預約 Demo</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="切換明暗模式">◐</button><button class="menu-toggle" id="menuToggle" type="button" aria-label="開啟選單">☰</button></div>
+    </div>
   </header>
 
   <main>

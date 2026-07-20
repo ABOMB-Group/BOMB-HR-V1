@@ -45,6 +45,16 @@
     demoForm.reset();
   });
 
+  document.querySelectorAll("[data-coming-soon]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const toast = document.getElementById("toast");
+      if (!toast) return;
+      toast.textContent = `${button.dataset.comingSoon} 版本即將推出，目前可先安裝 Employee Web App。`;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 2800);
+    });
+  });
+
   document.querySelectorAll("[data-modal-open]").forEach((button) => {
     button.addEventListener("click", () => {
       const id = button.getAttribute("data-modal-open");

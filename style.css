@@ -39,6 +39,29 @@ html[data-theme="light"] .btn-outline{background:white}
 .theme-toggle,.menu-toggle{width:50px;height:50px;border-radius:50%;border:1px solid rgba(74,167,255,.35);background:#081a31;color:white;cursor:pointer;font-size:18px}
 html[data-theme="light"] .theme-toggle,html[data-theme="light"] .menu-toggle{background:white;color:#17243b}
 .menu-toggle{display:none}
+@media(max-width:1600px) and (min-width:1181px){
+  .brand img{width:260px;height:82px}
+  .nav-links{gap:14px}
+  .nav-links a{font-size:13px}
+  .nav-actions{gap:9px}
+  .nav-actions .btn{min-width:auto;padding-left:16px;padding-right:16px}
+}
+.app-download-section{position:relative;padding:110px 0;overflow:hidden;background:linear-gradient(180deg,var(--bg),var(--bg2))}
+.app-download-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center}
+.app-download-copy h2{font-size:clamp(38px,4.2vw,64px);line-height:1.08;letter-spacing:-.045em;margin:15px 0 20px}
+.app-download-copy>p{font-size:17px;color:var(--muted);max-width:650px}
+.app-capabilities{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;color:var(--text);font-weight:750}
+.app-capabilities span{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.app-download-actions,.store-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.store-badge{min-width:205px;min-height:63px;position:relative;border:1px solid rgba(143,174,231,.38);border-radius:14px;background:#05080e;color:#fff;padding:9px 13px;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;transition:.2s}
+.store-badge:hover{transform:translateY(-2px);border-color:#7d84ff}
+.store-badge i{font-style:normal;font-size:24px}.store-badge span{display:flex;flex-direction:column}.store-badge small{font-size:9px;line-height:1}.store-badge b{font-size:17px;line-height:1.3}.store-badge em{position:absolute;right:8px;top:7px;font-style:normal;font-size:8px;padding:3px 6px;border-radius:20px;background:rgba(255,255,255,.14);color:#cbd5e1}
+.install-note{font-size:12px!important;margin-top:14px;color:var(--muted)!important}
+.app-download-visual{position:relative;min-height:590px;display:grid;place-items:center}
+.app-download-visual img{position:relative;z-index:2;width:100%;max-height:650px;object-fit:contain;filter:drop-shadow(0 35px 60px rgba(0,0,0,.34))}
+.app-visual-glow{position:absolute;width:75%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(79,86,255,.36),rgba(49,198,255,.12) 45%,transparent 70%);filter:blur(15px)}
+.app-status-card{position:absolute;z-index:3;left:5%;bottom:9%;display:flex;align-items:center;gap:10px;padding:13px 16px;border:1px solid rgba(255,255,255,.2);border-radius:14px;background:rgba(9,20,38,.83);backdrop-filter:blur(16px);color:#fff;box-shadow:0 16px 42px rgba(0,0,0,.28)}
+.app-status-card>span{color:#62e7a2}.app-status-card b,.app-status-card small{display:block}.app-status-card small{color:#aab8cb;font-size:10px}
 .hero{position:relative;min-height:850px;padding:150px 0 48px;overflow:hidden}
 .hero::before{content:"";position:absolute;inset:0;background:
 linear-gradient(90deg,rgba(2,8,20,.72),rgba(2,8,20,.18) 52%,rgba(2,8,20,.38)),
@@ -320,15 +343,15 @@ footer,
 
 
 /* BOMB HR V1.0.1 — shared inner-page header compatibility */
-.site-header{
+.site-header.legacy-header{
   min-height:118px;
   padding:0 max(24px,calc((100vw - var(--max))/2));
   display:flex;
   align-items:center;
   gap:28px;
 }
-.site-header>.brand{display:flex;align-items:center;flex:0 0 auto}
-.site-header>.brand img{
+.site-header.legacy-header>.brand{display:flex;align-items:center;flex:0 0 auto}
+.site-header.legacy-header>.brand img{
   width:300px;
   height:88px;
   object-fit:contain;
@@ -394,19 +417,19 @@ footer,
 }
 
 @media(max-width:1260px){
-  .site-header>.brand img{width:245px}
+  .site-header.legacy-header>.brand img{width:245px}
   .main-nav{gap:16px}
   .main-nav a{font-size:13px}
   .header-actions .btn{padding:0 16px}
 }
 @media(max-width:1050px){
-  .site-header{
+  .site-header.legacy-header{
     min-height:90px;
     flex-wrap:wrap;
     padding-top:8px;
     padding-bottom:8px;
   }
-  .site-header>.brand img{width:220px;height:70px}
+  .site-header.legacy-header>.brand img{width:220px;height:70px}
   .main-nav{
     order:3;
     width:100%;
@@ -416,10 +439,12 @@ footer,
   .main-nav a{padding:10px 0 12px}
   .main-nav a::after{bottom:3px}
   .header-actions{margin-left:auto}
+  .app-download-grid{grid-template-columns:1fr;gap:20px}.app-download-copy{text-align:center}.app-download-copy>p{margin-left:auto;margin-right:auto}.app-capabilities{max-width:700px;margin-left:auto;margin-right:auto}.app-download-actions,.store-row{justify-content:center}.app-download-visual{min-height:500px}
 }
 @media(max-width:650px){
-  .site-header>.brand img{width:175px}
+  .site-header.legacy-header>.brand img{width:175px}
   .header-actions .btn-primary{display:none}
   .header-actions .btn-outline{padding:0 13px}
   .main-nav{gap:18px}
+  .app-download-section{padding:75px 0}.app-download-copy h2{font-size:38px}.app-capabilities{grid-template-columns:1fr;text-align:left}.app-download-actions .btn{width:100%}.store-badge{width:100%}.app-download-visual{min-height:370px}.app-status-card{left:0;bottom:2%}
 }
