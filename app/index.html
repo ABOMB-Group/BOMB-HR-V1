@@ -1488,6 +1488,7 @@ function punch(){
     punchState=1;
     core.innerHTML='<div><b>下班打卡</b><small>'+nowTime()+'</small></div>';
     document.getElementById('homeInTime').textContent=time;
+    pushBombHREvent({category:'attendance',action:'clock-in',employee:'王小明',employeeId:'AB00128',time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});
     toast(activeMethod+' 驗證完成，上班打卡成功');
   }else if(punchState===1){
     punchState=2;
@@ -1495,6 +1496,7 @@ function punch(){
     core.disabled=true;
     core.style.opacity='.68';
     document.getElementById('homeOutTime').textContent=time;
+    pushBombHREvent({category:'attendance',action:'clock-out',employee:'王小明',employeeId:'AB00128',time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});
     toast(activeMethod+' 驗證完成，下班打卡成功');
   }
 }
@@ -1751,6 +1753,7 @@ function submitLeave(){
     submitted:new Date().toLocaleString('zh-TW',{hour12:false}),
     rejectReason:''
   });
+  pushBombHREvent({category:'approval',subtype:'leave',id:applicationNo,title:type+'申請',employee:'王小明',employeeId:'AB00128',period:startDate+'–'+endDate,duration,agent,reason,submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:leaveAttachments.map(f=>({name:f.name,size:Math.ceil(f.size/1024)+' KB'}))});
 
   saveLeaveApplications();
   renderLeaveApplications();
@@ -1761,7 +1764,11 @@ function submitLeave(){
 }
 function calcOT(){const s=document.getElementById('otStart').value,e=document.getElementById('otEnd').value;if(!s||!e)return;const [sh,sm]=s.split(':').map(Number),[eh,em]=e.split(':').map(Number);let m=eh*60+em-(sh*60+sm);if(m<0)m+=1440;document.getElementById('otHours').textContent=(m/60).toFixed(1).replace('.0','')+' 小時'}
 ['otStart','otEnd'].forEach(id=>document.getElementById(id).addEventListener('change',calcOT));
-function submitOvertime(){toast('加班申請已送出，等待主管審核');closeSubview('overtimeSubview')}
+function submitOvertime(){const id='OT'+Date.now().toString().slice(-12),start=document.getElementById('otStart').value,end=document.getElementById('otEnd').value,hours=document.getElementById('otHours').textContent;pushBombHREvent({category:'approval',subtype:'overtime',id,title:'加班申請',employee:'王小明',employeeId:'AB00128',period:start+'–'+end,duration:hours,reason:'專案上線前測試與文件整理',submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:[]});toast('加班申請已送出，等待主管審核');closeSubview('overtimeSubview')}
+
+function pushBombHREvent(event){const key='bombhr-demo-events';let events=[];try{events=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}events.unshift({...event,eventId:event.id||'EV'+Date.now(),createdAt:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(events.slice(0,100)));window.dispatchEvent(new CustomEvent('bombhr-demo-update'))}
+function syncApprovalResults(){let events=[];try{events=JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]')}catch(e){}let changed=false;leaveApplications.forEach(item=>{const matched=events.find(e=>e.id===item.id);if(matched&&matched.status&&matched.status!==item.status){item.status=matched.status;item.statusText=matched.statusText;item.rejectReason=matched.rejectReason||'';changed=true}});if(changed){saveLeaveApplications();renderLeaveApplications()}}
+window.addEventListener('storage',e=>{if(e.key==='bombhr-demo-events')syncApprovalResults()});document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncApprovalResults()});
 
 let leaveApplications=[
   {id:'LV202607150001',type:'旅遊假',start:'2026-07-20',end:'2026-07-22',duration:'3 天／24 小時',agent:'王小明',reason:'家庭旅遊',status:'review',statusText:'主管審核中',submitted:'2026/07/15 10:30',rejectReason:''},
@@ -2038,6 +2045,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 loadLeaveApplications();
+syncApprovalResults();
 renderLeaveApplications();
 initSmartDemo();
 
