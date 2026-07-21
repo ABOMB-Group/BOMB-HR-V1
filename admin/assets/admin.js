@@ -15,6 +15,8 @@ document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="asset
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-slips-v123.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-landscape-v124.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/readability-v125.css">');
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/insurance-cost-v126.css">');
+const insuranceCostScript=document.createElement('script');insuranceCostScript.src='assets/insurance-cost-v126.js';document.head.appendChild(insuranceCostScript);
 function toast(msg){const box=$('#toastStack');if(!box)return;const el=document.createElement('div');el.className='toast';el.textContent=msg;box.append(el);setTimeout(()=>el.remove(),2800)}
 function getSharedEvents(){try{return JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]')}catch(e){return []}}
 function saveSharedEvents(events){localStorage.setItem('bombhr-demo-events',JSON.stringify(events.slice(0,100)));window.dispatchEvent(new CustomEvent('bombhr-demo-update'))}
