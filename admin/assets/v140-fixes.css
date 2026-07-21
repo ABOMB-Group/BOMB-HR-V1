@@ -4,6 +4,9 @@
 .pop-head-row{flex-direction:row;align-items:flex-start;justify-content:space-between;gap:14px}
 .pop-head-row>div{display:flex;flex-direction:column}
 .compact-close{width:30px;height:30px;flex:0 0 auto}
-.popover-close-row{display:flex;justify-content:flex-end;margin-bottom:2px}
+.profile-pop{padding-top:38px}
+.profile-pop .popover-close-row{position:absolute;top:7px;right:7px;display:block;margin:0}
+.profile-pop .popover-close-row .compact-close{width:28px;height:28px;padding:0;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:18px;text-align:center}
+.profile-pop .popover-close-row .compact-close:hover{background:var(--surface2);color:var(--text)}
 .command-head{display:flex;align-items:center;border-bottom:1px solid var(--line);padding-right:12px}
 .command-head>label{display:flex;align-items:center;gap:10px;padding:16px;flex:1;font-size:20px}
