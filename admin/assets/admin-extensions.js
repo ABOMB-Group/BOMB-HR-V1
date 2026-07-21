@@ -49,7 +49,7 @@
 
 /* Salary persistence */
 (function(){
- const storageKey='bombhr-employee-salary-profiles-v124';
+ const storageKey='bombhr-employee-salary-profiles';
  let activeEmployeeId='';
  const value=id=>document.getElementById(id)?.value??'';
  const number=id=>Number(value(id)||0);
@@ -79,6 +79,6 @@
   const calc=window.bombhrInsuranceCost({laborGrade:number('employeeLaborGrade'),healthGrade:number('employeeHealthGrade'),dependents:number('employeeDependents'),occupationalRate:number('employeeOccupationalRate'),voluntaryPension:number('employeeVoluntaryPension')});
   if(force||!labor.dataset.manualEdited)labor.value=calc.laborEmployee;if(force||!health.dataset.manualEdited)health.value=calc.healthEmployee;if(force||!pension.dataset.manualEdited)pension.value=calc.pensionEmployer;
  }
- const previousEnhance=window.enhanceEmployeeSalaryPage;window.enhanceEmployeeSalaryPage=function(id){activeEmployeeId=id;document.getElementById('modal')?.setAttribute('data-salary-employee-id',id);const result=previousEnhance(id);const profile=readProfiles()[id]||{};['laborInsurance','healthInsurance','pensionContribution'].forEach(name=>{const input=document.querySelector(`[data-employee-salary="${name}"]`);if(input){if(Number(profile[name]||0)>0)input.dataset.manualEdited='1';input.addEventListener('input',()=>input.dataset.manualEdited='1')}});['employeeLaborGrade','employeeHealthGrade','employeeDependents','employeeOccupationalRate','employeeVoluntaryPension'].forEach(field=>document.getElementById(field)?.addEventListener('change',()=>syncOfficialDeductions(false)));if(!Number(profile.laborInsurance||0)&&!Number(profile.healthInsurance||0))syncOfficialDeductions(true);document.getElementById('fillOfficialInsuranceCosts')?.addEventListener('click',()=>syncOfficialDeductions(true));return result};
+ const previousEnhance=window.enhanceEmployeeSalaryPage;window.enhanceEmployeeSalaryPage=function(id){activeEmployeeId=id;document.getElementById('modal')?.setAttribute('data-salary-employee-id',id);const result=previousEnhance(id);const profile=readProfiles()[id]||{};['laborInsurance','healthInsurance','pensionContribution'].forEach(name=>{const input=document.querySelector(`[data-employee-salary="${name}"]`);if(input){if(Number(profile[name]||0)>0)input.dataset.manualEdited='1';input.addEventListener('input',()=>input.dataset.manualEdited='1')}});['employeeLaborGrade','employeeHealthGrade','employeeDependents','employeeOccupationalRate','employeeVoluntaryPension'].forEach(field=>document.getElementById(field)?.addEventListener('change',()=>syncOfficialDeductions(false)));const base=document.querySelector('[data-employee-salary="base"]');base?.addEventListener('change',()=>{const labor=document.getElementById('employeeLaborGrade'),health=document.getElementById('employeeHealthGrade');if(labor)labor.value=closestInsuranceGrade(laborInsuranceGrades,Number(base.value));if(health)health.value=closestInsuranceGrade(healthInsuranceGrades,Number(base.value));syncOfficialDeductions(false)});if(!Number(profile.laborInsurance||0)&&!Number(profile.healthInsurance||0))syncOfficialDeductions(true);document.getElementById('fillOfficialInsuranceCosts')?.addEventListener('click',()=>syncOfficialDeductions(true));return result};
  window.bombhrSaveEmployeeSalaryV129=saveCurrentEmployee;
 })();

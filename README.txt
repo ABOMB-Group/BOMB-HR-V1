@@ -1,4 +1,10 @@
-BOMB HR Enterprise HR Admin V1.32 Unified
+BOMB HR Enterprise HR Admin V1.33 Unified
+
+V1.33 薪資與投保級距規則：
+- 未設定的員工依底薪自動選擇大於或等於底薪的最近勞保／健保級距
+- 底薪變動時同步更新兩種投保級距與官方試算扣款
+- 人工調整並儲存後，以員工個別設定為最高優先，不再套回專員預設值
+- 薪資資料改用單一正式儲存鍵，隔離舊版被預設級距污染的資料
 
 V1.32 Unified 整併：
 - 移除 admin 資源目錄內所有帶 V 版本號的 CSS／JavaScript 檔案
