@@ -5,7 +5,7 @@
  const number=id=>Number(value(id)||0);
  function readProfiles(){try{return JSON.parse(localStorage.getItem(storageKey)||'{}')}catch(error){return {}}}
  function saveCurrentEmployee(){
-  const id=activeEmployeeId;
+  const id=document.getElementById('modal')?.dataset.salaryEmployeeId||activeEmployeeId;
   if(!id){toast('找不到目前員工，請關閉視窗後重新點選查看');return false}
   const effectiveDate=value('employeeSalaryEffective');
   if(!effectiveDate){toast('請先設定薪資生效日');return false}
@@ -24,6 +24,6 @@
   toast(`${getEmployeeRecord(id)?.name||id}的薪資、級距與扣款已確實儲存`);return true;
  }
  document.addEventListener('click',event=>{const trigger=event.target.closest('[data-view-employee],[data-edit-employee]');if(trigger)activeEmployeeId=trigger.dataset.viewEmployee||trigger.dataset.editEmployee||'';const button=event.target.closest('#saveEmployeeSalaryProfile');if(!button)return;event.preventDefault();event.stopImmediatePropagation();saveCurrentEmployee()},true);
- const previousEnhance=window.enhanceEmployeeSalaryPage;window.enhanceEmployeeSalaryPage=function(id){activeEmployeeId=id;return previousEnhance(id)};
+ const previousEnhance=window.enhanceEmployeeSalaryPage;window.enhanceEmployeeSalaryPage=function(id){activeEmployeeId=id;document.getElementById('modal')?.setAttribute('data-salary-employee-id',id);return previousEnhance(id)};
  window.bombhrSaveEmployeeSalaryV129=saveCurrentEmployee;
 })();
