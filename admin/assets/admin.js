@@ -11,14 +11,8 @@ document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="asset
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/benefit-calendar-fixes.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-item-master.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/role-permissions.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-department-v122.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-slips-v123.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-landscape-v124.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/readability-v125.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/insurance-cost-v126.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-interactions-v127.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/salary-persistence-v129.css?v=130">');
-const insuranceCostScript=document.createElement('script');insuranceCostScript.src='assets/insurance-cost-v126.js?v=130';insuranceCostScript.onload=()=>{const interactionScript=document.createElement('script');interactionScript.src='assets/admin-interactions-v127.js?v=130';interactionScript.onload=()=>{const persistenceScript=document.createElement('script');persistenceScript.src='assets/salary-persistence-v129.js?v=130';document.head.appendChild(persistenceScript)};document.head.appendChild(interactionScript)};document.head.appendChild(insuranceCostScript);
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-unified.css">');
+const adminExtensionsScript=document.createElement('script');adminExtensionsScript.src='assets/admin-extensions.js';document.head.appendChild(adminExtensionsScript);
 function toast(msg){const box=$('#toastStack');if(!box)return;const el=document.createElement('div');el.className='toast';el.textContent=msg;box.append(el);setTimeout(()=>el.remove(),2800)}
 function getSharedEvents(){try{return JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]')}catch(e){return []}}
 function saveSharedEvents(events){localStorage.setItem('bombhr-demo-events',JSON.stringify(events.slice(0,100)));window.dispatchEvent(new CustomEvent('bombhr-demo-update'))}
