@@ -1,4 +1,11 @@
-BOMB HR Enterprise HR Admin V1.37 Unified
+BOMB HR Enterprise HR Admin V1.38 Unified
+
+V1.38 主管聯絡入口與組織編輯修正：
+- 員工人事頁上方新增明顯的「主管電話／LINE 主檔」入口
+- 員工查看視窗新增「編輯部門／職位／直屬主管」按鈕
+- 員工編輯視窗可直接修改部門、職位、直屬主管、據點與任職狀態
+- 預載員工及新建員工皆可保存組織異動，保留修改人與時間
+- Employee App 已驗證可讀取主檔 LINE ID、加好友連結與 QR Code
 
 V1.37 主管電話與 LINE 聯絡主檔：
 - 後台出勤頁新增主管聯絡主檔，可維護公司電話、私人電話與 LINE 顯示名稱
