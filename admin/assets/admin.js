@@ -102,6 +102,7 @@ const payrollDepartments=[
 function departmentPayrollCards(){return `<div class="department-payroll-grid">${payrollDepartments.map(d=>`<button class="department-payroll-card" data-payroll-department="${d.id}"><div class="dept-card-head"><span>${d.name.slice(0,2)}</span><div><b>${d.name}</b><small>主管：${d.manager}・${d.count} 人</small></div><i>查看人員 →</i></div><strong>NT$ ${d.total.toLocaleString()}</strong><small>本月預估薪資總額</small><div class="dept-progress"><span>已確認 ${d.count-d.pending-d.exception}</span><span class="warn">待核對 ${d.pending}</span><span class="danger">異常 ${d.exception}</span></div></button>`).join('')}</div>`}
 function payrollSettingsPanel(){return panel('薪資設定與工具','低頻設定集中於此，不再和人員薪資核對混在同一區',`<div class="payroll-tool-grid"><button data-salary-structure><i>▤</i><b>職位薪資架構</b><small>底薪、津貼、獎金及扣款範本</small></button><button data-benefit-manage><i>◇</i><b>福利與假別制度</b><small>福利金額、資格與假別基準</small></button><button data-bank-master><i>▣</i><b>企業銀行主檔</b><small>薪轉銀行、分行與付款用途</small></button><button data-payroll-import><i>⇩</i><b>薪資資料匯入</b><small>下載範本或批次匯入資料</small></button></div>`)}
 const payrollRoster=[
+ {name:'王小明',id:'AB00128',department:'營運－企劃部',position:'專員',overtime:0,deduction:0,status:'待核對'},
  {name:'林怡君',id:'AB00026',department:'財務人事行政',position:'人事行政主管',overtime:3200,deduction:2642,status:'已確認'},
  {name:'陳冠宇',id:'AB00001',department:'營運管理部',position:'經理',overtime:2400,deduction:2642,status:'待核對'},
  {name:'王思涵',id:'AB00231',department:'產品設計部',position:'資深產品設計師',overtime:1800,deduction:2642,status:'已確認'},
