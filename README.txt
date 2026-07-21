@@ -1,4 +1,11 @@
-BOMB HR Enterprise HR Admin V1.38 Unified
+BOMB HR Enterprise HR Admin V1.39 Unified
+
+V1.39 Employee App 主管資料更新：
+- Employee App 內建主管更新為 OG・AB00118
+- 更新營運－企劃部、08:45–18:00 班別、公司及私人電話
+- 更新 LINE 顯示名稱 ABOMB OG、LINE ID 與加好友連結
+- 更新 PWA 快取版本並納入緊急請假、LINE 與出勤規則檔案，避免手機沿用舊快取
+- LINE QR Code 尚未提供，仍可由後台主管電話／LINE 主檔上傳
 
 V1.38 主管聯絡入口與組織編輯修正：
 - 員工人事頁上方新增明顯的「主管電話／LINE 主檔」入口

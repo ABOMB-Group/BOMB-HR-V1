@@ -1,6 +1,6 @@
 (function(){
  const eventKey='bombhr-demo-events',recordKey='bombhr-emergency-leave-records';
- const supervisor=(()=>{const base={name:'王志豪',employeeId:'AB00118',role:'當班主管',department:'營運－企劃部',shift:'08:45–18:00',companyPhone:'04-2258-1688',privatePhone:'0912-345-678',line:'ABOMB 王主管',lineId:'abomb.supervisor',lineUrl:'https://line.me/R/ti/p/@abomb-supervisor',lineQr:'',allowEmployeeView:true,verified:false,delegate:'林怡君・AB00026'};try{return {...base,...JSON.parse(localStorage.getItem('bombhr-supervisor-contact-master')||'{}')}}catch(e){return base}})();
+ const supervisor=(()=>{const base={name:'OG',employeeId:'AB00118',role:'當班主管',department:'營運－企劃部',shift:'08:45–18:00',companyPhone:'04-2258-1688',privatePhone:'0912-345-678',line:'ABOMB OG',lineId:'abomb.supervisor',lineUrl:'https://line.me/ti/p/l__q4CyUgN',lineQr:'',allowEmployeeView:true,verified:true,delegate:''};try{return {...base,...JSON.parse(localStorage.getItem('bombhr-supervisor-contact-master')||'{}')}}catch(e){return base}})();
  let contactedBy='',contactStartedAt='';
  const now=()=>new Date().toLocaleString('zh-TW',{hour12:false});
  const read=(key,fallback=[])=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}};
