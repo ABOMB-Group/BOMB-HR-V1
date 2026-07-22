@@ -11,7 +11,7 @@ document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="asset
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/benefit-calendar-fixes.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-item-master.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/role-permissions.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-unified.css">');
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-unified.css?v=154">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/v140-fixes.css">');
 const adminExtensionsScript=document.createElement('script');adminExtensionsScript.src='assets/admin-extensions.js';document.head.appendChild(adminExtensionsScript);
 function toast(msg){const box=$('#toastStack');if(!box)return;const el=document.createElement('div');el.className='toast';el.textContent=msg;box.append(el);setTimeout(()=>el.remove(),2800)}
