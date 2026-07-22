@@ -1,4 +1,7 @@
-BOMB HR Enterprise HR Admin V1.70 Unified
+BOMB HR Enterprise HR Admin V1.71 Unified
+
+V1.71 管理部門主檔：
+- 重設四個正式部門並支援新增、刪除及使用中阻擋。
 
 V1.70 帳號部門同步：
 - 管理部門勾選及儲存時同步至主管員編範圍，登入後直接按員編讀取。

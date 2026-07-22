@@ -1,6 +1,6 @@
 (function(){
  'use strict';
- const aliases={'企劃':'企劃','營運企劃部':'企劃','營運－企劃部':'企劃','技術':'技術','資訊技術部':'技術','營運－技術部':'技術','產品設計部':'技術','財務/人事':'財務/人事','財務人事行政部':'財務/人事','財務人事行政':'財務/人事'};
+ const aliases={'企劃':'企劃','企劃部':'企劃','營運企劃部':'企劃','營運－企劃部':'企劃','技術':'技術','技術部':'技術','資訊技術部':'技術','營運－技術部':'技術','產品設計部':'技術','財務/人事':'財務/人事','財務人事行政部':'財務/人事','財務人事行政':'財務/人事','營運管理部':'營運管理部'};
  const normalize=value=>aliases[String(value||'').trim()]||String(value||'').trim();
  const read=(key,fallback={})=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}};
  const profile=()=>typeof currentProfile==='function'?currentProfile():{role:'executive',department:'全公司'};
