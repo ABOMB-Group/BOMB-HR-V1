@@ -1,4 +1,9 @@
-BOMB HR Enterprise HR Admin Demo V1.73
+BOMB HR Enterprise HR Admin Demo V1.74
+
+V1.74：
+- 左側品牌區改用完整 BOMB HR 公司 Logo，移除紫色 B 方塊。
+- 重整側欄間距、分類、選取狀態、底部範圍卡及互動效果。
+- 修正漢堡按鈕：桌面收合／展開、手機滑出／關閉，並記住桌面狀態。
 
 V1.73：
 - 未勾選任何管理部門時正式儲存空範圍，主管不可查看任何員工資料。
