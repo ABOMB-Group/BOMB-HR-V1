@@ -1,4 +1,7 @@
-BOMB HR Enterprise HR Admin V1.68 Unified
+BOMB HR Enterprise HR Admin V1.69 Unified
+
+V1.69 完整名冊重新過濾：
+- 主管權限每次都從完整人事主檔重新計算，不再使用舊版已縮減的名冊結果。
 
 V1.68 管理部門連動：
 - 修正管理部門勾選已儲存但主管員工名冊未套用的問題。

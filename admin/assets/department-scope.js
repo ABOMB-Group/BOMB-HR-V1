@@ -15,12 +15,11 @@
   const overrides=read('bombhr-employee-org-overrides',{}),custom=typeof getCustomEmployees==='function'?getCustomEmployees():[];
   return [...(window.BOMBHR_IMPORTED_PERSONNEL||[]),...custom].map(person=>({...person,...(overrides[person.employeeId]||{})}));
  }
- const originalRows=typeof getEmployeeRows==='function'?getEmployeeRows:null,originalRecord=typeof getEmployeeRecord==='function'?getEmployeeRecord:null;
  window.getEmployeeRows=function(){
-  const rows=originalRows?originalRows():allPersonnel().map(person=>[person.name,person.employeeId,person.department,person.position,person.location,person.status]);
+  const rows=allPersonnel().map(person=>[person.name,person.employeeId,person.department,person.position,person.location,person.status]);
   return rows.filter(row=>permittedDepartment(row[2]));
  };
- window.getEmployeeRecord=function(id){const record=originalRecord?originalRecord(id):allPersonnel().find(person=>person.employeeId===id)||null;return record&&permittedDepartment(record.department)?record:null};
+ window.getEmployeeRecord=function(id){const record=allPersonnel().find(person=>person.employeeId===id)||null;return record&&permittedDepartment(record.department)?record:null};
  window.bombhrCanAccessEmployee=function(id){const person=allPersonnel().find(item=>item.employeeId===id);return !!person&&permittedDepartment(person.department)};
  function rowEmployee(row){
   const trigger=row.querySelector('[data-view-employee],[data-edit-employee],[data-payroll-person-detail],[data-payroll-adjust]'),id=trigger&&(trigger.dataset.viewEmployee||trigger.dataset.editEmployee||trigger.dataset.payrollPersonDetail||trigger.dataset.payrollAdjust);
