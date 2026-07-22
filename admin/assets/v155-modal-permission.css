@@ -22,3 +22,14 @@ body[data-permission-role="supervisor"] .permission-pane:has(.permission-matrix)
 .supervisor-summary>div{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface2)}
 .supervisor-summary span{color:var(--brand);font-weight:800}
 @media(max-width:700px){.assignment-person.supervisor-person{grid-template-columns:38px 1fr auto}.assignment-person.supervisor-person select{grid-column:2/-1}.supervisor-summary{grid-template-columns:1fr}}
+@media(min-width:821px){
+ .modal:has(.employee-record-tabs){padding:0!important}
+ .modal:has(.employee-record-tabs) .modal-card{width:99.5vw!important;height:99vh!important;max-height:99vh!important;border-radius:12px}
+ .modal:has(.employee-record-tabs) #modalBody{padding:12px 20px!important;scrollbar-width:none}
+ .modal:has(.employee-record-tabs) #modalBody::-webkit-scrollbar{width:0;height:0}
+}
+.role-switch-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.role-switch-grid>button{min-height:108px}
+.role-switch-grid>button:first-child{grid-column:1/-1}
+.role-switch-grid>button small{font-weight:700}
+.role-switch-grid>button p{line-height:1.45}
