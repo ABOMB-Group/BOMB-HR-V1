@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin V1.67 Unified
+BOMB HR Enterprise HR Admin V1.68 Unified
+
+V1.68 管理部門連動：
+- 修正管理部門勾選已儲存但主管員工名冊未套用的問題。
+- 主管資料範圍採帳號部門、逐人指派與身份管理部門的聯集。
 
 V1.67 身份操作按鈕：
 - 新增與刪除身份固定並排、放大並提高辨識度。

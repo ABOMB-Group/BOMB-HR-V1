@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin Demo V1.67
+BOMB HR Enterprise HR Admin Demo V1.68
+
+V1.68：
+- 主管資料範圍改為合併人員與部門指派、身份管理部門勾選及帳號原始部門。
+- KEN 勾選產品設計部／資訊技術部後，可查看對應技術部員工；取消後立即收回。
 
 V1.67：
 - 身份群組上方固定並排顯示「新增身份」與「刪除身份」。

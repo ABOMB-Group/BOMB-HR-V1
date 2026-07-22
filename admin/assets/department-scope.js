@@ -4,7 +4,12 @@
  const normalize=value=>aliases[String(value||'').trim()]||String(value||'').trim();
  const read=(key,fallback={})=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}};
  const profile=()=>typeof currentProfile==='function'?currentProfile():{role:'executive',department:'全公司'};
- const allowedDepartments=()=>{const p=profile();return (p.departments||[p.department]).map(normalize).filter(Boolean)};
+ function configuredDepartments(employeeId){
+  const roles=read('bombhr-role-designer-v147',{}),departments=[];
+  Object.values(roles).forEach(role=>{if(!(role?.members||[]).includes(employeeId))return;departments.push(...((role.memberDepartments||{})[employeeId]||[]),...(role.departments||[]))});
+  return departments;
+ }
+ const allowedDepartments=()=>{const p=profile(),configured=configuredDepartments(p.id),combined=[...(p.departments||[p.department]),...configured];return [...new Set(combined.map(normalize).filter(Boolean))]};
  function permittedDepartment(department){const p=profile();return p.role!=='supervisor'||allowedDepartments().includes(normalize(department))}
  function allPersonnel(){
   const overrides=read('bombhr-employee-org-overrides',{}),custom=typeof getCustomEmployees==='function'?getCustomEmployees():[];
@@ -36,6 +41,6 @@
   event.preventDefault();event.stopImmediatePropagation();const p=profile();if(typeof addAudit==='function')addAudit('阻擋跨部門存取',(id||'未知員工')+'・'+p.name+'・'+p.id+'・'+p.label+'・責任部門 '+allowedDepartments().join('、'));if(typeof closeModal==='function')closeModal();if(typeof toast==='function')toast('權限不足：只能查看與處理責任部門員工資料')
  },true);
  let queued=false;const refresh=()=>{if(queued)return;queued=true;setTimeout(()=>{queued=false;enforceRows()},0)};
- window.addEventListener('hashchange',refresh);new MutationObserver(refresh).observe(document.getElementById('content'),{childList:true,subtree:true});
+ window.addEventListener('hashchange',refresh);window.addEventListener('storage',event=>{if(event.key==='bombhr-role-designer-v147')location.reload()});new MutationObserver(refresh).observe(document.getElementById('content'),{childList:true,subtree:true});
  setTimeout(()=>{if(profile().role==='supervisor'){window.dispatchEvent(new HashChangeEvent('hashchange'));refresh()}},0);
 })();

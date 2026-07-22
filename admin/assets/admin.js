@@ -11,9 +11,9 @@ document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="asset
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/benefit-calendar-fixes.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-item-master.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/role-permissions.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-unified.css?v=167">');
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-unified.css?v=168">');
 
-const adminExtensionsScript=document.createElement('script');adminExtensionsScript.src='assets/admin-extensions.js?v=167';document.head.appendChild(adminExtensionsScript);
+const adminExtensionsScript=document.createElement('script');adminExtensionsScript.src='assets/admin-extensions.js?v=168';document.head.appendChild(adminExtensionsScript);
 function toast(msg){const box=$('#toastStack');if(!box)return;const el=document.createElement('div');el.className='toast';el.textContent=msg;box.append(el);setTimeout(()=>el.remove(),2800)}
 function getSharedEvents(){try{return JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]')}catch(e){return []}}
 function saveSharedEvents(events){localStorage.setItem('bombhr-demo-events',JSON.stringify(events.slice(0,100)));window.dispatchEvent(new CustomEvent('bombhr-demo-update'))}
