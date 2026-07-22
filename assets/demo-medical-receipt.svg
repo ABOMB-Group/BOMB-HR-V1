@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="980" viewBox="0 0 720 980">
+ <rect width="720" height="980" fill="#eef2f7"/><rect x="70" y="40" width="580" height="900" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+ <text x="360" y="105" text-anchor="middle" font-family="sans-serif" font-size="30" font-weight="700" fill="#172033">ABOMB 聯合診所</text>
+ <text x="360" y="140" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#64748b">門診醫療費用收據（DEMO）</text><line x1="110" y1="170" x2="610" y2="170" stroke="#cbd5e1"/>
+ <g font-family="sans-serif" font-size="18" fill="#334155"><text x="115" y="220">姓名：王思涵</text><text x="400" y="220">日期：2026/07/20</text><text x="115" y="265">科別：一般內科</text><text x="400" y="265">收據編號：D-0720018</text></g>
+ <rect x="110" y="315" width="500" height="250" fill="#f8fafc" stroke="#cbd5e1"/><g font-family="sans-serif" font-size="17" fill="#334155"><text x="130" y="355" font-weight="700">費用項目</text><text x="525" y="355" font-weight="700">金額</text><text x="130" y="405">掛號費</text><text x="535" y="405">150</text><text x="130" y="455">部分負擔</text><text x="535" y="455">100</text><line x1="125" y1="490" x2="595" y2="490" stroke="#cbd5e1"/><text x="130" y="535" font-weight="700">合計</text><text x="525" y="535" font-weight="700">NT$ 250</text></g>
+ <text x="115" y="625" font-family="sans-serif" font-size="17" fill="#334155">醫囑：建議休息一日</text><rect x="430" y="665" width="150" height="150" rx="75" fill="none" stroke="#ef4444" stroke-width="5" opacity=".7"/><text x="505" y="735" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#ef4444">診所證明章</text><text x="505" y="765" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#ef4444">DEMO ONLY</text>
+ <text x="360" y="890" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#94a3b8">此為 BOMB HR 前端展示用假資料，非真實醫療文件</text>
+</svg>
