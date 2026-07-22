@@ -1,4 +1,14 @@
-BOMB HR Enterprise HR Admin V1.60 Unified
+BOMB HR Enterprise HR Admin V1.62 Unified
+
+V1.62 身份群組修正：
+- 預設部門主管群組已由底層資料移除。
+- 非受保護身份支援安全刪除及已指派人員阻擋。
+- 身份與人員清單移除左側字母／文字圖示。
+
+V1.61 身份刪除與檔案整併：
+- 新增自訂身份群組安全刪除、指派人員檢查、二次確認及稽核紀錄。
+- 舊版編號補丁已合併為 admin-bootstrap.js、admin-features.js、admin-permissions.css。
+- 官網、Employee App、薪資、勞健保、緊急請假、主管聯絡主檔、證照健康文件、裝置與通知功能均保留。
 
 V1.60 權限與主管群組更新：
 - 預設部門主管群組改為自行新增與命名。
