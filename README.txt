@@ -1,4 +1,7 @@
-BOMB HR Enterprise HR Admin V1.69 Unified
+BOMB HR Enterprise HR Admin V1.70 Unified
+
+V1.70 帳號部門同步：
+- 管理部門勾選及儲存時同步至主管員編範圍，登入後直接按員編讀取。
 
 V1.69 完整名冊重新過濾：
 - 主管權限每次都從完整人事主檔重新計算，不再使用舊版已縮減的名冊結果。
