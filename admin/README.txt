@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin Demo V1.71
+BOMB HR Enterprise HR Admin Demo V1.72
+
+V1.72：
+- 管理部門改為取代帳號原始部門，不再與本人所屬部門自動合併。
+- 有明確勾選時完全依勾選結果；沒有設定時才回退本人原始部門。
 
 V1.71：
 - 管理部門重設為營運管理部、技術部、企劃部、財務人事行政部。

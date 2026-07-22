@@ -9,7 +9,7 @@
   Object.values(roles).forEach(role=>{if(!(role?.members||[]).includes(employeeId))return;departments.push(...((role.memberDepartments||{})[employeeId]||[]),...(role.departments||[]))});
   return departments;
  }
- const allowedDepartments=()=>{const p=profile(),configured=configuredDepartments(p.id),accountScopes=read('bombhr-account-department-scopes',{})[p.id]||[],combined=[...(p.departments||[p.department]),...configured,...accountScopes];return [...new Set(combined.map(normalize).filter(Boolean))]};
+ const allowedDepartments=()=>{const p=profile(),configured=configuredDepartments(p.id),accountScopes=read('bombhr-account-department-scopes',{})[p.id]||[],source=accountScopes.length?accountScopes:configured.length?configured:(p.departments||[p.department]);return [...new Set(source.map(normalize).filter(Boolean))]};
  function permittedDepartment(department){const p=profile();return p.role!=='supervisor'||allowedDepartments().includes(normalize(department))}
  function allPersonnel(){
   const overrides=read('bombhr-employee-org-overrides',{}),custom=typeof getCustomEmployees==='function'?getCustomEmployees():[];

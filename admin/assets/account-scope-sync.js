@@ -18,7 +18,7 @@
   const ids=targets(id,role);if(!ids.length)return;const scopes=read(scopeKey,{});ids.forEach(employeeId=>scopes[employeeId]=departments);localStorage.setItem(scopeKey,JSON.stringify(scopes));
  }
  function migrate(){
-  const roles=read(roleKey,{}),scopes=read(scopeKey,{});Object.entries(roles).forEach(([id,role])=>{const departments=[...(role.departments||[])];targets(id,role).forEach(employeeId=>{const personal=(role.memberDepartments||{})[employeeId]||[];const merged=[...new Set([...personal,...departments])];if(merged.length)scopes[employeeId]=merged})});localStorage.setItem(scopeKey,JSON.stringify(scopes));
+  const roles=read(roleKey,{}),scopes=read(scopeKey,{});Object.entries(roles).forEach(([id,role])=>{const departments=[...(role.departments||[])];targets(id,role).forEach(employeeId=>{const personal=(role.memberDepartments||{})[employeeId]||[],effective=departments.length?departments:personal;if(effective.length)scopes[employeeId]=[...new Set(effective)]})});localStorage.setItem(scopeKey,JSON.stringify(scopes));
  }
  window.addEventListener('change',event=>{if(event.target.matches&&event.target.matches('[data-role-department]'))setTimeout(persistVisibleScope,0)},true);
  window.addEventListener('click',event=>{if(event.target.closest&&event.target.closest('[data-save-role],[data-v156-save],[data-v160-save]'))persistVisibleScope()},true);

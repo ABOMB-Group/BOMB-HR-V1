@@ -1,4 +1,7 @@
-BOMB HR Enterprise HR Admin V1.71 Unified
+BOMB HR Enterprise HR Admin V1.72 Unified
+
+V1.72 管理部門優先：
+- 修正只勾財務人事行政部時仍自動包含企劃部的問題。
 
 V1.71 管理部門主檔：
 - 重設四個正式部門並支援新增、刪除及使用中阻擋。
