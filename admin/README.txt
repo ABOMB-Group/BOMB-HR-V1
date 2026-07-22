@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin Demo V1.72
+BOMB HR Enterprise HR Admin Demo V1.73
+
+V1.73：
+- 未勾選任何管理部門時正式儲存空範圍，主管不可查看任何員工資料。
+- 移除自動回退主管本人原始部門的行為，空範圍名冊顯示 0 人。
 
 V1.72：
 - 管理部門改為取代帳號原始部門，不再與本人所屬部門自動合併。

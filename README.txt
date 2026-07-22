@@ -1,4 +1,7 @@
-BOMB HR Enterprise HR Admin V1.72 Unified
+BOMB HR Enterprise HR Admin V1.73 Unified
+
+V1.73 空管理範圍：
+- 完全未勾選管理部門時不提供任何員工資料，不再自動套用本人部門。
 
 V1.72 管理部門優先：
 - 修正只勾財務人事行政部時仍自動包含企劃部的問題。
