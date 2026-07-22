@@ -1,4 +1,9 @@
-BOMB HR Enterprise HR Admin V1.54 Unified
+BOMB HR Enterprise HR Admin V1.60 Unified
+
+V1.60 權限與主管群組更新：
+- 預設部門主管群組改為自行新增與命名。
+- 主管人員與部門指派連動後台切換帳號及各管理模組。
+- 主管跨部門員工資料採畫面過濾與開啟前驗證雙重阻擋。
 
 V1.54 強制清除CPR舊資料與快取：
 - 無論舊紀錄來源為何，只要CPR＋AED沒有附件且狀態為待補上傳就直接移除

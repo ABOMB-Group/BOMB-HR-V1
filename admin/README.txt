@@ -1,4 +1,9 @@
-BOMB HR Enterprise HR Admin Demo V1.28
+BOMB HR Enterprise HR Admin Demo V1.60
+
+V1.60：
+- 移除預設「部門主管」身份群組，改由最高權限新增主管範本並自行輸入群組名稱。
+- 自訂主管群組的人員與部門設定成為後台帳號及跨模組資料範圍的主要來源。
+- 強制阻擋主管開啟其他部門的人事、出勤、排班、簽核與薪資資料，並保留操作人與責任部門稽核紀錄。
 
 登入：於登入頁選擇 Demo 身份，密碼皆為 bombhr（公司代碼 ABOMB）
 入口：admin/index.html
