@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin V1.63 Unified
+BOMB HR Enterprise HR Admin V1.64 Unified
+
+V1.64 新增身份獨立化：
+- 新增身份流程由獨立腳本處理，避免整併檔案的執行順序影響建立按鈕。
+- 建立後增加寫入驗證與重新載入確認。
 
 V1.63 新增身份修正：
 - 修正部分瀏覽器載入順序造成「建立並設定」按鈕無反應。

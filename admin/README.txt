@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin Demo V1.63
+BOMB HR Enterprise HR Admin Demo V1.64
+
+V1.64：
+- 新增身份改用獨立 identity-management.js，不受其他整併功能執行錯誤影響。
+- 按下建立後先回讀確認資料已寫入，再重新載入並開啟新身份。
 
 V1.63：
 - 新增身份改為單一直接建立事件，修正輸入身份名稱後「建立並設定」無反應。
