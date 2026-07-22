@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin V1.62 Unified
+BOMB HR Enterprise HR Admin V1.63 Unified
+
+V1.63 新增身份修正：
+- 修正部分瀏覽器載入順序造成「建立並設定」按鈕無反應。
+- 建立流程加入名稱驗證、重複檢查與建立稽核紀錄。
 
 V1.62 身份群組修正：
 - 預設部門主管群組已由底層資料移除。
