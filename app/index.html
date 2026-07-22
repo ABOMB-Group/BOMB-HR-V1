@@ -1188,6 +1188,7 @@ button{cursor:pointer}
 <div class="form-group"><label>開始時間</label><input id="leaveStartTime" type="time" value="09:00"/></div>
 <div class="form-group"><label>結束日期</label><input id="leaveEndDate" type="date" value="2026-07-22"/></div>
 <div class="form-group"><label>結束時間</label><input id="leaveEndTime" type="time" value="18:00"/></div>
+<div class="form-group"><label>資格起算日 <span class="optional-badge">婚假必填</span></label><input id="leaveEntitlementDate" type="date"/><div class="readonly-note">婚假請填結婚登記日，系統會檢查是否在 3 個月內使用。</div></div>
 <div class="info-row"><span>自動計算</span><b id="leaveDuration">3 天／24 小時</b></div>
 <div class="form-group">
 <label>工作代理人 <span class="optional-badge">選填</span></label>
@@ -1751,6 +1752,10 @@ function submitLeave(){
   const endDate=document.getElementById('leaveEndDate').value;
   const agent=document.getElementById('leaveAgent').value || '未指定';
   const duration=document.getElementById('leaveDuration').textContent;
+  const leaveDays=window.BOMBHR_HR_LEDGER?.days(duration)||0;
+  const entitlementDate=document.getElementById('leaveEntitlementDate').value;
+  const validation=window.BOMBHR_HR_LEDGER?.validate('AB00008',type,leaveDays,startDate,entitlementDate);
+  if(validation&&!validation.ok){toast(validation.message);return}
   const applicationNo='LV'+Date.now().toString().slice(-12);
 
   leaveApplications.unshift({
@@ -1759,7 +1764,7 @@ function submitLeave(){
     submitted:new Date().toLocaleString('zh-TW',{hour12:false}),
     rejectReason:''
   });
-  pushBombHREvent({category:'approval',subtype:'leave',id:applicationNo,title:type+'申請',employee:'佑',employeeId:'AB00008',period:startDate+'–'+endDate,duration,agent,reason,submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:leaveAttachments.map(f=>({name:f.name,size:Math.ceil(f.size/1024)+' KB'}))});
+  pushBombHREvent({category:'approval',subtype:'leave',id:applicationNo,title:type+'申請',leaveType:type,leaveDays,entitlementDate,employee:'佑',employeeId:'AB00008',period:startDate+'–'+endDate,duration,agent,reason,submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:leaveAttachments.map(f=>({name:f.name,size:Math.ceil(f.size/1024)+' KB'}))});
 
   saveLeaveApplications();
   renderLeaveApplications();
@@ -1776,11 +1781,7 @@ function pushBombHREvent(event){const key='bombhr-demo-events';let events=[];try
 function syncApprovalResults(){let events=[];try{events=JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]')}catch(e){}let changed=false;leaveApplications.forEach(item=>{const matched=events.find(e=>e.id===item.id);if(matched&&matched.status&&matched.status!==item.status){item.status=matched.status;item.statusText=matched.statusText;item.rejectReason=matched.rejectReason||'';changed=true}});if(changed){saveLeaveApplications();renderLeaveApplications()}}
 window.addEventListener('storage',e=>{if(e.key==='bombhr-demo-events')syncApprovalResults()});document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncApprovalResults()});
 
-let leaveApplications=[
-  {id:'LV202607150001',type:'旅遊假',start:'2026-07-20',end:'2026-07-22',duration:'3 天／24 小時',agent:'KEN',reason:'家庭旅遊',status:'review',statusText:'主管審核中',submitted:'2026/07/15 10:30',rejectReason:''},
-  {id:'LV202607080014',type:'病假',start:'2026-07-09',end:'2026-07-09',duration:'1 天／8 小時',agent:'陳怡君',reason:'身體不適',status:'approved',statusText:'已核准',submitted:'2026/07/08 19:24',rejectReason:''},
-  {id:'LV202607020006',type:'事假',start:'2026-07-03',end:'2026-07-03',duration:'0.5 天／4 小時',agent:'林志豪',reason:'私人事務',status:'rejected',statusText:'已退回',submitted:'2026/07/02 16:05',rejectReason:'附件資料不足，請補充說明後重新送出。'}
-];
+let leaveApplications=[];
 
 function loadLeaveApplications(){
   const saved=localStorage.getItem('bombhr-leave-applications');
@@ -2065,6 +2066,7 @@ setInterval(tick,1000);
 <link rel="stylesheet" href="emergency-leave.css">
 <link rel="stylesheet" href="device-security.css">
 <link rel="stylesheet" href="certificates.css">
+<script src="../assets/hr-leave-ledger.js?v=175"></script>
 <script src="../assets/certificate-requirements.js"></script>
 <script src="emergency-leave.js"></script>
 <script src="attendance-rules.js"></script>

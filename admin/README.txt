@@ -1,6 +1,6 @@
-BOMB HR Enterprise HR Admin Demo V1.74
+BOMB HR Enterprise HR Admin Demo V1.75
 
-V1.74：
+V1.75：清空預設排班，新增假勤規則管理、申請額度檢核、核准扣額、人事餘額與薪資／遲到連動。
 - 左側品牌區改用完整 BOMB HR 公司 Logo，移除紫色 B 方塊。
 - 重整側欄間距、分類、選取狀態、底部範圍卡及互動效果。
 - 修正漢堡按鈕：桌面收合／展開、手機滑出／關閉，並記住桌面狀態。
