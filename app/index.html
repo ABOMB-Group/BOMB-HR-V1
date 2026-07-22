@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="BOMB HR"/>
 <link rel="manifest" href="manifest.webmanifest"/>
 <link rel="apple-touch-icon" href="../assets/bombhr-logo.png"/>
-<title>BOMB HR｜員工打卡 APP V9</title>
+<title>BOMB HR｜Employee App V1.51</title>
 <style>
 :root{
   --bg:#f6f8fc;
@@ -890,7 +890,7 @@ button{cursor:pointer}
 <section class="view active" id="homeView">
 <div class="topbar">
 <div>
-<h1 id="dynamicGreeting">早安，Vika 👋</h1>
+<h1 id="dynamicGreeting">早安，佑 👋</h1>
 <small id="homeTodayDate">2026 年 7 月 15 日（二）</small>
 </div>
 <div class="actions">
@@ -1128,7 +1128,7 @@ button{cursor:pointer}
 <svg viewbox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg>
 </button>
 </div>
-<div><h3>Vika</h3><p>產品企劃部・員工編號 VIKA001</p></div>
+<div><h3>佑</h3><p>技術・前端工程師・員工編號 AB00008</p></div>
 </div>
 <div class="card menu-list">
 <button class="menu-row" onclick="openSubview('profileSubview')" style="width:100%;border:0;background:none;color:inherit;text-align:left">
@@ -1161,7 +1161,7 @@ button{cursor:pointer}
 </span>
 <span class="arrow">›</span>
 </a>
-<div class="demo-badge">● Employee APP Demo V1.0</div>
+<div class="demo-badge">● Employee APP Demo V1.51</div>
 </section>
 </div>
 <section class="subview" id="leaveSubview">
@@ -1193,7 +1193,7 @@ button{cursor:pointer}
 <label>工作代理人 <span class="optional-badge">選填</span></label>
 <select id="leaveAgent">
 <option value="">請選擇代理人（若無可略過）</option>
-<option>王小明</option>
+<option>KEN</option>
 <option>陳怡君</option>
 <option>林志豪</option>
 </select>
@@ -1229,13 +1229,13 @@ button{cursor:pointer}
 <h2>個人資料</h2>
 </div>
 <div class="card">
-<div class="form-group"><label>姓名</label><input disabled="" id="profileName" value="Vika"/></div>
-<div class="form-group"><label>員工編號</label><input disabled="" value="VIKA001"/></div>
-<div class="form-group"><label>部門</label><input disabled="" id="profileDepartment" value="產品企劃部"/></div>
-<div class="form-group"><label>職稱</label><input disabled="" value="產品企劃專員"/></div>
+<div class="form-group"><label>姓名</label><input disabled="" id="profileName" value="佑"/></div>
+<div class="form-group"><label>員工編號</label><input disabled="" value="AB00008"/></div>
+<div class="form-group"><label>部門</label><input disabled="" id="profileDepartment" value="技術"/></div>
+<div class="form-group"><label>職稱</label><input disabled="" value="前端工程師"/></div>
 <div class="form-group"><label>聯絡電話</label><input id="profilePhone" value="0912-345-678"/></div>
 <div class="form-group"><label>Email</label><input id="profileEmail" value="vika@bombhr.com"/></div>
-<div class="form-group"><label>緊急聯絡人</label><input id="profileEmergency" value="王小明"/></div>
+<div class="form-group"><label>緊急聯絡人</label><input id="profileEmergency" value="KEN"/></div>
 <div class="form-group"><label>緊急聯絡電話</label><input id="profileEmergencyPhone" value="0911-222-333"/></div>
 <button class="save-btn" onclick="saveProfile()">儲存可修改資料</button>
 <button class="secondary" onclick="requestHRChange()" style="margin-top:10px">申請人事資料變更</button>
@@ -1330,7 +1330,7 @@ button{cursor:pointer}
 <div class="about-logo">B</div>
 <h3>BOMB HR</h3>
 <p>The Intelligent Hub for Enterprise Workforce Management.</p>
-<div class="info-line" style="margin-top:18px"><span>APP 版本</span><b>2.0.0</b></div>
+<div class="info-line" style="margin-top:18px"><span>APP 版本</span><b>2.1.0</b></div>
 <div class="info-line"><span>前端 DEMO</span><b>V1.0</b></div>
 <div class="info-line"><span>服務狀態</span><b style="color:var(--green)">正常</b></div>
 </div>
@@ -1488,7 +1488,7 @@ function punch(){
     punchState=1;
     core.innerHTML='<div><b>下班打卡</b><small>'+nowTime()+'</small></div>';
     document.getElementById('homeInTime').textContent=time;
-    pushBombHREvent({category:'attendance',action:'clock-in',employee:'王小明',employeeId:'AB00128',time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});
+    pushBombHREvent({category:'attendance',action:'clock-in',employee:'佑',employeeId:'AB00008',time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});
     toast(activeMethod+' 驗證完成，上班打卡成功');
   }else if(punchState===1){
     punchState=2;
@@ -1496,7 +1496,7 @@ function punch(){
     core.disabled=true;
     core.style.opacity='.68';
     document.getElementById('homeOutTime').textContent=time;
-    pushBombHREvent({category:'attendance',action:'clock-out',employee:'王小明',employeeId:'AB00128',time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});
+    pushBombHREvent({category:'attendance',action:'clock-out',employee:'佑',employeeId:'AB00008',time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});
     toast(activeMethod+' 驗證完成，下班打卡成功');
   }
 }
@@ -1584,7 +1584,7 @@ function processAvatarFile(file){
         try{
           localStorage.setItem('bombhr-avatar', compressedData);
           const sharedPhotos=JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}');
-          sharedPhotos.AB00128=compressedData;
+          sharedPhotos.AB00008=compressedData;
           localStorage.setItem('bombhr-employee-profile-photos',JSON.stringify(sharedPhotos));
           toast('大頭照已更新並儲存');
         }catch(storageError){
@@ -1633,7 +1633,7 @@ function renderAvatar(data){
 }
 function removeAvatar(){
   localStorage.removeItem('bombhr-avatar');
-  try{const sharedPhotos=JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}');delete sharedPhotos.AB00128;localStorage.setItem('bombhr-employee-profile-photos',JSON.stringify(sharedPhotos))}catch(e){}
+  try{const sharedPhotos=JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}');delete sharedPhotos.AB00008;localStorage.setItem('bombhr-employee-profile-photos',JSON.stringify(sharedPhotos))}catch(e){}
   renderAvatar('');
   closeAvatarSheet();
   toast('大頭照已移除');
@@ -1646,7 +1646,7 @@ document.getElementById('cameraInput').addEventListener('change',function(){
   processAvatarFile(this.files[0]);
   this.value='';
 });
-function getSharedEmployeeAvatar(){try{return JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}').AB00128||''}catch(e){return ''}}
+function getSharedEmployeeAvatar(){try{return JSON.parse(localStorage.getItem('bombhr-employee-profile-photos')||'{}').AB00008||''}catch(e){return ''}}
 renderAvatar(getSharedEmployeeAvatar()||localStorage.getItem('bombhr-avatar')||'');
 window.addEventListener('storage',e=>{if(e.key==='bombhr-employee-profile-photos')renderAvatar(getSharedEmployeeAvatar())});
 
@@ -1759,7 +1759,7 @@ function submitLeave(){
     submitted:new Date().toLocaleString('zh-TW',{hour12:false}),
     rejectReason:''
   });
-  pushBombHREvent({category:'approval',subtype:'leave',id:applicationNo,title:type+'申請',employee:'王小明',employeeId:'AB00128',period:startDate+'–'+endDate,duration,agent,reason,submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:leaveAttachments.map(f=>({name:f.name,size:Math.ceil(f.size/1024)+' KB'}))});
+  pushBombHREvent({category:'approval',subtype:'leave',id:applicationNo,title:type+'申請',employee:'佑',employeeId:'AB00008',period:startDate+'–'+endDate,duration,agent,reason,submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:leaveAttachments.map(f=>({name:f.name,size:Math.ceil(f.size/1024)+' KB'}))});
 
   saveLeaveApplications();
   renderLeaveApplications();
@@ -1770,14 +1770,14 @@ function submitLeave(){
 }
 function calcOT(){const s=document.getElementById('otStart').value,e=document.getElementById('otEnd').value;if(!s||!e)return;const [sh,sm]=s.split(':').map(Number),[eh,em]=e.split(':').map(Number);let m=eh*60+em-(sh*60+sm);if(m<0)m+=1440;document.getElementById('otHours').textContent=(m/60).toFixed(1).replace('.0','')+' 小時'}
 ['otStart','otEnd'].forEach(id=>document.getElementById(id).addEventListener('change',calcOT));
-function submitOvertime(){const id='OT'+Date.now().toString().slice(-12),start=document.getElementById('otStart').value,end=document.getElementById('otEnd').value,hours=document.getElementById('otHours').textContent;pushBombHREvent({category:'approval',subtype:'overtime',id,title:'加班申請',employee:'王小明',employeeId:'AB00128',period:start+'–'+end,duration:hours,reason:'專案上線前測試與文件整理',submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:[]});toast('加班申請已送出，等待主管審核');closeSubview('overtimeSubview')}
+function submitOvertime(){const id='OT'+Date.now().toString().slice(-12),start=document.getElementById('otStart').value,end=document.getElementById('otEnd').value,hours=document.getElementById('otHours').textContent;pushBombHREvent({category:'approval',subtype:'overtime',id,title:'加班申請',employee:'佑',employeeId:'AB00008',period:start+'–'+end,duration:hours,reason:'專案上線前測試與文件整理',submitted:new Date().toLocaleString('zh-TW',{hour12:false}),status:'review',statusText:'主管審核中',attachments:[]});toast('加班申請已送出，等待主管審核');closeSubview('overtimeSubview')}
 
 function pushBombHREvent(event){const key='bombhr-demo-events';let events=[];try{events=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}events.unshift({...event,eventId:event.id||'EV'+Date.now(),createdAt:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(events.slice(0,100)));window.dispatchEvent(new CustomEvent('bombhr-demo-update'))}
 function syncApprovalResults(){let events=[];try{events=JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]')}catch(e){}let changed=false;leaveApplications.forEach(item=>{const matched=events.find(e=>e.id===item.id);if(matched&&matched.status&&matched.status!==item.status){item.status=matched.status;item.statusText=matched.statusText;item.rejectReason=matched.rejectReason||'';changed=true}});if(changed){saveLeaveApplications();renderLeaveApplications()}}
 window.addEventListener('storage',e=>{if(e.key==='bombhr-demo-events')syncApprovalResults()});document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncApprovalResults()});
 
 let leaveApplications=[
-  {id:'LV202607150001',type:'旅遊假',start:'2026-07-20',end:'2026-07-22',duration:'3 天／24 小時',agent:'王小明',reason:'家庭旅遊',status:'review',statusText:'主管審核中',submitted:'2026/07/15 10:30',rejectReason:''},
+  {id:'LV202607150001',type:'旅遊假',start:'2026-07-20',end:'2026-07-22',duration:'3 天／24 小時',agent:'KEN',reason:'家庭旅遊',status:'review',statusText:'主管審核中',submitted:'2026/07/15 10:30',rejectReason:''},
   {id:'LV202607080014',type:'病假',start:'2026-07-09',end:'2026-07-09',duration:'1 天／8 小時',agent:'陳怡君',reason:'身體不適',status:'approved',statusText:'已核准',submitted:'2026/07/08 19:24',rejectReason:''},
   {id:'LV202607020006',type:'事假',start:'2026-07-03',end:'2026-07-03',duration:'0.5 天／4 小時',agent:'林志豪',reason:'私人事務',status:'rejected',statusText:'已退回',submitted:'2026/07/02 16:05',rejectReason:'附件資料不足，請補充說明後重新送出。'}
 ];
@@ -1890,7 +1890,7 @@ function updateLiveDateTime(){
   if(punch)punch.textContent=formatTime(now,true);
   if(homeDate)homeDate.textContent=formatZhDate(now,true);
   if(punchDate)punchDate.textContent=formatZhDate(now,false);
-  if(greeting)greeting.textContent=greetingForHour(now.getHours())+'，Vika 👋';
+  if(greeting)greeting.textContent=greetingForHour(now.getHours())+'，佑 👋';
 }
 
 function buildAttendanceRecords(){
@@ -2064,9 +2064,12 @@ setInterval(tick,1000);
 </script>
 <link rel="stylesheet" href="emergency-leave.css">
 <link rel="stylesheet" href="device-security.css">
+<link rel="stylesheet" href="certificates.css">
+<script src="../assets/certificate-requirements-v151.js"></script>
 <script src="emergency-leave.js"></script>
 <script src="attendance-rules.js"></script>
 <script src="device-security.js"></script>
+<script src="certificates.js"></script>
 <script src="pwa-install.js"></script>
 </body>
 </html>

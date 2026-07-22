@@ -1,11 +1,11 @@
 (function(){
  const key='bombhr-health-documents-v148';
- const types=['餐飲從業人員健康檢查','供膳人員健康檢查','一般員工健康檢查','食品衛生訓練證明','其他證照／健康文件'];
+ const types=window.BOMBHR_CERTIFICATE_TYPES||['健康檢查／體檢證明','CPR＋AED急救訓練證明','工作場所急救人員結業證書','資訊技術專業證照','雲端／系統管理證照','資訊安全證照','設計軟體／視覺設計證照','專案管理證照','其他專業證照'];
  const canManage=()=>['executive','hradmin'].includes(currentRole());
  const canSeeStatus=()=>['executive','hradmin','supervisor'].includes(currentRole());
  const read=()=>{try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return []}};
  const save=items=>localStorage.setItem(key,JSON.stringify(items));
- const statusOf=doc=>{if(doc.reviewStatus==='退回補件')return '退回補件';if(!doc.expiryDate)return doc.reviewStatus||'待確認';const days=Math.ceil((new Date(doc.expiryDate+'T23:59:59')-new Date())/86400000);return days<0?'已逾期':days<=30?'即將到期':doc.reviewStatus==='待確認'?'待確認':'有效'};
+ const statusOf=doc=>{if(doc.reviewStatus==='待補上傳'||doc.reviewStatus==='退回補件')return doc.reviewStatus;if(!doc.expiryDate)return doc.reviewStatus||'待確認';const days=Math.ceil((new Date(doc.expiryDate+'T23:59:59')-new Date())/86400000);return days<0?'已逾期':days<=30?'即將到期':doc.reviewStatus==='待確認'?'待確認':'有效'};
  const employee=id=>(window.BOMBHR_IMPORTED_PERSONNEL||[]).find(item=>item.employeeId===id)||getEmployeeRecord(id);
  const attachmentAccess=()=>['executive','hradmin'].includes(currentRole());
  function statusBadge(status){return badge(status)}
