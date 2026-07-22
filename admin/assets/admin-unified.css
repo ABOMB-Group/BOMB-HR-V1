@@ -66,3 +66,17 @@ body[data-role="supervisor"] .salary-auto-preview{display:none}.salary-pending-p
 .modal:has(.health-document-list) .modal-card,.modal:has(.health-overview-table) .modal-card,.modal:has(.health-upload) .modal-card{width:min(1280px,97vw);max-height:95vh}.modal:has(.health-document-list) #modalBody,.modal:has(.health-overview-table) #modalBody,.modal:has(.health-upload) #modalBody{overflow-x:hidden}.health-overview-table{overflow-x:hidden}.health-overview-table table{min-width:0;table-layout:fixed}.health-overview-table th,.health-overview-table td{padding:11px 9px;overflow-wrap:anywhere}.health-overview-table th:first-child{width:16%}.health-overview-table th:nth-child(2){width:14%}.health-overview-table th:nth-child(3){width:18%}.health-overview-table th:nth-child(4),.health-overview-table th:nth-child(5){width:10%}.health-overview-table th:nth-child(6){width:10%}.health-overview-table th:nth-child(7){width:12%}.health-overview-table th:last-child{width:10%}.modal:has(.health-document-list) .health-document-card{grid-template-columns:minmax(220px,1.8fr) minmax(130px,.8fr) minmax(130px,.8fr) auto minmax(150px,.8fr)}@media(max-width:900px){.modal:has(.health-document-list) .modal-card,.modal:has(.health-overview-table) .modal-card,.modal:has(.health-upload) .modal-card{width:98vw}.health-overview-table{overflow-x:auto}.health-overview-table table{min-width:900px}.modal:has(.health-document-list) .health-document-card{grid-template-columns:1fr 1fr}}
 .modal:has(.health-privacy-note) .modal-card{width:min(1280px,97vw);max-height:95vh}.modal:has(.health-privacy-note) #modalBody{overflow-x:hidden}
 .health-card-actions button{min-width:62px;padding:8px 12px!important;border:1px solid var(--line)!important;border-radius:9px!important;background:var(--surface2)!important;color:var(--text)!important;font-size:12px!important;font-weight:800!important;opacity:1!important;visibility:visible!important}.health-card-actions button:hover{border-color:var(--brand)!important;background:color-mix(in srgb,var(--brand) 10%,var(--surface))!important;color:var(--brand)!important}
+
+/* Consolidated layout fixes */
+.sound-setting{align-items:center;gap:10px}
+.sound-setting>div{flex:1}
+.sound-test-btn{border:1px solid var(--line);border-radius:9px;padding:7px 10px;background:var(--surface2);color:var(--text);font-size:10px;font-weight:800;white-space:nowrap}
+.pop-head-row{flex-direction:row;align-items:flex-start;justify-content:space-between;gap:14px}
+.pop-head-row>div{display:flex;flex-direction:column}
+.compact-close{width:30px;height:30px;flex:0 0 auto}
+.profile-pop{padding-top:38px}
+.profile-pop .popover-close-row{position:absolute;top:7px;right:7px;display:block;margin:0}
+.profile-pop .popover-close-row .compact-close{width:28px;height:28px;padding:0;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:18px;text-align:center}
+.profile-pop .popover-close-row .compact-close:hover{background:var(--surface2);color:var(--text)}
+.command-head{display:flex;align-items:center;border-bottom:1px solid var(--line);padding-right:12px}
+.command-head>label{display:flex;align-items:center;gap:10px;padding:16px;flex:1;font-size:20px}
