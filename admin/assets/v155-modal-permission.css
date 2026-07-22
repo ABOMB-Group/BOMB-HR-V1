@@ -33,3 +33,4 @@ body[data-permission-role="supervisor"] .permission-pane:has(.permission-matrix)
 .role-switch-grid>button:first-child{grid-column:1/-1}
 .role-switch-grid>button small{font-weight:700}
 .role-switch-grid>button p{line-height:1.45}
+.linked-tab-note{display:block;margin-top:2px;color:var(--brand);font-size:8px;font-weight:800}
