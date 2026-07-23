@@ -25,11 +25,7 @@
  };
  function fields(){
    const codes=window.BOMBHR_SCHEDULING?.scheduleCodes?.()||[{code:'休',name:'休假'},{code:'年',name:'年假'}];
-   const preferred=['休','年','旅','喪','婚','病','事'];
-   return codes.filter(item=>item.code!=='1').sort((a,b)=>{
-     const ai=preferred.indexOf(a.code),bi=preferred.indexOf(b.code);
-     return (ai<0?99:ai)-(bi<0?99:bi);
-   });
+   return codes.filter(item=>item.code!=='1');
  }
  function values(max){
    return fields().map(item=>({item,...parseDays(document.querySelector(`[data-monthly-code="${CSS.escape(item.code)}"]`)?.value,max)}));

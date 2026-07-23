@@ -1,6 +1,9 @@
 .schedule-table-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
 .schedule-table-tools>strong{margin-right:4px;font-size:12px}.schedule-table-tool-group{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface2)}
-.schedule-table-tool-group span{min-width:68px;padding:0 9px;text-align:center;font-size:11px;color:var(--muted)}
+.schedule-table-tool-group span{padding:0 6px;color:var(--muted);font-size:10px;font-weight:700}
+.schedule-table-tool-group input{width:56px;height:32px;box-sizing:border-box;border:0;background:var(--surface2);color:var(--text);text-align:center;font:700 11px/1 inherit;outline:0}
+.schedule-table-tool-group input:focus{background:color-mix(in srgb,var(--surface) 80%,var(--brand));box-shadow:inset 0 0 0 2px var(--brand)}
+.schedule-table-tool-group input::-webkit-inner-spin-button{opacity:1}
 .schedule-table-tool-group button{width:34px;height:32px;border:0;border-left:1px solid var(--line);background:var(--surface);color:var(--text);font-size:15px;font-weight:800}
 .schedule-table-tool-group button:first-child{border-left:0;border-right:1px solid var(--line)}.schedule-table-tool-group button:hover{background:color-mix(in srgb,var(--surface) 84%,var(--brand));color:var(--brand)}
 .schedule-table-reset{height:34px;padding:0 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font-size:11px;font-weight:700}
