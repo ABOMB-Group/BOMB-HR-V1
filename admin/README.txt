@@ -1,4 +1,6 @@
-BOMB HR Enterprise HR Admin Demo V1.96
+BOMB HR Enterprise HR Admin Demo V1.97
+
+V1.97：完成排班功能檔案合併與版本尾碼清理；排班功能統一載入 scheduling.js / scheduling.css，企業設定統一使用 enterprise-settings.js / enterprise-settings.css。
 
 V1.96：修正排班 A+ 控制、週六與國定假日辨識、節日滑入提示、排休意願區塊順序；重製假別設定卡片並完成 Employee App 開關儲存與同步。
 V1.95：新增排班對象管理，可設定參與、不參與、指定期間暫停或固定班制；僅影響適用月份的班表名單，不刪除人事與歷史資料。

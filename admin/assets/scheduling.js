@@ -1,0 +1,394 @@
+/* ===== Consolidated from scheduling-import.js ===== */
+(function(){
+ const KEY='bombhr-schedules-v176',CODE_KEY='bombhr-schedule-codes-v182',CODE_ORDER_KEY='bombhr-schedule-code-order-v193',COMPANY_LAYOUT_KEY='bombhr-schedule-company-layout-v184';let pending=[],editMode=false,draft=null,selectedShift='09:00-18:00',selectedCode='1';
+ const HOLIDAYS_2026={'2026-01-01':'元旦','2026-02-16':'除夕','2026-02-17':'春節','2026-02-18':'春節','2026-02-19':'春節','2026-02-20':'春節補假','2026-02-27':'和平紀念日補假','2026-02-28':'和平紀念日','2026-04-03':'兒童節補假','2026-04-04':'兒童節','2026-04-05':'清明節','2026-04-06':'清明節補假','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-09':'國慶日補假','2026-10-10':'國慶日','2026-10-25':'臺灣光復節','2026-10-26':'臺灣光復節補假','2026-12-25':'行憲紀念日'};
+ const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}};
+ const save=v=>localStorage.setItem(KEY,JSON.stringify(v));
+ const visibleRows=()=>editMode&&draft?draft:read();
+ const role=()=>typeof currentRole==='function'?currentRole():'';
+ const canEdit=()=>['executive','hradmin','supervisor'].includes(role());
+ const isHistorical=()=>scheduleCursor<new Date(scheduleToday.getFullYear(),scheduleToday.getMonth(),1);
+ const canEditHistory=()=>['executive','hradmin'].includes(role());
+ const canEditMonth=()=>canEdit()&&(!isHistorical()||canEditHistory());
+ const defaultCodes=()=>[{code:'1',name:'上班'},{code:'休',name:'休假'},{code:'年',name:'年假'},{code:'旅',name:'旅遊假'},{code:'喪',name:'喪假'},{code:'婚',name:'婚假'},{code:'病',name:'病假'}];
+ const scheduleCodes=()=>{try{const custom=JSON.parse(localStorage.getItem(CODE_KEY)||'[]'),merged=[...defaultCodes(),...custom].filter((x,i,a)=>x?.code&&a.findIndex(y=>y.code===x.code)===i),order=JSON.parse(localStorage.getItem(CODE_ORDER_KEY)||'[]');return merged.sort((a,b)=>{const ai=order.indexOf(a.code),bi=order.indexOf(b.code);return (ai<0?999:ai)-(bi<0?999:bi)})}catch(e){return defaultCodes()}};
+ const codeOptions=()=>scheduleCodes().map(x=>`<option value="${esc(x.code)}" ${selectedCode===x.code?'selected':''}>${esc(x.code)}｜${esc(x.name)}</option>`).join('');
+ const defaultLayout=()=>({order:['code','add','shift','cancel','save'],compactCodes:true,weekendBands:false,showLegend:true,showImportNote:true,showWeek:true,showStaff:true});
+ const userLayoutKey=()=>`bombhr-schedule-user-layout-v184-${currentProfile().id||'unknown'}-${role()||'role'}`;
+ const readLayout=key=>{try{return {...defaultLayout(),...JSON.parse(localStorage.getItem(key)||'{}')}}catch(e){return defaultLayout()}};
+ const companyLayout=()=>readLayout(COMPANY_LAYOUT_KEY);
+ const scheduleLayout=()=>{const company=companyLayout();try{return {...company,...JSON.parse(localStorage.getItem(userLayoutKey())||'{}')}}catch(e){return company}};
+ const saveLayout=(key,value)=>localStorage.setItem(key,JSON.stringify({...defaultLayout(),...value}));
+ const holidayName=date=>HOLIDAYS_2026[date]||'';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const month=d=>String(d||'').slice(0,7);
+ function leaveFor(row){return approvedLeaveEvents().find(e=>e.employeeId===row.employeeId&&(Array.isArray(e.dates)&&e.dates.length?e.dates.includes(row.date):String(e.period||'').split('–')[0]<=row.date&&String(e.period||'').split('–')[1]>=row.date))}
+ function editControls(){const controls={code:`<label data-layout-item="code">排班代號<select id="scheduleQuickCode">${codeOptions()}</select></label>`,add:'<button class="secondary-btn" data-layout-item="add" data-schedule-code-manage>＋ 新增代號</button>',shift:`<label data-layout-item="shift" class="${selectedCode==='1'?'':'shift-disabled'}">上班班別<select id="scheduleQuickShift" ${selectedCode==='1'?'':'disabled'}><option value="09:00-18:00" ${selectedShift==='09:00-18:00'?'selected':''}>日班 09:00–18:00</option><option value="08:30-17:30" ${selectedShift==='08:30-17:30'?'selected':''}>早班 08:30–17:30</option><option value="13:00-22:00" ${selectedShift==='13:00-22:00'?'selected':''}>晚班 13:00–22:00</option><option value="19:00-07:00" ${selectedShift==='19:00-07:00'?'selected':''}>夜班 19:00–07:00</option></select></label>`,cancel:'<button class="secondary-btn" data-layout-item="cancel" data-schedule-edit-cancel>取消</button>',save:'<button class="primary-btn" data-layout-item="save" data-schedule-edit-save>儲存修改</button>'};return scheduleLayout().order.map(x=>controls[x]||'').join('')}
+ function editToolbar(){if(!canEdit())return '<div class="schedule-view-only"><b>唯讀模式</b><span>目前身份沒有排班修改權限</span></div>';if(!canEditMonth())return '<div class="schedule-view-only"><b>歷史班表唯讀</b><span>部門主管只能修改本月與未來月份；歷史修正請由最高權限或財務人事行政處理</span></div>';return `<div class="schedule-edit-toolbar ${editMode?'editing':''}"><div><b>${editMode?'正在修改班表':'班表快速修改'}</b><small>${editMode?'選擇排班代號後點日期格；完成後按儲存':isHistorical()?'歷史修正將記錄實際操作人、身份、責任部門與時間':'依目前身份權限，可直接在月班表修改'}</small></div>${editMode?editControls():'<button class="primary-btn" data-schedule-edit-start>直接修改班表</button>'}</div>`}
+ const baseSchedulingView=schedulingView;schedulingView=function(){const layout=scheduleLayout();let view=baseSchedulingView();if(isHistorical()&&canEditHistory())view=view.replace('歷史班表為唯讀模式；所有原始班別與異動紀錄永久保留。','歷史班表修正模式：最高權限與財務人事行政可修改；所有異動永久保留稽核紀錄。').replace('歷史唯讀・ABOMB','可稽核修正・ABOMB');if(!layout.showWeek)view=view.replace('<button data-schedule-view="week"','<button hidden data-schedule-view="week"');if(!layout.showStaff)view=view.replace('<button data-schedule-view="staff"','<button hidden data-schedule-view="staff"');const importNote=layout.showImportNote?'<div class="schedule-import-note"><b>排班匯入流程</b><small>下載橫向每月班表 → 每位員工一列填寫 1～31 日 → 上傳預覽 → 確認後才套用。核准請假若撞班，會自動顯示「排班衝突／需補人」。</small></div>':'';return view.replace('<button class="secondary-btn" data-copy-month','<a class="secondary-btn" href="assets/BOMB-HR-每月班表範例.xlsx" download>下載每月班表範例</a><button class="secondary-btn" data-schedule-import>上傳排班表</button><button class="secondary-btn" data-copy-month').replace('<div class="schedule-toolbar">',importNote+editToolbar()+'<div class="schedule-toolbar">')};
+ function roster(){const imported=window.BOMBHR_IMPORTED_PERSONNEL||[],rows=visibleRows().filter(x=>month(x.date)===monthKey(scheduleCursor)),extra=rows.filter(x=>!imported.some(p=>p.employeeId===x.employeeId)).map(x=>({employeeId:x.employeeId,name:x.employeeName,department:x.department||'未分類',position:''}));return [...imported,...extra].filter((person,index,list)=>list.findIndex(item=>item.employeeId===person.employeeId)===index).filter(person=>window.BOMBHR_SCHEDULE_PARTICIPATION?.isIncluded(person,monthKey(scheduleCursor))!==false)}
+ function leaveOn(employeeId,date){return approvedLeaveEvents().find(e=>e.employeeId===employeeId&&(Array.isArray(e.dates)&&e.dates.length?e.dates.includes(date):String(e.period||'').split('–')[0]<=date&&String(e.period||'').split('–')[1]>=date))}
+ function shortLeave(e){const type=e?.leaveType||String(e?.title||'假').replace(/申請$/,'');return type.includes('年假')?'年':type.includes('旅遊')?'旅':type.includes('喪')?'喪':type.includes('病')?'病':type.includes('事')?'事':type.includes('婚')?'婚':'假'}
+ scheduleCalendarDays=function(){const y=scheduleCursor.getFullYear(),m=scheduleCursor.getMonth()+1,days=new Date(y,m,0).getDate(),monthValue=`${y}-${String(m).padStart(2,'0')}`,rows=visibleRows().filter(x=>month(x.date)===monthValue),people=roster(),dateKey=d=>`${monthValue}-${String(d).padStart(2,'0')}`,header=Array.from({length:days},(_,i)=>{const d=i+1,key=dateKey(d),date=new Date(y,m-1,d),week=new Intl.DateTimeFormat('zh-TW',{weekday:'short'}).format(date),dayType=date.getDay()===6?'saturday':date.getDay()===0?'sunday':'',holiday=holidayName(key),today=date.toDateString()===scheduleToday.toDateString();return `<div class="schedule-date-cell ${dayType} ${holiday?'holiday':''} ${today?'today':''}" title="${esc(holiday||week)}"><b>${d}</b><small>${week}</small>${holiday?`<em>${esc(holiday)}</em>`:''}</div>`}).join(''),body=people.map(p=>{const own=rows.filter(x=>x.employeeId===p.employeeId),sample=own.find(x=>(x.code||'1')==='1'),shift=sample?`${sample.start}–${sample.end}`:'09:00–18:00';return `<div class="schedule-month-row"><button type="button" class="schedule-person-cell schedule-person-button ${canEditMonth()?'quick-leave-enabled':''}" data-schedule-person data-employee-id="${esc(p.employeeId)}" data-employee-name="${esc(p.name)}" data-employee-department="${esc(p.department||'')}"><b>${esc(p.name)}</b><small>${esc(p.employeeId)}・${esc(p.department||'—')}／${esc(p.position||'—')}</small><em>${shift}</em></button>${Array.from({length:days},(_,i)=>{const d=i+1,key=dateKey(d),item=own.find(x=>x.date===key),leave=leaveOn(p.employeeId,key),date=new Date(y,m-1,d),dayType=date.getDay()===6?'saturday':date.getDay()===0?'sunday':'',holiday=holidayName(key),code=item?.code||'1',manualLeave=item&&code!=='1',isWork=!item||code==='1',state=leave?(item&&isWork?'conflict':'leave'):(manualLeave?'leave':isWork?'work':'empty'),label=leave?(item&&isWork?`⚠${shortLeave(leave)}`:shortLeave(leave)):(manualLeave?code:isWork?'1':''),title=leave?(item&&isWork?`${leave.leaveType||leave.title}已核准，與排班衝突／需補人`:`${leave.leaveType||leave.title}已核准`):(manualLeave?(scheduleCodes().find(x=>x.code===code)?.name||code):isWork?`${item?.start||"09:00"}–${item?.end||"18:00"}`:holiday||'未排班');return `<button class="schedule-matrix-cell ${state} ${dayType} ${holiday?'holiday':''} ${editMode&&canEditMonth()?'editable':''}" data-schedule-cell data-employee-id="${esc(p.employeeId)}" data-employee-name="${esc(p.name)}" data-date="${key}" data-start="${esc(item?.start||'09:00')}" data-end="${esc(item?.end||'18:00')}" title="${esc(title)}">${esc(label)}</button>`}).join('')}</div>`}).join(''),totals=Array.from({length:days},(_,i)=>{const key=dateKey(i+1),count=people.filter(p=>{const row=rows.find(x=>x.date===key&&x.employeeId===p.employeeId);return !row||(row.code||'1')==='1'}).length,conflicts=rows.filter(x=>x.date===key&&(x.code||'1')==='1'&&leaveOn(x.employeeId,key)).length;return `<div class="schedule-total-cell ${conflicts?'has-conflict':''}"><b>${count}</b>${conflicts?`<small>${conflicts} 缺口</small>`:''}</div>`}).join('');return `<div class="schedule-legend" ${scheduleLayout().showLegend?'':'hidden'}><span><i class="sat"></i>週六</span><span><i class="sun"></i>週日</span><span><i class="holiday"></i>國定假日</span><span><i class="leave"></i>核准請假</span><span><i class="conflict"></i>排班衝突</span></div><div class="schedule-month-matrix ${scheduleLayout().compactCodes?'compact-codes':''} ${scheduleLayout().weekendBands?'weekend-bands':''}" style="--days:${days}"><div class="schedule-month-row header"><div class="schedule-person-cell"><b>${y} 年 ${m} 月</b><small>員工／部門／班別</small></div>${header}</div>${body}<div class="schedule-month-row totals"><div class="schedule-person-cell"><b>每日上班人力</b><small>紅色數字代表請假撞班缺口</small></div>${totals}</div></div>`};
+ weekSchedule=function(){const rows=read().filter(x=>month(x.date)===monthKey(scheduleCursor));if(!rows.length)return '<div class="empty-state">本月尚未匯入排班。</div>';return `<div class="table-wrap"><table><thead><tr><th>日期</th><th>員工</th><th>班別</th><th>據點</th><th>狀態</th></tr></thead><tbody>${rows.sort((a,b)=>a.date.localeCompare(b.date)).map(x=>{const leave=leaveFor(x);return `<tr><td>${x.date}</td><td>${esc(x.employeeName)}<small class="table-subline">${esc(x.employeeId)}</small></td><td>${(x.code||'1')==='1'?`${esc(x.start)}–${esc(x.end)}`:esc(scheduleCodes().find(c=>c.code===x.code)?.name||x.code)}</td><td>${esc(x.site||'—')}</td><td>${(x.code||'1')!=='1'?badge('休假／未排班'):leave?badge('排班衝突／需補人'):badge('已排班')}</td></tr>`}).join('')}</tbody></table></div>`};
+ staffSchedule=function(){const rows=read().filter(x=>month(x.date)===monthKey(scheduleCursor)),people=[...new Map(rows.map(x=>[x.employeeId,x])).values()];if(!people.length)return '<div class="empty-state">本月尚未匯入排班。</div>';return `<div class="table-wrap"><table><thead><tr><th>員工</th><th>本月班數</th><th>衝突班數</th><th>狀態</th></tr></thead><tbody>${people.map(p=>{const mine=rows.filter(x=>x.employeeId===p.employeeId&&(x.code||'1')==='1'),bad=mine.filter(leaveFor).length;return `<tr><td>${esc(p.employeeName)}<small class="table-subline">${esc(p.employeeId)}</small></td><td>${mine.length}</td><td>${bad}</td><td>${badge(bad?'需處理':'正常')}</td></tr>`}).join('')}</tbody></table></div>`};
+ function parseRows(rows){const headerIndex=rows.findIndex(r=>String(r?.[0]||'').trim()==='日期');if(headerIndex<0)throw Error('找不到「日期」標題列，請使用系統下載的 Excel 範例');const head=rows[headerIndex].map(x=>String(x??'').trim()),need=['日期','員工編號','員工姓名','班別開始','班別結束'],idx=Object.fromEntries(head.map((x,i)=>[x,i]));need.forEach(x=>{if(idx[x]===undefined)throw Error(`缺少欄位：${x}`)});return rows.slice(headerIndex+1).filter(r=>r.some(x=>String(x??'').trim())).map((c,i)=>{const row={date:String(c[idx['日期']]??'').trim(),employeeId:String(c[idx['員工編號']]??'').trim(),employeeName:String(c[idx['員工姓名']]??'').trim(),start:String(c[idx['班別開始']]??'').trim(),end:String(c[idx['班別結束']]??'').trim(),site:String(c[idx['據點']]??'').trim(),note:String(c[idx['備註']]??'').trim()};if(!/^\d{4}-\d{2}-\d{2}$/.test(row.date)||!row.employeeId||!row.employeeName||!/^\d{2}:\d{2}$/.test(row.start)||!/^\d{2}:\d{2}$/.test(row.end))throw Error(`資料第 ${i+1} 列格式不正確`);return row})}
+ function parseCSV(text){const split=line=>{const out=[];let cur='',q=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'&&line[i+1]==='"'){cur+='"';i++}else if(c==='"')q=!q;else if(c===','&&!q){out.push(cur.trim());cur=''}else cur+=c}out.push(cur.trim());return out};return parseRows(text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim()).map(split))}
+ function parseMatrixRows(rows){const header=rows.findIndex(r=>r.some(x=>String(x??'').trim()==='員工編號')&&r.some(x=>String(x??'').trim()==='員工姓名'));if(header<0)return null;const labels=rows[header].map(x=>String(x??'').trim()),idCol=labels.indexOf('員工編號'),nameCol=labels.indexOf('員工姓名'),shiftCol=labels.indexOf('班別時段'),departmentCol=labels.indexOf('部門／職位');const monthRow=rows.find(r=>String(r?.[0]||'').trim()==='排班月份'),monthText=String(monthRow?.[1]||'').trim().replace('/','-');if(!/^\d{4}-\d{2}$/.test(monthText))throw Error('排班月份格式不正確，請使用 yyyy-mm');const dayRow=rows.slice(0,header).reverse().find(r=>r.filter(x=>/^([1-9]|[12]\d|3[01])$/.test(String(x).trim())).length>=28);if(!dayRow)throw Error('找不到 1～31 日的日期欄');const [year,mon]=monthText.split('-').map(Number),maxDay=new Date(year,mon,0).getDate(),dayCols=dayRow.map((x,i)=>({day:Number(x),i})).filter(x=>x.day>=1&&x.day<=maxDay),result=[];for(let r=header+1;r<rows.length;r++){const line=rows[r],first=String(line?.[0]||'').trim();if(first==='每日上班人力'||first.includes('上班人力'))break;const employeeId=String(line?.[idCol]||'').trim(),employeeName=String(line?.[nameCol]||'').trim();if(!employeeId&&!employeeName)continue;if(!employeeId||!employeeName)throw Error(`員工資料第 ${r-header} 列缺少員編或姓名`);const shift=String(line?.[shiftCol]||'').trim(),times=shift.match(/(\d{1,2}:\d{2})\s*[-–~]\s*(\d{1,2}:\d{2})/);if(!times)throw Error(`${employeeName} 的班別時段格式不正確，請使用 09:00-18:00`);for(const d of dayCols){const code=String(line?.[d.i]??'').trim();if(!code||code==='休')continue;const normalizedCode=['1','班','早','晚'].includes(code)?'1':code;result.push({code:normalizedCode,date:`${year}-${String(mon).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`,employeeId,employeeName,start:normalizedCode==='1'?times[1].padStart(5,'0'):'',end:normalizedCode==='1'?times[2].padStart(5,'0'):'',site:'台中總公司',note:String(line?.[labels.indexOf('備註')]||'').trim(),department:String(line?.[departmentCol]||'').trim()})}}if(!result.length)throw Error('班表中沒有找到可匯入的排班代號');return result}
+ async function parseFile(file){if(/\.csv$/i.test(file.name))return parseCSV(await file.text());if(!window.XLSX)throw Error('Excel 讀取元件未載入，請重新整理後再試');const workbook=XLSX.read(await file.arrayBuffer(),{type:'array'}),sheet=workbook.Sheets[workbook.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{header:1,raw:false,defval:''});return parseMatrixRows(rows)||parseRows(rows)}
+ function preview(){const conflicts=pending.filter(leaveFor).length;$('#scheduleImportPreview').innerHTML=`<div class="import-summary"><span>${pending.length} 筆排班</span><span>${new Set(pending.map(x=>x.employeeId)).size} 位員工</span><span>${conflicts} 筆請假衝突</span></div><div class="table-wrap import-preview"><table><thead><tr><th>日期</th><th>員工</th><th>班別</th><th>檢查</th></tr></thead><tbody>${pending.map(x=>`<tr><td>${x.date}</td><td>${esc(x.employeeName)}・${esc(x.employeeId)}</td><td>${esc(x.start)}–${esc(x.end)}</td><td>${leaveFor(x)?'<span class="schedule-conflict">與已核准請假衝突</span>':'可套用'}</td></tr>`).join('')}</tbody></table></div>`;$('#confirmScheduleImport').disabled=false}
+ function importModal(){pending=[];openModal('上傳排班表','支援 Excel（.xlsx）及 UTF-8 CSV；確認前不會修改目前班表',`<label class="form-field">選擇排班表<input id="scheduleFile" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" class="form-control"></label><p id="scheduleImportError" class="form-error"></p><div id="scheduleImportPreview" class="empty-state">請先選擇依範例格式填寫的 Excel 表格</div>`,`<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="confirmScheduleImport" disabled>確認並套用</button>`);$('#scheduleFile').onchange=async e=>{try{pending=await parseFile(e.target.files[0]);preview()}catch(err){pending=[];$('#scheduleImportError').textContent=err.message;$('#confirmScheduleImport').disabled=true}};$('#confirmScheduleImport').onclick=()=>{const months=[...new Set(pending.map(x=>month(x.date)))],kept=read().filter(x=>!months.includes(month(x.date)));save([...kept,...pending]);closeModal();toast(`已套用 ${pending.length} 筆排班；請假衝突已自動標記`);window.dispatchEvent(new HashChangeEvent('hashchange'))}}
+ const leaveCode=r=>({annual:'年',travel:'旅',marriage:'婚',sick:'病',personal:'事',bereavement:'喪'}[r.id]||String(r.name||'假').slice(0,1));
+ const isoDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+ function datesBetween(start,end,skipWeekends){const out=[],cursor=new Date(`${start}T12:00:00`),last=new Date(`${end}T12:00:00`);while(cursor<=last){if(!skipWeekends||![0,6].includes(cursor.getDay()))out.push(isoDate(cursor));cursor.setDate(cursor.getDate()+1)}return out}
+ function quickLeaveModal(button){if(!canEditMonth())return;const ledger=window.BOMBHR_HR_LEDGER;if(!ledger){toast('假勤額度模組尚未載入，請重新整理後再試');return}const employeeId=button.dataset.employeeId,employeeName=button.dataset.employeeName,department=button.dataset.employeeDepartment||'—',rules=ledger.rules().filter(x=>x.enabled!==false),monthValue=monthKey(scheduleCursor),todayValue=monthKey(scheduleToday)===monthValue?isoDate(scheduleToday):`${monthValue}-01`;openModal('快速建立休假並套用班表',`${employeeName}・${employeeId}・${department}`,`<div class="quick-leave-balance">${ledger.summary(employeeId).map(x=>`<span><b>${esc(leaveCode(x.rule))}</b>${esc(x.rule.name)}<strong>${x.remaining} 天</strong></span>`).join('')}</div><div class="form-grid quick-leave-form"><label class="form-field">假別<select id="quickLeaveType" class="form-control">${rules.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}（剩餘 ${ledger.remaining(employeeId,x.name)} 天）</option>`).join('')}</select></label><label class="form-field">使用方式<select id="quickLeavePortion" class="form-control"><option value="full">整天</option><option value="half">半天</option><option value="hours">時數</option></select></label><label class="form-field">開始日期<input id="quickLeaveStart" class="form-control" type="date" value="${todayValue}"></label><label class="form-field">結束日期<input id="quickLeaveEnd" class="form-control" type="date" value="${todayValue}"></label><label class="form-field" id="quickLeaveHoursField" hidden>請假時數<input id="quickLeaveHours" class="form-control" type="number" min="1" max="8" step="0.5" value="1"></label><label class="form-field" id="quickLeaveEntitlementField">資格日／結婚登記日<input id="quickLeaveEntitlement" class="form-control" type="date"><small>婚假必填；其他有使用期限的假別可填</small></label><label class="form-field full quick-leave-check"><span><input id="quickLeaveSkipWeekend" type="checkbox" checked> 自動略過週六、週日</span></label><label class="form-field full">備註<textarea id="quickLeaveReason" class="form-control" rows="2" placeholder="例：主管依員工申請協助排入班表"></textarea></label></div><div id="quickLeavePreview" class="quick-leave-preview"></div><p id="quickLeaveError" class="form-error"></p>`,`<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="applyQuickLeave">建立請假並套用班表</button>`);const calculate=()=>{const start=$('#quickLeaveStart').value,end=$('#quickLeaveEnd').value,portion=$('#quickLeavePortion').value,hours=Number($('#quickLeaveHours').value||0),dates=start&&end&&end>=start?datesBetween(start,end,$('#quickLeaveSkipWeekend').checked):[],days=portion==='hours'?hours/8:dates.length*(portion==='half'?.5:1);$('#quickLeaveHoursField').hidden=portion!=='hours';if(portion==='hours'&&start&&end&&start!==end){$('#quickLeavePreview').innerHTML='<b>時數假一次只能選擇同一天</b>';return {dates,days,invalid:'時數假一次只能選擇同一天'}}const rule=rules.find(x=>x.id===$('#quickLeaveType').value),left=ledger.remaining(employeeId,rule?.name);$('#quickLeavePreview').innerHTML=`<span>將標記 <b>${dates.length}</b> 個日期</span><span>扣除 <b>${Number(days.toFixed(2))}</b> 天</span><span>目前剩餘 <b>${left}</b> 天</span>`;return {dates,days,rule,start,end}};['quickLeaveType','quickLeavePortion','quickLeaveStart','quickLeaveEnd','quickLeaveHours','quickLeaveSkipWeekend'].forEach(id=>$(`#${id}`).onchange=calculate);calculate();$('#applyQuickLeave').onclick=()=>{const result=calculate(),error=$('#quickLeaveError');error.textContent='';if(result.invalid){error.textContent=result.invalid;return}if(!result.start||!result.end||result.end<result.start||!result.dates.length||result.days<=0){error.textContent='請選擇有效日期與請假時間';return}const type=result.rule.name,entitlementDate=$('#quickLeaveEntitlement').value,eventId=`ADMIN-LEAVE-${Date.now()}`,event={id:eventId,eventId,category:'approval',subtype:'leave',title:`${type}申請`,employee:employeeName,employeeId,department,leaveType:type,period:`${result.start}–${result.end}`,duration:`${Number(result.days.toFixed(2))} 天`,leaveDays:Number(result.days.toFixed(2)),status:'approved',statusText:'已核准',source:'admin-schedule',reason:$('#quickLeaveReason').value.trim()||'由排班頁快速建立',entitlementDate,reviewer:currentProfile().name,reviewerId:currentProfile().id,reviewerRole:currentProfile().label||role(),reviewerDepartment:currentProfile().department||'—',reviewedAt:new Date().toISOString(),submitted:new Date().toLocaleString('zh-TW',{hour12:false})},check=ledger.validate(employeeId,type,event.leaveDays,result.start,entitlementDate);if(!check.ok){error.textContent=check.message;return}const approved=ledger.approve(event);if(!approved.ok){error.textContent=approved.message;return}const events=getSharedEvents();events.unshift(event);saveSharedEvents(events);const code=leaveCode(result.rule),existing=read().filter(x=>!(x.employeeId===employeeId&&result.dates.includes(x.date))),leaveRows=result.dates.map(date=>({date,employeeId,employeeName,department,start:'',end:'',code,site:'台中總公司',note:`${type}・排班快速建立・${eventId}`}));save([...existing,...leaveRows]);if(!scheduleCodes().some(x=>x.code===code)){const custom=JSON.parse(localStorage.getItem(CODE_KEY)||'[]');custom.push({code,name:type});localStorage.setItem(CODE_KEY,JSON.stringify(custom))}if(typeof addAudit==='function')addAudit('快速建立員工休假並套用班表',`${employeeName}・${employeeId}・${type} ${event.leaveDays} 天・${event.period}・${currentProfile().name} ${currentProfile().id}`);closeModal();toast(`${employeeName}的${type}已扣除額度並套用班表，剩餘 ${approved.remaining} 天`);window.dispatchEvent(new HashChangeEvent('hashchange'))}}
+ function toggleCell(button){if(!canEditMonth()||!editMode||!draft)return;const id=button.dataset.employeeId,date=button.dataset.date,index=draft.findIndex(x=>x.employeeId===id&&x.date===date),leave=leaveOn(id,date);if(index>=0)draft.splice(index,1);if(selectedCode!=='休'){const [start,end]=selectedShift.split('-');draft.push({date,employeeId:id,employeeName:button.dataset.employeeName,start:selectedCode==='1'?start:'',end:selectedCode==='1'?end:'',code:selectedCode,site:'台中總公司',note:selectedCode==='1'?'系統月班表權限編輯':`手動排班代號：${selectedCode}`})}toast(selectedCode==='休'?'已暫改為休':selectedCode==='1'&&leave?'已暫排班，但與核准請假衝突':`已暫套用「${selectedCode}」`);window.dispatchEvent(new HashChangeEvent('hashchange'))}
+ function manageCodes(){openModal('新增排班代號','新增後會立即出現在下拉選單；內建代號不會被覆蓋',`<div class="form-grid"><label class="form-field">代號（建議 1 個中文字）<input id="newScheduleCode" class="form-control" maxlength="4" placeholder="例：生"></label><label class="form-field">假別／狀態名稱<input id="newScheduleCodeName" class="form-control" maxlength="20" placeholder="例：生日假"></label></div><p class="form-hint">內建：1 上班、休、年、旅、喪、婚、病。您新增的代號會保存在此瀏覽器。</p><p id="scheduleCodeError" class="form-error"></p>`,`<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="saveScheduleCode">新增代號</button>`);$('#saveScheduleCode').onclick=()=>{const code=$('#newScheduleCode').value.trim(),name=$('#newScheduleCodeName').value.trim();if(!code||!name){$('#scheduleCodeError').textContent='請輸入代號及名稱';return}if(scheduleCodes().some(x=>x.code===code)){$('#scheduleCodeError').textContent='此代號已存在';return}const custom=JSON.parse(localStorage.getItem(CODE_KEY)||'[]');custom.push({code,name});localStorage.setItem(CODE_KEY,JSON.stringify(custom));selectedCode=code;const inSettings=location.hash==='#settings';closeModal();toast(`已新增排班代號：${code}｜${name}`);window.dispatchEvent(new HashChangeEvent('hashchange'));if(inSettings)setTimeout(openScheduleLayoutTab,0)}}
+ function startEdit(){if(!canEditMonth())return;editMode=true;draft=JSON.parse(JSON.stringify(read()));window.dispatchEvent(new HashChangeEvent('hashchange'))}
+ function cancelEdit(){editMode=false;draft=null;toast('已取消，班表未變更');window.dispatchEvent(new HashChangeEvent('hashchange'))}
+ function saveEdit(){if(!canEditMonth()||!draft)return;save(draft);const profile=currentProfile(),action=isHistorical()?'修正歷史月班表':'修改月班表';if(typeof addAudit==='function')addAudit(action,`${profile.name}・${profile.id||'—'}・${profile.roleLabel||role()}・${profile.department||'—'}・${monthKey(scheduleCursor)}・${new Date().toLocaleString('zh-TW')}`);editMode=false;draft=null;toast('班表修改已儲存並留下稽核紀錄');window.dispatchEvent(new HashChangeEvent('hashchange'))}
+ const layoutLabels={code:'排班代號',add:'＋ 新增代號',shift:'上班班別',cancel:'取消',save:'儲存修改'};
+ function layoutEditor(scope,data,locked=false){return `<section class="layout-setting-card" data-layout-editor="${scope}"><div class="layout-setting-head"><div><b>${scope==='company'?'公司預設版面':'我的排班版面'}</b><small>${scope==='company'?'新帳號與尚未自訂者會沿用此排列':'依登入員編與身份個別保存，不影響其他人'}</small></div>${locked?'<span class="layout-lock">僅最高權限可修改</span>':''}</div><div class="layout-order-list">${data.order.map((key,i)=>`<div class="layout-order-item" data-layout-key="${key}"><span>${i+1}</span><b>${layoutLabels[key]}</b><div><button type="button" data-layout-up ${locked?'disabled':''}>↑</button><button type="button" data-layout-down ${locked?'disabled':''}>↓</button></div></div>`).join('')}</div><div class="layout-option-grid">${[['compactCodes','使用小型排班代號','降低色塊與文字尺寸'],['weekendBands','顯示週末整欄底色','關閉時只標示日期表頭'],['showLegend','顯示假別圖例','可隱藏表格上方圖例'],['showImportNote','顯示排班匯入說明','熟悉操作後可隱藏'],['showWeek','顯示「週」檢視','控制排班頁檢視按鈕'],['showStaff','顯示「人員」檢視','控制排班頁檢視按鈕']].map(x=>`<label><input type="checkbox" data-layout-option="${x[0]}" ${data[x[0]]?'checked':''} ${locked?'disabled':''}><span><b>${x[1]}</b><small>${x[2]}</small></span></label>`).join('')}</div><div class="layout-setting-actions">${scope==='company'?`<button class="primary-btn" data-save-company-layout ${locked?'disabled':''}>儲存公司預設</button>`:'<button class="secondary-btn" data-reset-user-layout>恢復公司預設</button><button class="primary-btn" data-save-user-layout>儲存我的版面</button>'}</div></section>`}
+ function scheduleLayoutSettings(){const custom=scheduleCodes().filter(x=>!defaultCodes().some(y=>y.code===x.code));return `<div class="layout-settings-intro"><div><b>排班版面與代號</b><span>${esc(currentProfile().name)}・${esc(currentProfile().id)}・${esc(currentProfile().label||role())}</span></div><p>公司預設決定初始排列；個人版面會覆蓋公司預設，並跟著目前登入者保存。</p></div>${layoutEditor('company',companyLayout(),role()!=='executive')}${layoutEditor('user',scheduleLayout())}<section class="layout-setting-card"><div class="layout-setting-head"><div><b>排班代號主檔</b><small>排班頁仍保留「＋新增代號」，也可在此集中管理</small></div><button class="secondary-btn" data-settings-add-code>＋ 新增代號</button></div><div class="schedule-code-master">${scheduleCodes().map(x=>`<div><strong>${esc(x.code)}</strong><span><b>${esc(x.name)}</b><small>${defaultCodes().some(y=>y.code===x.code)?'內建代號':'自訂代號'}</small></span>${custom.some(y=>y.code===x.code)?`<button data-delete-schedule-code="${esc(x.code)}">刪除</button>`:''}</div>`).join('')}</div></section>`}
+ function readLayoutEditor(scope){const root=$(`[data-layout-editor="${scope}"]`);return {...defaultLayout(),order:$$('[data-layout-key]',root).map(x=>x.dataset.layoutKey),...Object.fromEntries($$('[data-layout-option]',root).map(x=>[x.dataset.layoutOption,x.checked]))}}
+ function openScheduleLayoutTab(){$$('.tabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab==='schedule-layout'));$('#tabContent').innerHTML=scheduleLayoutSettings();bindLayoutSettings()}
+ function bindLayoutSettings(){$$('[data-layout-editor]').forEach(editor=>$$('[data-layout-up],[data-layout-down]',editor).forEach(button=>button.onclick=()=>{const row=button.closest('[data-layout-key]'),other=button.hasAttribute('data-layout-up')?row.previousElementSibling:row.nextElementSibling;if(other){button.hasAttribute('data-layout-up')?row.parentNode.insertBefore(row,other):row.parentNode.insertBefore(other,row);$$('[data-layout-key]',editor).forEach((x,i)=>x.querySelector('span').textContent=i+1)}}));$('[data-save-company-layout]')?.addEventListener('click',()=>{if(role()!=='executive')return;saveLayout(COMPANY_LAYOUT_KEY,readLayoutEditor('company'));if(typeof addAudit==='function')addAudit('修改排班公司預設版面',`${currentProfile().name}・${currentProfile().id}`);toast('公司預設版面已儲存')});$('[data-save-user-layout]')?.addEventListener('click',()=>{saveLayout(userLayoutKey(),readLayoutEditor('user'));toast(`${currentProfile().name} 的個人排班版面已儲存`)});$('[data-reset-user-layout]')?.addEventListener('click',()=>{localStorage.removeItem(userLayoutKey());openScheduleLayoutTab();toast('已恢復公司預設版面')});$('[data-settings-add-code]')?.addEventListener('click',manageCodes);$$('[data-delete-schedule-code]').forEach(button=>button.onclick=()=>{const custom=JSON.parse(localStorage.getItem(CODE_KEY)||'[]').filter(x=>x.code!==button.dataset.deleteScheduleCode);localStorage.setItem(CODE_KEY,JSON.stringify(custom));openScheduleLayoutTab();toast('自訂排班代號已刪除')})}
+ const baseSettingsView=views.settings;views.settings=()=>baseSettingsView().replace('<button data-tab="basic">基本設定</button>','<button data-tab="basic">基本設定</button><button data-tab="schedule-layout">排班與版面</button>');
+ const priorBind=bindView;bindView=function(route){priorBind(route);if(route==='settings')setTimeout(()=>{(()=>{const tab=$('[data-tab="schedule-layout"]');if(tab)tab.onclick=openScheduleLayoutTab})()},0);if(route==='scheduling')setTimeout(()=>{$('[data-schedule-import]')?.addEventListener('click',importModal);$('[data-schedule-edit-start]')?.addEventListener('click',startEdit);$('[data-schedule-edit-cancel]')?.addEventListener('click',cancelEdit);$('[data-schedule-edit-save]')?.addEventListener('click',saveEdit);$('[data-schedule-code-manage]')?.addEventListener('click',manageCodes);$('#scheduleQuickCode')?.addEventListener('change',e=>{selectedCode=e.target.value;window.dispatchEvent(new HashChangeEvent('hashchange'))});$('#scheduleQuickShift')?.addEventListener('change',e=>selectedShift=e.target.value);$$('[data-schedule-cell]').forEach(b=>b.onclick=()=>toggleCell(b));$$('[data-schedule-person]').forEach(b=>b.onclick=()=>quickLeaveModal(b))},0)};
+ window.BOMBHR_SCHEDULING={read,parseCSV,parseRows,parseMatrixRows,parseFile,leaveFor,leaveOn,shortLeave,holidayName,canEdit,canEditHistory,canEditMonth,isHistorical,scheduleCodes,scheduleLayout,companyLayout,userLayoutKey,scheduleLayoutSettings,datesBetween,leaveCode,quickLeaveModal};
+ setTimeout(()=>{if(['#scheduling','#settings'].includes(location.hash))window.dispatchEvent(new HashChangeEvent('hashchange'))},0);
+})();
+
+/* ===== Consolidated from monthly-person-schedule-v187.js ===== */
+(function(){
+ 'use strict';
+ const SCHEDULE_KEY='bombhr-schedules-v176',EVENT_KEY='bombhr-demo-events';
+ const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+ const iso=(year,month,day)=>`${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+ const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}};
+ const parseDays=(value,max)=>{
+   const raw=String(value||'').trim();
+   if(!raw)return {days:[],invalid:[]};
+   const tokens=raw.split(/[.,、，\s;；]+/).filter(Boolean),invalid=[],days=[];
+   tokens.forEach(token=>{const day=Number(token);if(!Number.isInteger(day)||day<1||day>max)invalid.push(token);else if(!days.includes(day))days.push(day)});
+   return {days:days.sort((a,b)=>a-b),invalid};
+ };
+ const ruleByCode=(ledger,code)=>{
+   const map={年:'annual',旅:'travel',喪:'bereavement',婚:'marriage',病:'sick',事:'personal'};
+   return ledger?.rules().find(rule=>rule.id===map[code]);
+ };
+ const buildMonthRows=(year,month,max,employee,occupied,codeNames)=>Array.from({length:max},(_,index)=>{
+   const day=index+1,code=occupied.get(day)||'1',work=code==='1';
+   return {date:iso(year,month,day),employeeId:employee.id,employeeName:employee.name,department:employee.department,start:work?'09:00':'',end:work?'18:00':'',code,site:'台中總公司',note:work?'整月快速輸入：正常上班':`整月快速輸入：${codeNames.get(code)||code}`};
+ });
+ const currentMonth=()=>{
+   const cursor=typeof scheduleCursor!=='undefined'?scheduleCursor:new Date();
+   return {year:cursor.getFullYear(),month:cursor.getMonth()+1,max:new Date(cursor.getFullYear(),cursor.getMonth()+1,0).getDate()};
+ };
+ function fields(){
+   const codes=window.BOMBHR_SCHEDULING?.scheduleCodes?.()||[{code:'休',name:'休假'},{code:'年',name:'年假'}];
+   return codes.filter(item=>item.code!=='1');
+ }
+ function values(max){
+   return fields().map(item=>({item,...parseDays(document.querySelector(`[data-monthly-code="${CSS.escape(item.code)}"]`)?.value,max)}));
+ }
+ function preview(max){
+   const box=document.getElementById('monthlyPersonPreview');if(!box)return;
+   const list=values(max),used=new Map(),conflicts=[];
+   list.forEach(group=>group.days.forEach(day=>{if(used.has(day))conflicts.push(`${day} 日同時填在「${used.get(day)}」與「${group.item.code}」`);else used.set(day,group.item.code)}));
+   const invalid=list.flatMap(group=>group.invalid.map(value=>`${group.item.code}：${value}`));
+   box.innerHTML=list.filter(group=>group.days.length).map(group=>`<span>${esc(group.item.name)}：${group.days.join('、')} 日</span>`).join('')+
+     conflicts.map(text=>`<span class="danger">${esc(text)}</span>`).join('')+
+     invalid.map(text=>`<span class="danger">無效日期 ${esc(text)}（本月 1～${max} 日）</span>`).join('');
+ }
+ function makeLeaveEvent(employee,rule,dates){
+   const id=`MONTH-LEAVE-${employee.id}-${rule.id}-${Date.now()}-${Math.random().toString(36).slice(2,6)}`;
+   return {id,eventId:id,category:'approval',subtype:'leave',title:`${rule.name}申請`,leaveType:rule.name,employee:employee.name,employeeId:employee.id,department:employee.department,dates,period:`${dates[0]}–${dates[dates.length-1]}`,duration:`${dates.length} 天`,leaveDays:dates.length,status:'approved',statusText:'已核准',source:'monthly-person-schedule',reason:'由整月員工排班快速輸入',reviewer:currentProfile().name,reviewerId:currentProfile().id,reviewerRole:currentProfile().label||currentRole(),reviewerDepartment:currentProfile().department||'—',reviewedAt:new Date().toISOString(),submitted:new Date().toLocaleString('zh-TW',{hour12:false})};
+ }
+ function openBatch(button){
+   const employee={id:button.dataset.employeeId,name:button.dataset.employeeName,department:button.dataset.employeeDepartment||'—'};
+   const {year,month,max}=currentMonth(),codeFields=fields();
+   const body=`<div class="monthly-person-example"><b>${year} 年 ${month} 月整月快速輸入</b><br>同一欄可輸入：04.08.13.18，或用逗號、空格分隔；系統會自動套入目前月份。</div><div class="monthly-person-grid">${codeFields.map(item=>`<label class="monthly-person-field"><span><i>${esc(item.code)}</i>${esc(item.name)}</span><input class="form-control" data-monthly-code="${esc(item.code)}" inputmode="numeric" placeholder="${item.code==='休'?'04.08.13.18.19.24.25.30':item.code==='年'?'23.29':'輸入日期'}"><small>可輸入 1～${max} 日</small></label>`).join('')}</div><div class="monthly-person-preview" id="monthlyPersonPreview"></div><p class="form-error" id="monthlyPersonError"></p>`;
+   openModal('員工整月排班快速輸入',`${employee.name}・${employee.id}・${employee.department}`,body,`<button class="secondary-btn" id="useRangeLeave">改用單日／日期區間</button><button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="applyMonthlyPerson">套用到 ${month} 月班表</button>`);
+   document.querySelectorAll('[data-monthly-code]').forEach(input=>input.addEventListener('input',()=>preview(max)));
+   document.getElementById('useRangeLeave').onclick=()=>{closeModal();setTimeout(()=>window.BOMBHR_SCHEDULING.quickLeaveModal(button),0)};
+   document.getElementById('applyMonthlyPerson').onclick=()=>{
+     const groups=values(max),error=document.getElementById('monthlyPersonError'),occupied=new Map();
+     error.textContent='';
+     if(groups.some(group=>group.invalid.length)){error.textContent=`日期只能輸入 1～${max}，請修正紅色提示`;return}
+     for(const group of groups)for(const day of group.days){if(occupied.has(day)){error.textContent=`${day} 日重複填在「${occupied.get(day)}」與「${group.item.code}」，請保留其中一個`;return}occupied.set(day,group.item.code)}
+     if(!occupied.size){error.textContent='請至少輸入一個日期';return}
+     const ledger=window.BOMBHR_HR_LEDGER,leavePlans=[];
+     for(const group of groups.filter(item=>item.days.length&&item.item.code!=='休')){
+       const rule=ruleByCode(ledger,group.item.code);
+       if(!rule)continue;
+       const dates=group.days.map(day=>iso(year,month,day)),event=makeLeaveEvent(employee,rule,dates);
+       const check=ledger.validate(employee.id,rule.name,dates.length,dates[0],'');
+       if(!check.ok){error.textContent=check.message;return}
+       leavePlans.push({event,rule});
+     }
+     for(const plan of leavePlans){const result=ledger.approve(plan.event);if(!result.ok){error.textContent=result.message;return}}
+     const monthPrefix=`${year}-${String(month).padStart(2,'0')}`,existing=read(SCHEDULE_KEY,[]).filter(row=>!(row.employeeId===employee.id&&String(row.date).startsWith(monthPrefix)));
+     const codeNames=new Map(groups.map(group=>[group.item.code,group.item.name]));
+     const rows=buildMonthRows(year,month,max,employee,occupied,codeNames);
+     localStorage.setItem(SCHEDULE_KEY,JSON.stringify([...existing,...rows]));
+     const events=read(EVENT_KEY,[]);leavePlans.forEach(plan=>events.unshift(plan.event));localStorage.setItem(EVENT_KEY,JSON.stringify(events.slice(0,200)));
+     if(typeof addAudit==='function')addAudit('員工整月排班快速輸入',`${employee.name}・${employee.id}・${year}/${month}・${[...occupied].map(([day,code])=>`${day}${code}`).join('、')}・${currentProfile().name} ${currentProfile().id}`);
+     closeModal();toast(`${employee.name}的 ${month} 月排班已完成：${occupied.size} 個排休，其餘日期自動套用 1`);
+     window.dispatchEvent(new HashChangeEvent('hashchange'));
+   };
+ }
+ document.addEventListener('click',event=>{
+   const button=event.target.closest?.('[data-schedule-person]');
+   if(!button)return;
+   event.preventDefault();event.stopImmediatePropagation();openBatch(button);
+ },true);
+ window.BOMBHR_MONTHLY_PERSON_SCHEDULE={parseDays,buildMonthRows,openBatch};
+})();
+
+/* ===== Consolidated from schedule-preference-admin-v188.js ===== */
+(function(){
+ 'use strict';
+ const KEY='bombhr-schedule-preferences-v188',POLICY='bombhr-schedule-preference-policy-v188',SCHEDULE='bombhr-schedules-v176';
+ const defaults={mode:'window',startDay:15,endDay:20,optional:true};
+ const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}};
+ const write=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+ const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+ const visible=item=>currentRole()!=='supervisor'||item.supervisorId===currentProfile().id||(typeof window.bombhrCanAccessEmployee==='function'&&window.bombhrCanAccessEmployee(item.employeeId));
+ const submissions=()=>read(KEY,[]).filter(item=>item.status!=='draft'&&visible(item));
+ function inbox(){
+   const rows=submissions();
+   return `<section class="preference-admin-card"><div class="preference-admin-head"><div><b>員工下月排休意願</b><small>僅供主管排班協調，不屬於正式請假，也不扣除假別額度</small></div><span class="preference-admin-count">${rows.filter(item=>item.status==='submitted').length} 件待安排</span></div>${rows.length?`<div class="table-wrap"><table><thead><tr><th>員工</th><th>排班月份</th><th>希望休假日期</th><th>備註</th><th>狀態</th><th>操作</th></tr></thead><tbody>${rows.map(item=>`<tr><td><b>${esc(item.employeeName)}</b><small class="table-subline">${esc(item.employeeId)}・${esc(item.department)}</small></td><td>${esc(item.targetMonth)}</td><td><div class="preference-date-tags">${item.dates.map(day=>`<i>${esc(day)}</i>`).join('')}</div></td><td>${esc(item.memo||'—')}</td><td>${badge(item.statusText)}</td><td class="row-actions">${item.status==='submitted'?`<button data-apply-preference="${esc(item.id)}">套入班表</button>`:'<button data-view-preference="${esc(item.id)}">查看</button>'}</td></tr>`).join('')}</tbody></table></div>`:'<div class="preference-admin-empty">目前沒有員工提交排休意願；未提交不列為異常。</div>'}</section>`;
+ }
+ const baseSchedulingView=schedulingView;
+ schedulingView=function(){const html=baseSchedulingView();return html.replace('<div class="schedule-toolbar">',inbox()+'<div class="schedule-toolbar">')};
+ function applyPreference(id){
+   const all=read(KEY,[]),item=all.find(row=>row.id===id);if(!item||!visible(item))return;
+   openModal('套用員工排休意願',`${item.employeeName}・${item.targetMonth}`,`<div class="permission-locked"><b>希望休假：${item.dates.join('、')} 日</b><span>套用後會在月班表標記為「休」，不會扣除任何假別額度。若需使用年假等假別，員工仍須另外提出正式請假。</span></div>${item.memo?`<div class="form-hint">員工備註：${esc(item.memo)}</div>`:''}`,`<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="confirmApplyPreference">確認套入班表</button>`);
+   document.getElementById('confirmApplyPreference').onclick=()=>{
+     const dates=item.dates.map(day=>`${item.targetMonth}-${day}`),schedules=read(SCHEDULE,[]).filter(row=>!(row.employeeId===item.employeeId&&dates.includes(row.date)));
+     dates.forEach(date=>schedules.push({date,employeeId:item.employeeId,employeeName:item.employeeName,department:item.department,start:'',end:'',code:'休',site:'台中總公司',note:`員工排休意願・${item.id}`}));
+     write(SCHEDULE,schedules);item.status='applied';item.statusText='主管已套入班表';item.appliedBy=`${currentProfile().name}・${currentProfile().id}`;item.appliedAt=new Date().toLocaleString('zh-TW',{hour12:false});write(KEY,all);
+     if(typeof addAudit==='function')addAudit('套用員工排休意願',`${item.employeeName}・${item.employeeId}・${item.targetMonth}・${item.dates.join('、')}・${item.appliedBy}`);
+     closeModal();toast(`${item.employeeName}的排休意願已套入 ${item.targetMonth} 班表`);window.dispatchEvent(new HashChangeEvent('hashchange'));
+   };
+ }
+ function policyView(){
+   const p=read(POLICY,defaults);
+   return `<section class="panel preference-policy-card"><div><h3>下月排休意願設定</h3><p>控制 Employee App 的提交期間；此功能永遠維持自願填寫。</p></div><div class="form-grid"><label class="form-field">開放方式<select id="preferencePolicyMode" class="form-control"><option value="window" ${p.mode==='window'?'selected':''}>每月指定日期開放</option><option value="anytime" ${p.mode==='anytime'?'selected':''}>隨時開放</option></select></label><label class="form-field">開始日<input id="preferenceStartDay" class="form-control" type="number" min="1" max="31" value="${p.startDay}"></label><label class="form-field">結束日<input id="preferenceEndDay" class="form-control" type="number" min="1" max="31" value="${p.endDay}"></label></div><div class="preference-policy-note">未提交不會產生缺繳、異常或催繳通知。員工提交的是排休意願，不等於請假核准，最終仍由主管發布班表。</div><button class="primary-btn" id="savePreferencePolicy">儲存排休意願設定</button></section>`;
+ }
+ const baseSettingsView=views.settings;
+ views.settings=()=>baseSettingsView().replace('<button data-tab="basic">基本設定</button>','<button data-tab="preference-policy">排休意願</button><button data-tab="basic">基本設定</button>');
+ const priorBind=bindView;
+ bindView=function(route){
+   priorBind(route);
+   if(route==='scheduling')setTimeout(()=>document.querySelectorAll('[data-apply-preference]').forEach(button=>button.onclick=()=>applyPreference(button.dataset.applyPreference)),0);
+   if(route==='settings')setTimeout(()=>{const tab=document.querySelector('[data-tab="preference-policy"]');if(tab)tab.onclick=()=>{document.querySelectorAll('.tabs button').forEach(button=>button.classList.toggle('active',button===tab));document.getElementById('tabContent').innerHTML=policyView();document.getElementById('savePreferencePolicy').onclick=()=>{const mode=document.getElementById('preferencePolicyMode').value,startDay=Number(document.getElementById('preferenceStartDay').value),endDay=Number(document.getElementById('preferenceEndDay').value);if(mode==='window'&&(startDay<1||endDay>31||startDay>endDay)){toast('請輸入正確的開放日期範圍');return}write(POLICY,{mode,startDay,endDay,optional:true,updatedBy:`${currentProfile().name}・${currentProfile().id}`,updatedAt:new Date().toLocaleString('zh-TW',{hour12:false})});if(typeof addAudit==='function')addAudit('修改排休意願開放設定',`${mode==='anytime'?'隨時開放':`每月 ${startDay}～${endDay} 日`}・自願填寫`);toast('排休意願設定已儲存並同步 Employee App')}}},0);
+ };
+ window.addEventListener('storage',event=>{if(event.key===KEY&&location.hash==='#scheduling')window.dispatchEvent(new HashChangeEvent('hashchange'))});
+ window.BOMBHR_SCHEDULE_PREFERENCE_ADMIN={submissions,visible,inbox,applyPreference,policyView};
+})();
+
+/* ===== Consolidated from schedule-table-tools-v190.js ===== */
+(function(){
+ 'use strict';
+ const defaults={cellWidth:52,rowHeight:54,fontSize:11};
+ const key=()=>`bombhr-schedule-table-view-v190-${currentProfile().id||'unknown'}`;
+ const read=()=>{try{return {...defaults,...JSON.parse(localStorage.getItem(key())||'{}')}}catch(e){return {...defaults}}};
+ const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+ const percent=value=>Math.round(value/defaults.cellWidth*100);
+ function toolbar(){
+   const value=read();
+   return `<div class="schedule-table-tools"><strong>表格顯示</strong><div class="schedule-table-tool-group"><button type="button" data-table-size="-1" title="縮小表格">−</button><input id="scheduleTableSize" type="number" min="69" max="154" step="1" value="${percent(value.cellWidth)}" aria-label="表格比例"><span>%</span><button type="button" data-table-size="1" title="放大表格">＋</button></div><strong>文字大小</strong><div class="schedule-table-tool-group"><button type="button" data-font-size="-1" title="縮小文字">A−</button><input id="scheduleFontSize" type="number" min="9" max="18" step="1" value="${value.fontSize}" aria-label="文字大小"><span>px</span><button type="button" data-font-size="1" title="放大文字">A＋</button></div><button type="button" class="schedule-table-reset" data-table-reset>恢復預設</button></div>`;
+ }
+ function apply(value=read(),save=false){
+   const content=document.getElementById('content');if(!content)return;
+   content.style.setProperty('--schedule-cell-width',`${value.cellWidth}px`);
+   content.style.setProperty('--schedule-row-height',`${value.rowHeight}px`);
+   content.style.setProperty('--schedule-font-size',`${value.fontSize}px`);
+   content.style.setProperty('--schedule-person-width',`${Math.round(270*(value.cellWidth/defaults.cellWidth))}px`);
+   const size=document.getElementById('scheduleTableSize'),font=document.getElementById('scheduleFontSize');
+   if(size&&document.activeElement!==size)size.value=percent(value.cellWidth);if(font&&document.activeElement!==font)font.value=value.fontSize;
+   if(save)localStorage.setItem(key(),JSON.stringify(value));
+ }
+ function bind(){
+   apply();
+   document.querySelectorAll('.schedule-matrix-cell').forEach(cell=>cell.dataset.code=cell.textContent.trim().replace('⚠',''));
+   document.querySelectorAll('[data-table-size]').forEach(button=>button.onclick=()=>{const value=read(),delta=Number(button.dataset.tableSize);value.cellWidth=clamp(value.cellWidth+delta*4,36,80);value.rowHeight=clamp(value.rowHeight+delta*4,42,82);apply(value,true)});
+   document.querySelectorAll('[data-font-size]').forEach(button=>button.onclick=()=>{const value=read();value.fontSize=clamp(value.fontSize+Number(button.dataset.fontSize),9,18);apply(value,true)});
+   const sizeInput=document.getElementById('scheduleTableSize'),fontInput=document.getElementById('scheduleFontSize');
+   const applySizeInput=()=>{const value=read(),requested=clamp(Number(sizeInput.value)||100,69,154),ratio=requested/100;value.cellWidth=clamp(Math.round(defaults.cellWidth*ratio),36,80);value.rowHeight=clamp(Math.round(defaults.rowHeight*ratio),42,82);sizeInput.value=percent(value.cellWidth);apply(value,true)};
+   const applyFontInput=()=>{const value=read();value.fontSize=clamp(Number(fontInput.value)||defaults.fontSize,9,18);fontInput.value=value.fontSize;apply(value,true)};
+   sizeInput?.addEventListener('change',applySizeInput);fontInput?.addEventListener('change',applyFontInput);
+   sizeInput?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();applySizeInput();sizeInput.blur()}});
+   fontInput?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();applyFontInput();fontInput.blur()}});
+   document.querySelector('[data-table-reset]')?.addEventListener('click',()=>{localStorage.removeItem(key());apply(defaults);toast('班表大小與文字已恢復預設')});
+ }
+ const baseSchedulingView=schedulingView;
+ schedulingView=function(){return baseSchedulingView().replace('<div class="calendar-scroll">',toolbar()+'<div class="calendar-scroll">')};
+ const priorBind=bindView;
+ bindView=function(route){priorBind(route);if(route==='scheduling')setTimeout(bind,0)};
+ window.BOMBHR_SCHEDULE_TABLE_TOOLS={read,apply,bind,defaults};
+})();
+
+/* ===== Consolidated from schedule-code-drag-v193.js ===== */
+(function(){
+ 'use strict';
+ const ORDER_KEY='bombhr-schedule-code-order-v193';
+ let dragging=null;
+ function rows(){return [...document.querySelectorAll('.schedule-code-master>div')]}
+ function save(){
+   const order=rows().map(row=>row.dataset.scheduleCode).filter(Boolean);
+   localStorage.setItem(ORDER_KEY,JSON.stringify(order));
+   if(typeof addAudit==='function')addAudit('調整排班代號順序',`${order.join(' → ')}・${currentProfile().name} ${currentProfile().id}`);
+   toast('排班代號順序已儲存，排班下拉選單與整月輸入已同步');
+ }
+ function prepare(){
+   const master=document.querySelector('.schedule-code-master');if(!master)return;
+   if(!master.previousElementSibling?.classList.contains('schedule-code-drag-help')){
+     const help=document.createElement('div');help.className='schedule-code-drag-help';help.innerHTML='<b>☷ 拖曳排序</b><span>按住任一代號卡片，拖到想要的位置後放開</span>';master.before(help);
+   }
+   rows().forEach(row=>{
+     const code=row.querySelector('strong')?.textContent.trim();if(!code)return;
+     row.draggable=true;row.dataset.scheduleCode=code;
+     if(!row.querySelector('.schedule-code-drag-handle')){const handle=document.createElement('span');handle.className='schedule-code-drag-handle';handle.textContent='⠿';handle.title='按住拖曳排序';row.prepend(handle)}
+   });
+ }
+ document.addEventListener('dragstart',event=>{
+   const row=event.target.closest?.('.schedule-code-master>div[draggable="true"]');if(!row)return;
+   dragging=row;row.classList.add('dragging');event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',row.dataset.scheduleCode);
+ });
+ document.addEventListener('dragover',event=>{
+   const row=event.target.closest?.('.schedule-code-master>div[draggable="true"]');if(!row||!dragging||row===dragging)return;
+   event.preventDefault();rows().forEach(item=>item.classList.remove('drag-over'));row.classList.add('drag-over');
+   const rect=row.getBoundingClientRect(),after=event.clientY>rect.top+rect.height/2||Math.abs(event.clientY-(rect.top+rect.height/2))<rect.height/2&&event.clientX>rect.left+rect.width/2;
+   row.parentNode.insertBefore(dragging,after?row.nextSibling:row);
+ });
+ document.addEventListener('drop',event=>{if(!dragging)return;event.preventDefault();save()});
+ document.addEventListener('dragend',()=>{rows().forEach(row=>row.classList.remove('dragging','drag-over'));dragging=null});
+ const observer=new MutationObserver(()=>prepare());observer.observe(document.getElementById('content'),{childList:true,subtree:true});
+ prepare();
+ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
+})();
+
+/* ===== Consolidated from schedule-page-layout-v194.js ===== */
+(function(){
+ 'use strict';
+ function arrange(){
+   const content=document.getElementById('content');if(!content||location.hash!=='#scheduling')return;
+   content.querySelector('.schedule-legend')?.remove();
+   const monthNav=content.querySelector('.schedule-toolbar .month-nav'),tools=content.querySelector('.schedule-table-tools');
+   if(monthNav&&tools&&!monthNav.contains(tools))monthNav.append(tools);
+   const editButton=content.querySelector('[data-schedule-edit-start]'),download=content.querySelector('a[href*="BOMB-HR-每月班表範例"]');
+   if(editButton&&download){
+     editButton.classList.add('schedule-head-edit-button');
+     download.parentNode.insertBefore(editButton,download);
+     const oldToolbar=content.querySelector('.schedule-edit-toolbar:not(.editing)');
+     if(oldToolbar)oldToolbar.classList.add('is-moved');
+   }
+   const scroll=content.querySelector('.calendar-scroll:has(.schedule-month-matrix)'),panel=scroll?.closest('.panel'),importNote=content.querySelector('.schedule-import-note'),preference=content.querySelector('.preference-admin-card');
+   if(panel&&(importNote||preference)){
+     let bottom=content.querySelector('.schedule-page-bottom-blocks');
+     if(!bottom){bottom=document.createElement('div');bottom.className='schedule-page-bottom-blocks';panel.after(bottom)}
+     if(preference&&!bottom.contains(preference))bottom.append(preference);
+     if(importNote&&!bottom.contains(importNote))bottom.append(importNote);
+   }
+ }
+ const priorBind=bindView;
+ bindView=function(route){priorBind(route);if(route==='scheduling')setTimeout(arrange,0)};
+ setTimeout(arrange,0);
+ window.BOMBHR_SCHEDULE_PAGE_LAYOUT={arrange};
+})();
+
+/* ===== Consolidated from schedule-participation-v195.js ===== */
+(function(){
+ 'use strict';
+ const KEY='bombhr-schedule-participants-v195';
+ const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
+ const write=value=>localStorage.setItem(KEY,JSON.stringify(value));
+ const monthValue=()=>typeof scheduleCursor!=='undefined'?`${scheduleCursor.getFullYear()}-${String(scheduleCursor.getMonth()+1).padStart(2,'0')}`:new Date().toISOString().slice(0,7);
+ const effective=(setting,month)=>{
+   if(!setting||setting.mode==='participate')return false;
+   if(setting.mode==='exclude')return month>=(setting.effectiveMonth||'0000-00');
+   if(setting.mode==='pause'){const start=String(setting.startDate||'').slice(0,7),end=String(setting.endDate||'9999-12').slice(0,7);return (!start||month>=start)&&(!end||month<=end)}
+   return false;
+ };
+ function isIncluded(person,month=monthValue()){const setting=read()[person.employeeId];return !effective(setting,month)}
+ function settingFor(employeeId){return read()[employeeId]||{mode:'participate',effectiveMonth:monthValue(),startDate:'',endDate:'',reason:'',shift:'09:00-18:00'}}
+ function people(){
+   let custom=[];try{custom=typeof getCustomEmployees==='function'?getCustomEmployees():JSON.parse(localStorage.getItem('bombhr-custom-employees-v147')||localStorage.getItem('bombhr-custom-employees')||'[]')}catch(e){}
+   const all=[...(window.BOMBHR_IMPORTED_PERSONNEL||[]),...custom].filter((person,index,list)=>person?.employeeId&&list.findIndex(item=>item.employeeId===person.employeeId)===index);
+   return all.filter(person=>typeof window.bombhrCanAccessEmployee!=='function'||window.bombhrCanAccessEmployee(person.employeeId));
+ }
+ function statusLabel(setting){
+   if(setting.mode==='exclude')return `自 ${setting.effectiveMonth||'現在'} 起不參與`;
+   if(setting.mode==='pause')return `${setting.startDate||'未定'}～${setting.endDate||'未定'} 暫停`;
+   if(setting.mode==='fixed')return `固定班 ${setting.shift||'09:00-18:00'}`;
+   return '參與排班';
+ }
+ function renderRows(filter=''){
+   const root=document.getElementById('scheduleParticipationList');if(!root)return;
+   const keyword=filter.trim().toLowerCase(),records=read(),visible=people().filter(person=>!keyword||[person.name,person.employeeId,person.department,person.position].join(' ').toLowerCase().includes(keyword));
+   root.innerHTML=visible.map(person=>{
+     const setting=records[person.employeeId]||settingFor(person.employeeId),mode=setting.mode||'participate';
+     return `<div class="schedule-participation-row" data-participation-row="${person.employeeId}" data-mode="${mode}"><div class="schedule-participation-person"><b>${person.name}</b><small>${person.employeeId}・${person.department||'—'}／${person.position||'—'}</small><small>${statusLabel(setting)}</small></div><label>排班狀態<select class="form-control" data-participation-mode><option value="participate" ${mode==='participate'?'selected':''}>參與排班</option><option value="exclude" ${mode==='exclude'?'selected':''}>不參與排班</option><option value="pause" ${mode==='pause'?'selected':''}>指定期間暫停</option><option value="fixed" ${mode==='fixed'?'selected':''}>固定班制</option></select></label><label data-effective-field>生效月份<input class="form-control" data-participation-effective type="month" value="${setting.effectiveMonth||monthValue()}"></label><label data-start-field>暫停開始<input class="form-control" data-participation-start type="date" value="${setting.startDate||''}"></label><label data-end-field>暫停結束<input class="form-control" data-participation-end type="date" value="${setting.endDate||''}"></label><label data-shift-field>固定班別<select class="form-control" data-participation-shift><option value="09:00-18:00" ${setting.shift==='09:00-18:00'?'selected':''}>日班 09:00–18:00</option><option value="08:30-17:30" ${setting.shift==='08:30-17:30'?'selected':''}>早班 08:30–17:30</option><option value="13:00-22:00" ${setting.shift==='13:00-22:00'?'selected':''}>晚班 13:00–22:00</option></select></label><label>原因／備註<input class="form-control" data-participation-reason value="${setting.reason||''}" placeholder="選填"></label></div>`;
+   }).join('')||'<div class="empty-state">沒有符合目前權限範圍的員工。</div>';
+   root.querySelectorAll('[data-participation-mode]').forEach(select=>{select.onchange=()=>updateVisibility(select.closest('[data-participation-row]'))});
+   root.querySelectorAll('[data-participation-row]').forEach(updateVisibility);
+ }
+ function updateVisibility(row){
+   const mode=row.querySelector('[data-participation-mode]').value;row.dataset.mode=mode;
+   row.querySelector('[data-effective-field]').hidden=mode!=='exclude';
+   row.querySelector('[data-start-field]').hidden=mode!=='pause';
+   row.querySelector('[data-end-field]').hidden=mode!=='pause';
+   row.querySelector('[data-shift-field]').hidden=mode!=='fixed';
+ }
+ function openManager(){
+   const all=people(),records=read(),excluded=all.filter(person=>effective(records[person.employeeId],monthValue())).length;
+   openModal('排班對象管理',`${monthValue()}・目前權限範圍內共 ${all.length} 位員工`,`<div class="schedule-participation-summary"><span>參與排班 <b>${all.length-excluded}</b></span><span>本月不顯示 <b>${excluded}</b></span><span>歷史資料 <b>永久保留</b></span></div><label class="search-field">⌕<input id="scheduleParticipationSearch" placeholder="搜尋姓名、員編、部門或職位"></label><div class="schedule-participation-list" id="scheduleParticipationList"></div><div class="schedule-participation-note">不參與或暫停排班只會從生效月份的班表名單隱藏，不會刪除員工主檔、登入帳號、薪資、保險、假別額度或歷史班表。</div>`,`<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="saveScheduleParticipation">儲存排班對象</button>`);
+   renderRows();
+   document.getElementById('scheduleParticipationSearch').oninput=event=>renderRows(event.target.value);
+   document.getElementById('saveScheduleParticipation').onclick=saveManager;
+ }
+ function saveManager(){
+   const records=read(),errors=[];
+   document.querySelectorAll('[data-participation-row]').forEach(row=>{
+     const id=row.dataset.participationRow,mode=row.querySelector('[data-participation-mode]').value,startDate=row.querySelector('[data-participation-start]').value,endDate=row.querySelector('[data-participation-end]').value;
+     if(mode==='pause'&&(!startDate||!endDate||endDate<startDate)){errors.push(`${id} 的暫停日期不完整`);return}
+     records[id]={mode,effectiveMonth:row.querySelector('[data-participation-effective]').value||monthValue(),startDate,endDate,shift:row.querySelector('[data-participation-shift]').value,reason:row.querySelector('[data-participation-reason]').value.trim(),updatedBy:`${currentProfile().name}・${currentProfile().id}`,updatedRole:currentProfile().label||currentRole(),updatedDepartment:currentProfile().department||'—',updatedAt:new Date().toLocaleString('zh-TW',{hour12:false})};
+   });
+   if(errors.length){toast(errors[0]);return}
+   write(records);
+   if(typeof addAudit==='function')addAudit('修改排班對象',`${currentProfile().name}・${currentProfile().id}・${currentProfile().label||currentRole()}・責任部門 ${currentProfile().department||'—'}・${new Date().toLocaleString('zh-TW',{hour12:false})}`);
+   closeModal();toast('排班對象設定已儲存；員工主檔與歷史班表不受影響');window.dispatchEvent(new HashChangeEvent('hashchange'));
+ }
+ function injectButton(){
+   const download=document.querySelector('a[href*="BOMB-HR-每月班表範例"]');if(!download||document.querySelector('[data-schedule-participation]'))return;
+   const button=document.createElement('button');button.type='button';button.className='secondary-btn schedule-participation-trigger';button.dataset.scheduleParticipation='';button.textContent='排班對象';button.onclick=openManager;download.parentNode.insertBefore(button,download);
+ }
+ const priorBind=bindView;
+ bindView=function(route){priorBind(route);if(route==='scheduling')setTimeout(injectButton,0)};
+ setTimeout(injectButton,0);
+ setTimeout(()=>{if(location.hash==='#scheduling')window.dispatchEvent(new HashChangeEvent('hashchange'))},0);
+ window.BOMBHR_SCHEDULE_PARTICIPATION={read,isIncluded,settingFor,effective,people,renderRows,openManager,saveManager,injectButton};
+})();
+
+/* ===== Consolidated from schedule-visual-v196.js ===== */
+(function(){
+ 'use strict';
+ function decorate(){
+   if(location.hash!=='#scheduling')return;
+   document.querySelectorAll('.schedule-date-cell.holiday').forEach(cell=>{
+     const name=cell.getAttribute('title')||cell.querySelector('em')?.textContent||'國定假日';
+     cell.dataset.holiday=name;
+     cell.setAttribute('aria-label',`${cell.querySelector('b')?.textContent||''} 日，${name}`);
+   });
+ }
+ const priorBind=bindView;
+ bindView=function(route){priorBind(route);if(route==='scheduling')setTimeout(decorate,0)};
+ document.addEventListener('click',event=>{
+   if(location.hash==='#scheduling'&&event.target.closest('.month-nav,[data-schedule-edit-start],[data-schedule-edit-save]'))setTimeout(decorate,0);
+ });
+ setTimeout(decorate,0);
+ window.BOMBHR_SCHEDULE_VISUAL={decorate};
+})();
