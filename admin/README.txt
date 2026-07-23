@@ -1,4 +1,6 @@
-BOMB HR Enterprise HR Admin Demo V1.99
+BOMB HR Enterprise HR Admin Demo V2.00
+
+V2.00：排班人員與角色部門範圍改為單一權限來源；功能設定「不顯示」同步隱藏左側導覽並阻擋網址直接存取。
 
 V1.99：修復企業打卡方式開關狀態無法保留，並同步 QR Code、NFC、Beacon、Wi-Fi 設定至 Employee App。
 
