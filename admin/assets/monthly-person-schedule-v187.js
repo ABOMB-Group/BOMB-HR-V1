@@ -15,6 +15,10 @@
    const map={年:'annual',旅:'travel',喪:'bereavement',婚:'marriage',病:'sick',事:'personal'};
    return ledger?.rules().find(rule=>rule.id===map[code]);
  };
+ const buildMonthRows=(year,month,max,employee,occupied,codeNames)=>Array.from({length:max},(_,index)=>{
+   const day=index+1,code=occupied.get(day)||'1',work=code==='1';
+   return {date:iso(year,month,day),employeeId:employee.id,employeeName:employee.name,department:employee.department,start:work?'09:00':'',end:work?'18:00':'',code,site:'台中總公司',note:work?'整月快速輸入：正常上班':`整月快速輸入：${codeNames.get(code)||code}`};
+ });
  const currentMonth=()=>{
    const cursor=typeof scheduleCursor!=='undefined'?scheduleCursor:new Date();
    return {year:cursor.getFullYear(),month:cursor.getMonth()+1,max:new Date(cursor.getFullYear(),cursor.getMonth()+1,0).getDate()};
@@ -66,13 +70,13 @@
        leavePlans.push({event,rule});
      }
      for(const plan of leavePlans){const result=ledger.approve(plan.event);if(!result.ok){error.textContent=result.message;return}}
-     const monthPrefix=`${year}-${String(month).padStart(2,'0')}`,existing=read(SCHEDULE_KEY,[]).filter(row=>!(row.employeeId===employee.id&&String(row.date).startsWith(monthPrefix)&&occupied.has(Number(String(row.date).slice(-2)))));
-     const rows=[];
-     groups.forEach(group=>group.days.forEach(day=>rows.push({date:iso(year,month,day),employeeId:employee.id,employeeName:employee.name,department:employee.department,start:'',end:'',code:group.item.code,site:'台中總公司',note:`整月快速輸入：${group.item.name}`})));
+     const monthPrefix=`${year}-${String(month).padStart(2,'0')}`,existing=read(SCHEDULE_KEY,[]).filter(row=>!(row.employeeId===employee.id&&String(row.date).startsWith(monthPrefix)));
+     const codeNames=new Map(groups.map(group=>[group.item.code,group.item.name]));
+     const rows=buildMonthRows(year,month,max,employee,occupied,codeNames);
      localStorage.setItem(SCHEDULE_KEY,JSON.stringify([...existing,...rows]));
      const events=read(EVENT_KEY,[]);leavePlans.forEach(plan=>events.unshift(plan.event));localStorage.setItem(EVENT_KEY,JSON.stringify(events.slice(0,200)));
      if(typeof addAudit==='function')addAudit('員工整月排班快速輸入',`${employee.name}・${employee.id}・${year}/${month}・${[...occupied].map(([day,code])=>`${day}${code}`).join('、')}・${currentProfile().name} ${currentProfile().id}`);
-     closeModal();toast(`${employee.name}的 ${month} 月排班已一次套用 ${occupied.size} 個日期`);
+     closeModal();toast(`${employee.name}的 ${month} 月排班已完成：${occupied.size} 個排休，其餘日期自動套用 1`);
      window.dispatchEvent(new HashChangeEvent('hashchange'));
    };
  }
@@ -81,5 +85,5 @@
    if(!button)return;
    event.preventDefault();event.stopImmediatePropagation();openBatch(button);
  },true);
- window.BOMBHR_MONTHLY_PERSON_SCHEDULE={parseDays,openBatch};
+ window.BOMBHR_MONTHLY_PERSON_SCHEDULE={parseDays,buildMonthRows,openBatch};
 })();

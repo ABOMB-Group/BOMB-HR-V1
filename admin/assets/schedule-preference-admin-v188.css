@@ -1,0 +1,6 @@
+.preference-admin-card{margin:16px 0;padding:16px;border:1px solid rgba(99,102,241,.3);border-radius:18px;background:linear-gradient(145deg,rgba(79,70,229,.09),rgba(15,23,42,.12))}
+.preference-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.preference-admin-head b{font-size:17px}.preference-admin-head small{display:block;margin-top:4px;color:var(--muted)}
+.preference-admin-count{padding:7px 10px;border-radius:999px;background:rgba(99,102,241,.16);color:#c7d2fe;font-size:12px;white-space:nowrap}
+.preference-admin-empty{padding:18px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+.preference-date-tags{display:flex;flex-wrap:wrap;gap:5px}.preference-date-tags i{min-width:25px;padding:4px 6px;border-radius:7px;background:rgba(99,102,241,.12);color:#a5b4fc;font-style:normal;text-align:center;font-size:11px}
+.preference-policy-card{display:grid;gap:16px}.preference-policy-note{padding:12px;border-radius:12px;background:rgba(245,158,11,.08);color:#fcd34d;font-size:13px;line-height:1.6}

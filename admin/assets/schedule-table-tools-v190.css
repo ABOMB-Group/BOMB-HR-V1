@@ -1,0 +1,25 @@
+.schedule-table-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+.schedule-table-tools>strong{margin-right:4px;font-size:12px}.schedule-table-tool-group{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface2)}
+.schedule-table-tool-group span{min-width:68px;padding:0 9px;text-align:center;font-size:11px;color:var(--muted)}
+.schedule-table-tool-group button{width:34px;height:32px;border:0;border-left:1px solid var(--line);background:var(--surface);color:var(--text);font-size:15px;font-weight:800}
+.schedule-table-tool-group button:first-child{border-left:0;border-right:1px solid var(--line)}.schedule-table-tool-group button:hover{background:color-mix(in srgb,var(--surface) 84%,var(--brand));color:var(--brand)}
+.schedule-table-reset{height:34px;padding:0 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font-size:11px;font-weight:700}
+.schedule-table-tools small{margin-left:auto;color:var(--muted);font-size:10px}
+.schedule-color-legend{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;padding-top:8px;border-top:1px solid var(--line)}
+.schedule-color-legend span{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:7px;background:var(--surface2);color:var(--muted);font-size:10px}
+.schedule-color-legend i{width:9px;height:9px;border-radius:3px}
+.schedule-color-legend .rest{background:#e11d48}.schedule-color-legend .annual{background:#d97706}.schedule-color-legend .travel{background:#0891b2}.schedule-color-legend .bereavement{background:#64748b}.schedule-color-legend .marriage{background:#db2777}.schedule-color-legend .sick{background:#ea580c}.schedule-color-legend .personal{background:#7c3aed}
+.schedule-month-row{grid-template-columns:var(--schedule-person-width,270px) repeat(var(--days),var(--schedule-cell-width,52px))!important}
+.schedule-month-row>*{min-height:var(--schedule-row-height,54px)!important}
+.schedule-month-matrix .schedule-matrix-cell{font-size:var(--schedule-font-size,11px)!important}
+.schedule-month-matrix .schedule-person-cell b{font-size:calc(var(--schedule-font-size,11px) + 1px)}
+.schedule-month-matrix .schedule-person-cell small,.schedule-month-matrix .schedule-person-cell em{font-size:calc(var(--schedule-font-size,11px) - 1px)}
+.schedule-month-matrix .schedule-date-cell b{font-size:var(--schedule-font-size,11px)}
+.schedule-month-matrix .schedule-matrix-cell[data-code="休"]{color:#fb7185!important;background:rgba(225,29,72,.12)!important;box-shadow:inset 0 0 0 1px rgba(225,29,72,.2)}
+.schedule-month-matrix .schedule-matrix-cell[data-code="年"]{color:#fbbf24!important;background:rgba(217,119,6,.14)!important;box-shadow:inset 0 0 0 1px rgba(217,119,6,.2)}
+.schedule-month-matrix .schedule-matrix-cell[data-code="旅"]{color:#22d3ee!important;background:rgba(8,145,178,.14)!important;box-shadow:inset 0 0 0 1px rgba(8,145,178,.2)}
+.schedule-month-matrix .schedule-matrix-cell[data-code="喪"]{color:#94a3b8!important;background:rgba(100,116,139,.16)!important;box-shadow:inset 0 0 0 1px rgba(100,116,139,.2)}
+.schedule-month-matrix .schedule-matrix-cell[data-code="婚"]{color:#f472b6!important;background:rgba(219,39,119,.13)!important;box-shadow:inset 0 0 0 1px rgba(219,39,119,.2)}
+.schedule-month-matrix .schedule-matrix-cell[data-code="病"]{color:#fb923c!important;background:rgba(234,88,12,.13)!important;box-shadow:inset 0 0 0 1px rgba(234,88,12,.2)}
+.schedule-month-matrix .schedule-matrix-cell[data-code="事"]{color:#c084fc!important;background:rgba(124,58,237,.13)!important;box-shadow:inset 0 0 0 1px rgba(124,58,237,.2)}
+@media(max-width:760px){.schedule-table-tools small{width:100%;margin-left:0}.schedule-month-row{grid-template-columns:var(--schedule-person-width,200px) repeat(var(--days),var(--schedule-cell-width,46px))!important}}
