@@ -1,4 +1,8 @@
-BOMB HR Enterprise HR Admin Demo V1.97
+BOMB HR Enterprise HR Admin Demo V1.99
+
+V1.99：修復企業打卡方式開關狀態無法保留，並同步 QR Code、NFC、Beacon、Wi-Fi 設定至 Employee App。
+
+V1.98：國定假日改為乾淨的橘色日期欄，移除黃色日期膠囊及格內節日小字，保留滑鼠提示。
 
 V1.97：完成排班功能檔案合併與版本尾碼清理；排班功能統一載入 scheduling.js / scheduling.css，企業設定統一使用 enterprise-settings.js / enterprise-settings.css。
 

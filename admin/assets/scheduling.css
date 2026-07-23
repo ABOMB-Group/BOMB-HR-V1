@@ -88,3 +88,9 @@
 .schedule-date-cell.holiday:hover::after,.schedule-date-cell.holiday:focus-within::after{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .schedule-month-row.header,.schedule-date-cell{overflow:visible}
 .schedule-toolbar .schedule-table-tool-group button{line-height:1;letter-spacing:0}
+
+/* V1.98：國定假日改為乾淨的單一橘底，不在日期格內堆疊標籤。 */
+.schedule-month-row.header .schedule-date-cell.holiday{background:#f97316!important;color:#fff!important;box-shadow:none!important}
+.schedule-month-row.header .schedule-date-cell.holiday b{display:block;min-width:0;height:auto;padding:0;border-radius:0;background:transparent!important;color:#fff!important;box-shadow:none!important}
+.schedule-month-row.header .schedule-date-cell.holiday small{color:#fff!important}
+.schedule-month-row.header .schedule-date-cell.holiday em{display:none!important}
