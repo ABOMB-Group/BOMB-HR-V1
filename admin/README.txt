@@ -1,6 +1,8 @@
-BOMB HR Enterprise HR Admin Demo V2.01
+BOMB HR Enterprise HR Admin Demo V2.03
 
-V2.01：官網 Employee App 改用人事員編登入；員工名冊移除縮寫圖示；左側新增可由最高權限開放的「事件紀錄」；APP 視覺增加立體層次。V2.00 的排班權限連動與隱藏功能保留。
+V2.03：Employee App 打卡按鈕移除圖示並以文字與顏色區分；個人資料依登入員編同步後台人事主檔；福利與申請入口改為無圖示的精緻文字卡片。既有排班、權限、薪資、假勤與裝置連動完整保留。
+
+V2.02：Employee App 下月排休意願改為精簡數字輸入，維持與後台排班套用連動；首頁打卡狀態及主打卡按鈕更新為立體圖示設計。V2.01 的員編登入、事件紀錄與權限設定完整保留。
 
 V1.99：修復企業打卡方式開關狀態無法保留，並同步 QR Code、NFC、Beacon、Wi-Fi 設定至 Employee App。
 
