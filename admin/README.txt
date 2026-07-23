@@ -1,4 +1,6 @@
-BOMB HR Enterprise HR Admin Demo V1.79
+BOMB HR Enterprise HR Admin Demo V1.80
+
+V1.80：新增週六、週日、2026 國定假日標示，精緻化捲軸與月班表，並加入依身份權限控制的上方編輯模式。
 
 V1.79：系統月檢視改成橫向 1～31 日班表，加入固定員工欄、星期、假別／衝突顏色與每日人力統計。
 
