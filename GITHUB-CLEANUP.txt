@@ -1,15 +1,15 @@
-BOMB HR V2.00｜GitHub 舊檔清理清單
+BOMB HR V2.01｜GitHub 舊檔清理清單
 ====================================
 
 重要：
-1. 請先將 V2.00 的完整內容上傳並覆蓋同名檔案。
-2. 確認 admin/dashboard.html 顯示 V2.00 後，再刪除下列舊檔。
+1. 請先將 V2.01 的完整內容上傳並覆蓋同名檔案。
+2. 確認 admin/dashboard.html 顯示 V2.01 後，再刪除下列舊檔。
 3. 下列路徑皆相對於 Repository 根目錄。
 4. 不要刪除 admin/assets/admin.js、admin-features.js、admin-unified.css、
    scheduling.js、scheduling.css、enterprise-settings.js 或 enterprise-settings.css。
 
 
-一、V2.00 已合併，可安全刪除的排班舊檔
+一、V2.01 已合併，可安全刪除的排班舊檔
 ---------------------------------------
 admin/assets/monthly-person-schedule-v187.css
 admin/assets/monthly-person-schedule-v187.js
@@ -29,7 +29,7 @@ admin/assets/scheduling-import.css
 admin/assets/scheduling-import.js
 
 
-二、V2.00 已改為正式檔名，可安全刪除的設定／App 舊檔
+二、V2.01 已改為正式檔名，可安全刪除的設定／App 舊檔
 ---------------------------------------------------
 admin/assets/enterprise-settings-v196.css
 admin/assets/enterprise-settings-v196.js
@@ -64,7 +64,7 @@ admin/assets/v160-authoritative-scope.js
 admin/assets/v160-custom-role-groups.js
 
 
-V2.00 合併後主要保留檔
+V2.01 合併後主要保留檔
 ----------------------
 admin/assets/scheduling.css
 admin/assets/scheduling.js

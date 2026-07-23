@@ -1,5 +1,5 @@
 (function(){
- const documentKey='bombhr-health-documents-v148',employeeId='AB00008',employeeName='佑',position='前端工程師';
+ const person=window.BOMBHR_APP_EMPLOYEE||{employeeId:'AB00008',name:'佑',position:'前端工程師'},documentKey='bombhr-health-documents-v148',employeeId=person.employeeId,employeeName=person.name,position=person.position;
  const config=()=>window.BOMBHR_CERTIFICATE_REQUIREMENTS?.forPosition(position)||{required:['健康檢查／體檢證明'],recommended:[]};
  const read=()=>{try{return JSON.parse(localStorage.getItem(documentKey)||'[]')}catch(e){return []}};
  const save=value=>localStorage.setItem(documentKey,JSON.stringify(value));

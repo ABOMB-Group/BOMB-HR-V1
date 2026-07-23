@@ -1,0 +1,5 @@
+.app .card,.app .status-card,.app .menu-card,.app .profile-card{border-color:color-mix(in srgb,var(--line) 80%,#fff);box-shadow:0 13px 34px rgba(15,23,42,.11),inset 0 1px 0 rgba(255,255,255,.7);transform:translateZ(0)}
+.app .card{background:linear-gradient(155deg,color-mix(in srgb,var(--surface) 96%,#fff),var(--surface))}
+.app .icon-btn,.app .nav button{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}.app .icon-btn:active,.app .nav button:active{transform:translateY(1px) scale(.97)}
+.app .hero{box-shadow:0 22px 48px rgba(66,78,240,.34),inset 0 1px 0 rgba(255,255,255,.28)}
+body.dark .app .card,body.dark .app .status-card,body.dark .app .menu-card,body.dark .app .profile-card{box-shadow:0 17px 38px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.06)}

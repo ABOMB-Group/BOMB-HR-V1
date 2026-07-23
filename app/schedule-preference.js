@@ -1,7 +1,7 @@
 (function(){
  'use strict';
  const KEY='bombhr-schedule-preferences-v188',POLICY='bombhr-schedule-preference-policy-v188';
- const EMPLOYEE={id:'AB00008',name:'佑',department:'技術',supervisor:'肉肉',supervisorId:'AB00006'};
+ const signedIn=window.BOMBHR_APP_EMPLOYEE||{employeeId:'AB00008',name:'佑',department:'技術',managerId:'AB00006'},EMPLOYEE={id:signedIn.employeeId,name:signedIn.name,department:signedIn.department,supervisor:signedIn.manager||'直屬主管',supervisorId:signedIn.managerId||''};
  const defaults={mode:'window',startDay:15,endDay:20,optional:true};
  const read=(key,fallback)=>{try{return {...(Array.isArray(fallback)?{}:fallback),...JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}}catch(e){return fallback}};
  const list=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}};
