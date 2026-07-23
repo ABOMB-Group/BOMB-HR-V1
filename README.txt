@@ -1,4 +1,15 @@
-BOMB HR Enterprise HR Admin V1.97 Unified
+BOMB HR Enterprise HR Admin V1.99 Unified
+
+V1.99 打卡方式連動：
+- QR Code、NFC 感應、Beacon 藍牙與指定 Wi-Fi 開關改為即時儲存。
+- 切換出勤標籤或重新整理後，開關狀態仍會保留。
+- Employee App 依後台設定顯示或隱藏可用打卡方式。
+- Employee App 新增 Beacon 藍牙打卡選項，停用的方式不可繼續打卡。
+
+V1.98 國定假日視覺簡化：
+- 國定假日日期欄改為單一橘色底與白字。
+- 移除黃色日期膠囊及日期格內的節日小字。
+- 保留滑鼠停留顯示節日名稱。
 
 V1.97 檔案結構整理：
 - 將排班匯入、單人快速排休、排休意願、表格縮放、代號拖曳、版面配置、排班人員及假日視覺功能，合併為 admin/assets/scheduling.js 與 scheduling.css。
