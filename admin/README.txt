@@ -1,4 +1,6 @@
-BOMB HR Enterprise HR Admin Demo V1.80
+BOMB HR Enterprise HR Admin Demo V1.86
+
+V1.86：完成後台班表、主管／人事代建休假、假別額度與 Employee App 的共用資料連動，並加入 App 更新提示及防重複扣額檢查。
 
 V1.80：新增週六、週日、2026 國定假日標示，精緻化捲軸與月班表，並加入依身份權限控制的上方編輯模式。
 

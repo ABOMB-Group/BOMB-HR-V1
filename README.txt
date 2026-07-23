@@ -1,4 +1,11 @@
-BOMB HR Enterprise HR Admin V1.80 Unified
+BOMB HR Enterprise HR Admin V1.86 Unified
+
+V1.86 Employee App 共用資料連動：
+- 後台替員工建立並核准休假後，Employee App 月曆同步顯示假別代號。
+- 主管／人事代建的休假會加入 App 申請紀錄，並保留實際核准狀態。
+- App 顯示人事主檔最新剩餘假別額度，重複同步不會重複扣除。
+- 病假、事假等規則產生的薪資扣款會同步顯示於 App 薪資頁。
+- 班表、請假、額度與薪資資料變動時，App 會自動重新整理並提示。
 
 V1.80 週末／國定假日與權限編輯：
 - 週六採藍色、週日採紅色、國定假日採金色標籤，並顯示假日名稱。
