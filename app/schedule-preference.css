@@ -6,6 +6,7 @@
 .preference-date-grid button{min-height:38px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--text);font-weight:700}
 .preference-date-grid button.selected{border-color:#818cf8;background:linear-gradient(145deg,#4f46e5,#6366f1);color:#fff}
 .preference-date-grid button:disabled{opacity:.3}
+.preference-compact-card{padding:15px}.preference-date-input{width:100%;margin-top:9px;padding:14px 15px;border:1px solid var(--line);border-radius:13px;background:var(--surface-2);color:var(--text);font-size:16px;font-weight:800;letter-spacing:.04em;outline:none}.preference-date-input:focus{border-color:#6d5dfc;box-shadow:0 0 0 4px rgba(109,93,252,.13)}.preference-input-help{display:block;margin-top:7px;color:var(--muted);font-size:11px;line-height:1.5}.preference-date-preview{display:flex;flex-wrap:wrap;gap:6px;min-height:30px;margin-top:10px}.preference-date-preview span{padding:6px 9px;border:1px solid rgba(99,102,241,.25);border-radius:999px;background:rgba(99,102,241,.1);color:#818cf8;font-size:11px;font-weight:900}.preference-date-preview small{color:var(--muted);font-size:11px}
 .preference-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:10px;margin-top:14px}
 .preference-note{margin-top:12px;padding:11px 12px;border-radius:12px;background:rgba(245,158,11,.08);color:#fcd34d;font-size:12px;line-height:1.55}
 .preference-history{display:grid;gap:10px;margin-top:14px}.preference-history-item{padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--card)}

@@ -18,17 +18,18 @@
  function roster(){
   const custom=[...parse('bombhr-custom-employees-v147',[]),...parse('bombhr-custom-employees',[])],overrides=parse('bombhr-employee-org-overrides',{});
   const unique=new Map([...defaults,...custom].map(person=>[person.employeeId,{...person,...(overrides[person.employeeId]||{})}]));
-  return [...unique.values()];
+  return [...unique.values()].map(person=>({...person,manager:person.manager||unique.get(person.managerId)?.name||'無'}));
  }
  function active(person){return person&&!['離職','停用'].includes(person.status)&&!['停用','暫不啟用'].includes(person.accountStatus)}
  function apply(person){
   window.BOMBHR_APP_EMPLOYEE=person;
   document.body.classList.remove('app-auth-pending');
   const greeting=document.getElementById('dynamicGreeting');if(greeting)greeting.textContent=`您好，${person.name} 👋`;
-  const name=document.getElementById('profileName');if(name)name.value=person.name;
+  const fields={profileName:person.name,profileEmployeeId:person.employeeId,profileDepartment:person.department,profilePosition:person.position,profilePhone:person.phone,profileEmail:person.email,profileEmergency:person.emergencyContact||person.manager,profileEmergencyPhone:person.emergencyPhone};
+  Object.entries(fields).forEach(([id,value])=>{const input=document.getElementById(id);if(input)input.value=value||''});
+  const name=document.getElementById('profileName');
   const profile=name?.closest('.profile-card')||document.querySelector('.profile-card');
   if(profile){const title=profile.querySelector('h3'),copy=profile.querySelector('h3+p');if(title)title.textContent=person.name;if(copy)copy.textContent=`${person.department}・${person.position}・員工編號 ${person.employeeId}`}
-  document.querySelectorAll('.form-group').forEach(group=>{if(group.querySelector('label')?.textContent.trim()==='員工編號'){const input=group.querySelector('input');if(input)input.value=person.employeeId}});
   const initial=document.getElementById('avatarInitial');if(initial)initial.textContent=person.name[0];
   window.dispatchEvent(new CustomEvent('bombhr-app-employee-ready',{detail:person}));
  }
@@ -39,5 +40,8 @@
  }
  const saved=parseSession(SESSION,null),person=saved&&roster().find(item=>item.employeeId===saved.employeeId);
  if(active(person))apply(person);else gate();
+ function refreshCurrent(){const current=window.BOMBHR_APP_EMPLOYEE,next=current&&roster().find(item=>item.employeeId===current.employeeId);if(active(next))apply(next)}
+ window.addEventListener('storage',event=>{if(['bombhr-custom-employees-v147','bombhr-custom-employees','bombhr-employee-org-overrides'].includes(event.key))refreshCurrent()});
+ window.addEventListener('focus',refreshCurrent);
  window.BOMBHR_APP_AUTH={roster,current:()=>window.BOMBHR_APP_EMPLOYEE,logout:()=>{sessionStorage.removeItem(SESSION);location.reload()}};
 })();

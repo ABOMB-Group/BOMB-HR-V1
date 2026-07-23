@@ -1,7 +1,7 @@
 (function(){
   'use strict';
   const EMPLOYEE_ID=(window.BOMBHR_APP_EMPLOYEE||{employeeId:'AB00008'}).employeeId;
-  const EMPLOYEE_NAME='佑';
+  const EMPLOYEE_NAME=(window.BOMBHR_APP_EMPLOYEE||{name:'佑'}).name;
   const KEYS={
     schedules:'bombhr-schedules-v176',
     events:'bombhr-demo-events',

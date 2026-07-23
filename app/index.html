@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="BOMB HR"/>
 <link rel="manifest" href="manifest.webmanifest"/>
 <link rel="apple-touch-icon" href="../assets/bombhr-logo.png"/>
-<title>BOMB HR｜Employee App V2.01</title>
+<title>BOMB HR｜Employee App V2.03</title>
 <style>
 :root{
   --bg:#f6f8fc;
@@ -164,24 +164,17 @@ button{cursor:pointer}
   gap:12px;
 }
 .status-card{
-  background:var(--surface-2);
-  border:1px solid var(--line);
-  border-radius:17px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid transparent;
+  border-radius:19px;
   padding:15px;
+  box-shadow:0 12px 26px rgba(15,23,42,.08),inset 0 1px rgba(255,255,255,.55);
 }
-.status-card .row{display:flex;align-items:center;gap:10px}
-.status-icon{
-  width:40px;height:40px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  color:#fff;
-  font-size:18px;
-  flex:0 0 auto;
-}
-.status-card.in .status-icon{background:var(--green)}
-.status-card.out .status-icon{background:#778196}
-.status-card b{font-size:13px}
+.status-card.in{background:linear-gradient(145deg,rgba(32,199,122,.17),rgba(32,199,122,.06));border-color:rgba(32,199,122,.34)}
+.status-card.out{background:linear-gradient(145deg,rgba(79,109,247,.16),rgba(109,74,255,.06));border-color:rgba(79,109,247,.32)}
+.status-card .row{display:flex;align-items:center}
+.status-card b{font-size:13px;letter-spacing:.04em}.status-card.in b{color:#13a96a}.status-card.out b{color:#5d73ef}
 .status-card strong{display:block;font-size:17px;margin-top:13px}
 .pill{
   display:inline-block;
@@ -193,7 +186,7 @@ button{cursor:pointer}
   background:rgba(32,199,122,.12);
   color:var(--green);
 }
-.status-card.out .pill{background:var(--surface-3);color:var(--muted)}
+.status-card.out .pill{background:rgba(79,109,247,.11);color:#5d73ef}
 .task-list{display:grid;gap:0}
 .task{
   display:flex;
@@ -233,27 +226,29 @@ button{cursor:pointer}
   display:grid;
   place-items:center;
   position:relative;
-  background:radial-gradient(circle,rgba(32,199,122,.14) 0 45%,transparent 46%);
+  background:radial-gradient(circle,rgba(79,109,247,.16) 0 45%,transparent 46%);
 }
 .punch-ring:before,.punch-ring:after{
   content:"";
   position:absolute;
   border-radius:50%;
 }
-.punch-ring:before{inset:18px;border:2px solid rgba(32,199,122,.35)}
-.punch-ring:after{inset:42px;border:2px solid rgba(32,199,122,.7);box-shadow:0 0 34px rgba(32,199,122,.28)}
+.punch-ring:before{inset:18px;border:1px solid rgba(109,93,252,.34);box-shadow:0 0 0 8px rgba(79,109,247,.05)}
+.punch-ring:after{inset:42px;border:1px solid rgba(255,255,255,.28);box-shadow:0 0 38px rgba(79,109,247,.3)}
 .punch-core{
-  width:120px;height:120px;
-  border-radius:50%;
-  background:linear-gradient(145deg,#0bb56d,#22d889);
+  width:132px;height:132px;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:38px;
+  background:linear-gradient(145deg,#315ff4,#724cf5);
   color:#fff;
   display:grid;
   place-items:center;
   text-align:center;
   z-index:2;
-  box-shadow:0 16px 34px rgba(32,199,122,.34),inset 0 1px 0 rgba(255,255,255,.3);
+  box-shadow:0 20px 42px rgba(70,75,240,.38),inset 0 1px 0 rgba(255,255,255,.34);
+  transition:transform .18s ease,box-shadow .18s ease;
 }
-.punch-core b{font-size:17px}.punch-core small{display:block;margin-top:4px;font-size:12px}
+.punch-core.checkout{background:linear-gradient(145deg,#ef7d38,#e34c74);box-shadow:0 20px 42px rgba(226,76,116,.3),inset 0 1px 0 rgba(255,255,255,.34)}.punch-core.done{background:linear-gradient(145deg,#159a69,#24c98c)}.punch-core:active{transform:scale(.96);box-shadow:0 10px 24px rgba(70,75,240,.3),inset 0 2px 5px rgba(0,0,0,.12)}.punch-core b{display:block;font-size:18px;letter-spacing:.04em}.punch-core small{display:block;margin-top:7px;font-size:12px;opacity:.9}
 .secondary{
   width:100%;
   border:1px solid var(--line);
@@ -633,7 +628,7 @@ button{cursor:pointer}
 }
 
 
-.module-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.module-card,.apply-card{border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:17px;padding:15px;text-align:left}.module-icon,.apply-icon{width:44px;height:44px;border-radius:14px;color:#fff;display:grid;place-items:center;font-size:20px;margin-bottom:11px}.module-card:nth-child(1) .module-icon{background:linear-gradient(135deg,#0ea5e9,#2563eb)}.module-card:nth-child(2) .module-icon{background:linear-gradient(135deg,#10b981,#2dd4bf)}.module-card:nth-child(3) .module-icon{background:linear-gradient(135deg,#7c3aed,#a855f7)}.module-card:nth-child(4) .module-icon{background:linear-gradient(135deg,#f59e0b,#fb923c)}.module-card b,.apply-card b{display:block;font-size:14px}.module-card small,.apply-card small{display:block;color:var(--muted);font-size:10px;line-height:1.45;margin-top:5px}.apply-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.apply-card:first-child .apply-icon{background:linear-gradient(135deg,#2f6df6,#6d4aff)}.apply-card:last-child .apply-icon{background:linear-gradient(135deg,#ff7a1a,#f59e0b)}
+.module-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.module-card,.apply-card{position:relative;overflow:hidden;min-height:112px;border:1px solid var(--line);background:linear-gradient(150deg,var(--surface),var(--surface-2));color:var(--text);border-radius:18px;padding:18px 15px 15px;text-align:left;box-shadow:0 10px 24px rgba(15,23,42,.08);transition:transform .18s ease,box-shadow .18s ease}.module-card:before,.apply-card:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--card-accent,#2f6df6)}.module-card:after,.apply-card:after{content:"";position:absolute;width:70px;height:70px;right:-36px;bottom:-40px;border-radius:50%;background:color-mix(in srgb,var(--card-accent,#2f6df6) 13%,transparent)}.module-card:active,.apply-card:active{transform:scale(.98)}.module-card:nth-child(1){--card-accent:#2787f5}.module-card:nth-child(2){--card-accent:#19bf91}.module-card:nth-child(3){--card-accent:#8a5cf5}.module-card:nth-child(4){--card-accent:#f39132}.module-card b,.apply-card b{display:block;margin-top:7px;font-size:15px}.module-card small,.apply-card small{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:7px}.apply-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.apply-card:nth-child(1){--card-accent:#f59e0b}.apply-card:nth-child(2){--card-accent:#566df5}.apply-card:nth-child(3){--card-accent:#e25472}.apply-card:nth-child(4){--card-accent:#18b989}
 .file-list{display:grid;gap:8px;margin-top:10px}.file-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}.file-item b{font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-item button{border:0;background:none;color:var(--danger);font-weight:900}
 .readonly-note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:11px}
 
@@ -912,12 +907,12 @@ button{cursor:pointer}
 <div class="card">
 <div class="status-grid">
 <div class="status-card in">
-<div class="row"><div class="status-icon">↑</div><b>上班打卡</b></div>
+<div class="row"><b>上班打卡</b></div>
 <strong id="homeInTime">08:58</strong>
 <span class="pill">正常</span>
 </div>
 <div class="status-card out">
-<div class="row"><div class="status-icon">↓</div><b>下班打卡</b></div>
+<div class="row"><b>下班打卡</b></div>
 <strong id="homeOutTime">--:--</strong>
 <span class="pill">尚未打卡</span>
 </div>
@@ -1102,14 +1097,14 @@ button{cursor:pointer}
 </div>
 <div class="section-line"><h3>福利</h3></div>
 <div class="module-grid">
-<button class="module-card" data-module="payroll" onclick="openSubview('salarySubview')"><div class="module-icon">$</div><b>薪資表</b><small>查看本期薪資與明細</small></button>
-<button class="module-card" data-module="benefits" onclick="openSubview('benefitsSubview')"><div class="module-icon">♡</div><b>員工福利</b><small>補助、特約與優惠</small></button>
-<button class="module-card" data-module="announcements" onclick="openSubview('announcementSubview')"><div class="module-icon">◈</div><b>公司公告</b><small>重要通知與政策</small></button>
-<button class="module-card" data-module="training" onclick="openSubview('trainingSubview')"><div class="module-icon">▤</div><b>教育訓練</b><small>課程與完成進度</small></button>
-<button class="module-card hidden" data-module="aiAssistant" onclick="toast('AI 助理模組尚未開放')"><div class="module-icon">AI</div><b>AI 助理</b><small>本公司智慧助理</small></button>
+<button class="module-card" data-module="payroll" onclick="openSubview('salarySubview')"><b>薪資表</b><small>查看本期薪資與明細</small></button>
+<button class="module-card" data-module="benefits" onclick="openSubview('benefitsSubview')"><b>員工福利</b><small>補助、特約與優惠</small></button>
+<button class="module-card" data-module="announcements" onclick="openSubview('announcementSubview')"><b>公司公告</b><small>重要通知與政策</small></button>
+<button class="module-card" data-module="training" onclick="openSubview('trainingSubview')"><b>教育訓練</b><small>課程與完成進度</small></button>
+<button class="module-card hidden" data-module="aiAssistant" onclick="toast('AI 助理模組尚未開放')"><b>AI 助理</b><small>本公司智慧助理</small></button>
 </div>
 <div class="section-line"><h3>申請</h3></div>
-<div class="apply-grid"><button class="apply-card" onclick="openSubview('leaveSubview')"><div class="apply-icon">✓</div><b>請假申請</b><small>依企業假別規則提出申請</small></button><button class="apply-card" onclick="openSubview('overtimeSubview')"><div class="apply-icon">＋</div><b>加班申請</b><small>填寫日期、時間與原因</small></button></div>
+<div class="apply-grid"><button class="apply-card" onclick="openSubview('leaveSubview')"><b>請假申請</b><small>依企業假別規則提出申請</small></button><button class="apply-card" onclick="openSubview('overtimeSubview')"><b>加班申請</b><small>填寫日期、時間與原因</small></button></div>
 </section>
 <section class="view" id="myView">
 <div class="topbar">
@@ -1161,7 +1156,7 @@ button{cursor:pointer}
 </span>
 <span class="arrow">›</span>
 </a>
-<div class="demo-badge">● Employee APP V2.01・人事資料連動</div>
+<div class="demo-badge">● Employee APP V2.03・人事資料連動</div>
 </section>
 </div>
 <section class="subview" id="leaveSubview">
@@ -1231,9 +1226,9 @@ button{cursor:pointer}
 </div>
 <div class="card">
 <div class="form-group"><label>姓名</label><input disabled="" id="profileName" value="佑"/></div>
-<div class="form-group"><label>員工編號</label><input disabled="" value="AB00008"/></div>
+<div class="form-group"><label>員工編號</label><input disabled="" id="profileEmployeeId" value="AB00008"/></div>
 <div class="form-group"><label>部門</label><input disabled="" id="profileDepartment" value="技術"/></div>
-<div class="form-group"><label>職稱</label><input disabled="" value="前端工程師"/></div>
+<div class="form-group"><label>職稱</label><input disabled="" id="profilePosition" value="前端工程師"/></div>
 <div class="form-group"><label>聯絡電話</label><input id="profilePhone" value="0912-345-678"/></div>
 <div class="form-group"><label>Email</label><input id="profileEmail" value="vika@bombhr.com"/></div>
 <div class="form-group"><label>緊急聯絡人</label><input id="profileEmergency" value="KEN"/></div>
@@ -1483,18 +1478,23 @@ function toast(msg){
   clearTimeout(window.toastTimer);
   window.toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
 }
+function punchButtonMarkup(label,time,completed=false){
+  return '<div><b>'+label+'</b><small id="punchClock">'+time+'</small></div>';
+}
 function punch(){
   const core=document.getElementById('punchCore');
   const time=nowTime().slice(0,5);
   if(punchState===0){
     punchState=1;
-    core.innerHTML='<div><b>下班打卡</b><small>'+nowTime()+'</small></div>';
+    core.classList.add('checkout');
+    core.innerHTML=punchButtonMarkup('下班打卡',nowTime());
     document.getElementById('homeInTime').textContent=time;
     {const person=currentAppEmployee();pushBombHREvent({category:'attendance',action:'clock-in',employee:person.name,employeeId:person.employeeId,time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});}
     toast(activeMethod+' 驗證完成，上班打卡成功');
   }else if(punchState===1){
     punchState=2;
-    core.innerHTML='<div><b>今日完成</b><small>'+nowTime()+'</small></div>';
+    core.classList.remove('checkout');core.classList.add('done');
+    core.innerHTML=punchButtonMarkup('今日完成',nowTime(),true);
     core.disabled=true;
     core.style.opacity='.68';
     document.getElementById('homeOutTime').textContent=time;
@@ -1660,14 +1660,21 @@ function closeSubview(id){
   document.getElementById(id).classList.remove('active');
 }
 function saveProfile(){
+  const person=currentAppEmployee();
   const data={
     phone:document.getElementById('profilePhone').value.trim(),
     email:document.getElementById('profileEmail').value.trim(),
-    emergency:document.getElementById('profileEmergency').value.trim(),
+    emergencyContact:document.getElementById('profileEmergency').value.trim(),
     emergencyPhone:document.getElementById('profileEmergencyPhone').value.trim()
   };
-  localStorage.setItem('bombhr-profile-contact',JSON.stringify(data));
-  toast('聯絡資料已儲存');
+  let overrides={};try{overrides=JSON.parse(localStorage.getItem('bombhr-employee-org-overrides')||'{}')}catch(e){}
+  overrides[person.employeeId]={...(overrides[person.employeeId]||{}),...data,updatedBy:`Employee App・${person.name}・${person.employeeId}`,updatedAt:new Date().toISOString()};
+  localStorage.setItem('bombhr-employee-org-overrides',JSON.stringify(overrides));
+  Object.assign(window.BOMBHR_APP_EMPLOYEE,data);
+  const events=JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]');
+  events.unshift({id:'PROFILE-'+Date.now(),category:'employee-profile',action:'員工更新聯絡資料',employee:person.name,employeeId:person.employeeId,status:'completed',createdAt:new Date().toISOString()});
+  localStorage.setItem('bombhr-demo-events',JSON.stringify(events.slice(0,200)));
+  toast('聯絡資料已儲存並同步後台人事主檔');
 }
 function requestHRChange(){
   toast('人事資料變更申請已送出，等待 HR 審核');
@@ -1707,16 +1714,6 @@ function setLanguage(language){
   toast('語言已切換為 '+language);
 }
 function loadMySettings(){
-  const profileRaw=localStorage.getItem('bombhr-profile-contact');
-  if(profileRaw){
-    try{
-      const p=JSON.parse(profileRaw);
-      document.getElementById('profilePhone').value=p.phone||'';
-      document.getElementById('profileEmail').value=p.email||'';
-      document.getElementById('profileEmergency').value=p.emergency||'';
-      document.getElementById('profileEmergencyPhone').value=p.emergencyPhone||'';
-    }catch(e){}
-  }
   const keys=['biometric','newDevice','clockNotify','scheduleNotify','leaveNotify','announcementNotify','salaryNotify'];
   keys.forEach(k=>{
     const el=document.getElementById(k==='biometric'?'biometricToggle':k==='newDevice'?'newDeviceToggle':k);
@@ -2067,22 +2064,22 @@ setInterval(tick,1000);
 <link rel="stylesheet" href="emergency-leave.css">
 <link rel="stylesheet" href="device-security.css">
 <link rel="stylesheet" href="certificates.css">
-<link rel="stylesheet" href="app-sync.css?v=201">
-<link rel="stylesheet" href="schedule-preference.css?v=201">
-<link rel="stylesheet" href="app-module-sync.css?v=201">
-<link rel="stylesheet" href="employee-auth.css?v=201">
-<link rel="stylesheet" href="app-depth.css?v=201">
-<script src="employee-auth.js?v=201"></script>
-<script src="../assets/hr-leave-ledger.js?v=201"></script>
+<link rel="stylesheet" href="app-sync.css?v=203">
+<link rel="stylesheet" href="schedule-preference.css?v=203">
+<link rel="stylesheet" href="app-module-sync.css?v=203">
+<link rel="stylesheet" href="employee-auth.css?v=203">
+<link rel="stylesheet" href="app-depth.css?v=203">
+<script src="employee-auth.js?v=203"></script>
+<script src="../assets/hr-leave-ledger.js?v=203"></script>
 <script src="../assets/certificate-requirements.js"></script>
 <script src="emergency-leave.js"></script>
 <script src="attendance-rules.js"></script>
 <script src="device-security.js"></script>
 <script src="certificates.js"></script>
 <script src="pwa-install.js"></script>
-<script src="app-sync.js?v=201"></script>
-<script src="schedule-preference.js?v=201"></script>
-<script src="app-module-sync.js?v=201"></script>
-<script src="attendance-methods.js?v=201"></script>
+<script src="app-sync.js?v=203"></script>
+<script src="schedule-preference.js?v=203"></script>
+<script src="app-module-sync.js?v=203"></script>
+<script src="attendance-methods.js?v=203"></script>
 </body>
 </html>
