@@ -16,8 +16,8 @@
    if(panel&&(importNote||preference)){
      let bottom=content.querySelector('.schedule-page-bottom-blocks');
      if(!bottom){bottom=document.createElement('div');bottom.className='schedule-page-bottom-blocks';panel.after(bottom)}
-     if(importNote&&!bottom.contains(importNote))bottom.append(importNote);
      if(preference&&!bottom.contains(preference))bottom.append(preference);
+     if(importNote&&!bottom.contains(importNote))bottom.append(importNote);
    }
  }
  const priorBind=bindView;
