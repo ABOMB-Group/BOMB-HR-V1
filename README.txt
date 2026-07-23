@@ -1,4 +1,10 @@
-BOMB HR Enterprise HR Admin V1.96 Unified
+BOMB HR Enterprise HR Admin V1.97 Unified
+
+V1.97 檔案結構整理：
+- 將排班匯入、單人快速排休、排休意願、表格縮放、代號拖曳、版面配置、排班人員及假日視覺功能，合併為 admin/assets/scheduling.js 與 scheduling.css。
+- 企業設定改用無版本尾碼的 enterprise-settings.js 與 enterprise-settings.css。
+- Employee App 同步與排休功能改用無版本尾碼的 app-sync、app-module-sync、schedule-preference 檔案。
+- 移除已完成合併的 v187～v196 零散功能檔，保留既有資料儲存鍵與全部功能。
 
 V1.96 排班與企業設定修正：
 - 修正表格文字 A+ 按鈕被裁切。

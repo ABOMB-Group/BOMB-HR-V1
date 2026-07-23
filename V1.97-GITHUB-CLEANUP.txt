@@ -1,0 +1,82 @@
+BOMB HR V1.97｜GitHub 舊檔清理清單
+====================================
+
+重要：
+1. 請先將 V1.97 的完整內容上傳並覆蓋同名檔案。
+2. 確認 admin/dashboard.html 顯示 V1.97 後，再刪除下列舊檔。
+3. 下列路徑皆相對於 Repository 根目錄。
+4. 不要刪除 admin/assets/admin.js、admin-features.js、admin-unified.css、
+   scheduling.js、scheduling.css、enterprise-settings.js 或 enterprise-settings.css。
+
+
+一、V1.97 已合併，可安全刪除的排班舊檔
+---------------------------------------
+admin/assets/monthly-person-schedule-v187.css
+admin/assets/monthly-person-schedule-v187.js
+admin/assets/schedule-preference-admin-v188.css
+admin/assets/schedule-preference-admin-v188.js
+admin/assets/schedule-table-tools-v190.css
+admin/assets/schedule-table-tools-v190.js
+admin/assets/schedule-code-drag-v193.css
+admin/assets/schedule-code-drag-v193.js
+admin/assets/schedule-page-layout-v194.css
+admin/assets/schedule-page-layout-v194.js
+admin/assets/schedule-participation-v195.css
+admin/assets/schedule-participation-v195.js
+admin/assets/schedule-visual-v196.css
+admin/assets/schedule-visual-v196.js
+admin/assets/scheduling-import.css
+admin/assets/scheduling-import.js
+
+
+二、V1.97 已改為正式檔名，可安全刪除的設定／App 舊檔
+---------------------------------------------------
+admin/assets/enterprise-settings-v196.css
+admin/assets/enterprise-settings-v196.js
+app/app-module-sync-v196.css
+app/app-module-sync-v196.js
+app/app-sync-v186.css
+app/app-sync-v186.js
+app/schedule-preference-v188.css
+app/schedule-preference-v188.js
+
+
+三、先前已合併至 admin-features.js 等核心檔，可安全刪除的歷史補丁
+----------------------------------------------------------------
+admin/assets/certificate-settings-v151.js
+admin/assets/employee-master-edit-v150.js
+admin/assets/health-documents-v148.js
+admin/assets/permission-designer-v146.css
+admin/assets/permission-designer.css
+admin/assets/permission-designer.js
+admin/assets/personnel-import-v147.js
+admin/assets/personnel-structure-v147.js
+admin/assets/v140-fixes.css
+admin/assets/v154-certificate-cleanup.js
+admin/assets/v154-certificate-fixes.css
+admin/assets/v155-modal-permission.css
+admin/assets/v156-permission-org.js
+admin/assets/v156-personnel-overrides.js
+admin/assets/v157-account-audit.js
+admin/assets/v158-hard-scope.js
+admin/assets/v159-role-linkage.js
+admin/assets/v160-authoritative-scope.js
+admin/assets/v160-custom-role-groups.js
+
+
+V1.97 合併後主要保留檔
+----------------------
+admin/assets/scheduling.css
+admin/assets/scheduling.js
+admin/assets/enterprise-settings.css
+admin/assets/enterprise-settings.js
+admin/assets/admin-features.js
+admin/assets/admin-unified.css
+app/app-sync.css
+app/app-sync.js
+app/app-module-sync.css
+app/app-module-sync.js
+app/schedule-preference.css
+app/schedule-preference.js
+
+以上刪除只清理舊程式檔，不會刪除瀏覽器已保存的人事、權限、排班或設定資料。
