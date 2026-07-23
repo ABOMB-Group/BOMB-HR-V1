@@ -1,4 +1,6 @@
-BOMB HR Enterprise HR Admin Demo V1.75
+BOMB HR Enterprise HR Admin Demo V1.76
+
+V1.76：新增排班 CSV 範例下載、上傳預覽、確認套用，以及核准請假與已排班的自動衝突標記。
 
 V1.75：清空預設排班，新增假勤規則管理、申請額度檢核、核准扣額、人事餘額與薪資／遲到連動。
 - 左側品牌區改用完整 BOMB HR 公司 Logo，移除紫色 B 方塊。
