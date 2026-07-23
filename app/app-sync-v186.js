@@ -28,6 +28,7 @@
   const approvedLeaves=()=>read(KEYS.events,[]).filter(event=>isMine(event)&&event.subtype==='leave'&&event.status==='approved');
   const schedules=()=>read(KEYS.schedules,[]).filter(row=>String(row.employeeId||'')===EMPLOYEE_ID);
   const covers=(event,date)=>{
+    if(Array.isArray(event.dates)&&event.dates.length)return event.dates.map(dateKey).includes(date);
     const [start,end]=periodParts(event);
     return start&&date>=start&&date<=(end||start);
   };

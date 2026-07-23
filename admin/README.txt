@@ -1,4 +1,6 @@
-BOMB HR Enterprise HR Admin Demo V1.86
+BOMB HR Enterprise HR Admin Demo V1.87
+
+V1.87：月班表點選員工姓名後，可用句點、逗號或空格一次輸入整月休假／假別日期並自動套用；假別同步人事額度、核准事件與 Employee App。
 
 V1.86：完成後台班表、主管／人事代建休假、假別額度與 Employee App 的共用資料連動，並加入 App 更新提示及防重複扣額檢查。
 
