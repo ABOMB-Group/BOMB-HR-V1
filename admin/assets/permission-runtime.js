@@ -1,7 +1,7 @@
 (function(){
  'use strict';
  const ROLE_KEY='bombhr-role-designer-v147';
- const labels={organization:'組織管理',employees:'員工人事',attendance:'出勤與裝置',scheduling:'排班月曆',approvals:'簽核中心',payroll:'薪資管理',permissions:'角色與權限',settings:'企業設定'};
+ const labels={organization:'組織管理',employees:'員工人事',attendance:'出勤與裝置',scheduling:'排班月曆',approvals:'簽核中心',payroll:'薪資管理',eventlog:'事件紀錄',permissions:'角色與權限',settings:'企業設定'};
  const read=()=>{try{return JSON.parse(localStorage.getItem(ROLE_KEY)||'{}')}catch(e){return {}}};
  function roleForCurrentAccount(){
   const profile=typeof currentProfile==='function'?currentProfile():null;if(!profile)return null;
@@ -17,6 +17,7 @@
   if(route==='dashboard'||route==='announcements'||route==='reports')return 'view';
   const role=roleForCurrentAccount();
   if(role?.permissions&&Object.prototype.hasOwnProperty.call(role.permissions,route))return role.permissions[route]||'hidden';
+  if(route==='eventlog'&&role)return role.sensitive?.audit?'view':'hidden';
   const profile=typeof currentProfile==='function'?currentProfile():null;
   return profile&&(profile.routes==='*'||profile.routes?.includes(route))?'view':'hidden';
  }
