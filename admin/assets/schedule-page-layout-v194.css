@@ -1,0 +1,5 @@
+.schedule-toolbar .month-nav{flex:1}.schedule-toolbar .schedule-table-tools{margin:0 0 0 8px;padding:0 0 0 10px;border:0;border-left:1px solid var(--line);border-radius:0;background:transparent;flex-wrap:nowrap}
+.schedule-toolbar .schedule-table-tools>strong{margin:0;font-size:10px;white-space:nowrap}.schedule-toolbar .schedule-table-tool-group input{width:48px}.schedule-toolbar .schedule-table-tool-group button{width:42px;min-width:42px;padding:0 5px;white-space:nowrap}
+.schedule-toolbar .schedule-table-reset{white-space:nowrap}.schedule-page-bottom-blocks{display:grid;gap:14px;margin-top:16px}.schedule-page-bottom-blocks .schedule-import-note,.schedule-page-bottom-blocks .preference-admin-card{margin:0}
+.schedule-head-edit-button{order:-10}.schedule-edit-toolbar.is-moved{display:none}
+@media(max-width:1180px){.schedule-toolbar{align-items:flex-start;flex-direction:column}.schedule-toolbar .month-nav{width:100%;flex-wrap:wrap}.schedule-toolbar .schedule-table-tools{width:100%;margin:4px 0 0;padding:8px 0 0;border-left:0;border-top:1px solid var(--line);flex-wrap:wrap}.schedule-view-switch{align-self:flex-end}}

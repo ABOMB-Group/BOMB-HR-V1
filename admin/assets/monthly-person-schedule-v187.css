@@ -1,0 +1,12 @@
+.monthly-person-example{margin:0 0 14px;padding:12px 14px;border:1px solid rgba(99,102,241,.3);border-radius:14px;background:rgba(79,70,229,.08);color:var(--muted);font-size:13px;line-height:1.65}
+.monthly-person-example b{color:var(--text)}
+.monthly-person-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.monthly-person-field{display:grid;gap:7px;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(15,23,42,.16)}
+.monthly-person-field>span{display:flex;align-items:center;gap:8px;font-weight:800}
+.monthly-person-field i{display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:rgba(99,102,241,.16);color:#a5b4fc;font-style:normal}
+.monthly-person-field input{width:100%;box-sizing:border-box}
+.monthly-person-field small{color:var(--muted);font-size:12px}
+.monthly-person-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.monthly-person-preview span{padding:7px 10px;border-radius:999px;background:rgba(99,102,241,.12);color:#c7d2fe;font-size:12px}
+.monthly-person-preview .danger{background:rgba(239,68,68,.12);color:#fca5a5}
+@media(max-width:720px){.monthly-person-grid{grid-template-columns:1fr}}
