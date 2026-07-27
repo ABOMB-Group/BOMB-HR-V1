@@ -2,6 +2,7 @@ const $=(s,p=document)=>p.querySelector(s), $$=(s,p=document)=>[...p.querySelect
 const store={get:(k,d)=>localStorage.getItem(k)??d,set:(k,v)=>localStorage.setItem(k,v)};
 function applyTheme(){document.documentElement.dataset.theme=store.get('bombhr-theme','light')}
 applyTheme();
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/scheduling-24m.css?v=2061">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/salary-structure.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/benefit-policy.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/employee-onboarding.css">');
@@ -10,7 +11,7 @@ document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="asset
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/benefit-calendar-fixes.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/payroll-item-master.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/role-permissions.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-unified.css?v=2060">');
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="assets/admin-unified.css?v=2061">');
 
 const adminExtensionsScript=document.createElement('script');adminExtensionsScript.src='assets/admin-extensions.js?v=205';document.head.appendChild(adminExtensionsScript);
 function toast(msg){const box=$('#toastStack');if(!box)return;const el=document.createElement('div');el.className='toast';el.textContent=msg;box.append(el);setTimeout(()=>el.remove(),2800)}

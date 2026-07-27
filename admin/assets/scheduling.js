@@ -419,11 +419,11 @@
  function people(){return window.BOMBHR_SCHEDULE_PARTICIPATION?.people?.()||[]}
  function defaultCode(person,date,holidayName=''){
   const setting=read()[person.employeeId]||{},mode=setting.policyMode||(setting.mode==='fixed'?'weekend':'roster'),day=new Date(`${date}T00:00:00`).getDay(),weekend=day===0||day===6;
-  if(mode==='roster')return '';
+  if(mode==='roster')return '1';
   if(mode==='weekend')return weekend?'休':'1';
   if(mode==='holiday')return holidayName?'休':'1';
   if(mode==='weekendHoliday')return weekend||holidayName?'休':'1';
-  return '';
+  return '1';
  }
  function policyLabel(setting={}){
   const mode=setting.policyMode||(setting.mode==='fixed'?'weekend':'roster');
@@ -473,7 +473,7 @@ window.BOMBHR_SCHEDULE_VISUAL={decorate};
 
 /* ===== Scheduling boot guard: repaint when a hard refresh starts on #scheduling ===== */
 (function(){
- const BUILD='V2.06.0';
+ const BUILD='V2.06.1';
  function showBuild(){
   if(location.hash!=='#scheduling'||document.querySelector('[data-scheduling-build]'))return;
   const toolbar=document.querySelector('.schedule-toolbar');
