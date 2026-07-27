@@ -128,27 +128,24 @@
      if(groups.some(group=>group.invalid.length)){error.textContent=`日期只能輸入 1～${max}，請修正紅色提示`;return}
      for(const group of groups)for(const day of group.days){if(occupied.has(day)){error.textContent=`${day} 日重複填在「${occupied.get(day)}」與「${group.item.code}」，請保留其中一個`;return}occupied.set(day,group.item.code)}
      if(!occupied.size){error.textContent='請至少輸入一個日期';return}
-     const ledger=window.BOMBHR_HR_LEDGER,leavePlans=[],savedCodeByDay=new Map(savedRows.map(row=>[Number(String(row.date).slice(-2)),row.code||'1']));
-     for(const group of groups.filter(item=>item.days.length&&item.item.code!=='休')){
-       const rule=ruleByCode(ledger,group.item.code);
-       if(!rule)continue;
-       const changedDays=group.days.filter(day=>savedCodeByDay.get(day)!==group.item.code);
-       if(!changedDays.length)continue;
-       const dates=changedDays.map(day=>iso(year,month,day)),event=makeLeaveEvent(employee,rule,dates);
-       const check=ledger.validate(employee.id,rule.name,dates.length,dates[0],'');
-       if(!check.ok){error.textContent=check.message;return}
-       leavePlans.push({event,rule});
-     }
-     for(const plan of leavePlans){const result=ledger.approve(plan.event);if(!result.ok){error.textContent=result.message;return}}
-     const currentRows=read(SCHEDULE_KEY,[]),updateKeys=new Set([...occupied.keys()].map(day=>`${employee.id}|${iso(year,month,day)}`)),existing=currentRows.filter(row=>!updateKeys.has(`${row.employeeId}|${row.date}`));
-     const codeNames=new Map(groups.map(group=>[group.item.code,group.item.name]));
-     const rows=[...occupied].map(([day,code])=>({date:iso(year,month,day),employeeId:employee.id,employeeName:employee.name,department:employee.department,start:'',end:'',code,site:'台中總公司',note:`快速排班增量更新：${codeNames.get(code)||code}`}));
-     localStorage.setItem(SCHEDULE_KEY,JSON.stringify([...existing,...rows]));
-     const events=read(EVENT_KEY,[]);leavePlans.forEach(plan=>events.unshift(plan.event));localStorage.setItem(EVENT_KEY,JSON.stringify(events.slice(0,200)));
-     if(typeof addAudit==='function')addAudit('員工整月排班快速輸入',`${employee.name}・${employee.id}・${year}/${month}・${[...occupied].map(([day,code])=>`${day}${code}`).join('、')}・${currentProfile().name} ${currentProfile().id}`);
-     toast(`${employee.name}的 ${month} 月快速排班已更新 ${occupied.size} 日；其他既有排班全部保留`);
-     openBatch(button);
-     refreshBehind();
+     const savedCodeByDay=new Map(savedRows.map(row=>[Number(String(row.date).slice(-2)),row.code||'1'])),codeNames=new Map((window.BOMBHR_SCHEDULING?.scheduleCodes?.()||[]).map(item=>[item.code,item.name])),showError=message=>{const target=document.getElementById('monthlyPersonError')||document.getElementById('restLimitError');if(target)target.textContent=message;else toast(message)};
+     const commit=(overLimitReason='')=>{
+       const ledger=window.BOMBHR_HR_LEDGER,leavePlans=[],changedByCode=new Map();
+       [...occupied].forEach(([day,code])=>{if(code!=='休'&&savedCodeByDay.get(day)!==code){if(!changedByCode.has(code))changedByCode.set(code,[]);changedByCode.get(code).push(day)}});
+       for(const [code,days] of changedByCode){const rule=ruleByCode(ledger,code);if(!rule)continue;const dates=days.map(day=>iso(year,month,day)),event=makeLeaveEvent(employee,rule,dates),check=ledger.validate(employee.id,rule.name,dates.length,dates[0],'');if(!check.ok){showError(check.message);return}leavePlans.push({event,rule})}
+       for(const plan of leavePlans){const result=ledger.approve(plan.event);if(!result.ok){showError(result.message);return}}
+       const currentRows=read(SCHEDULE_KEY,[]),updateKeys=new Set([...occupied.keys()].map(day=>`${employee.id}|${iso(year,month,day)}`)),existing=currentRows.filter(row=>!updateKeys.has(`${row.employeeId}|${row.date}`)),rows=[...occupied].map(([day,code])=>({date:iso(year,month,day),employeeId:employee.id,employeeName:employee.name,department:employee.department,start:'',end:'',code,site:'台中總公司',note:`快速排班增量更新：${codeNames.get(code)||code}${overLimitReason?`・超額原因：${overLimitReason}`:''}`}));
+       localStorage.setItem(SCHEDULE_KEY,JSON.stringify([...existing,...rows]));const events=read(EVENT_KEY,[]);leavePlans.forEach(plan=>events.unshift(plan.event));localStorage.setItem(EVENT_KEY,JSON.stringify(events.slice(0,200)));
+       if(typeof addAudit==='function')addAudit('員工整月排班快速輸入',`${employee.name}・${employee.id}・${year}/${month}・${[...occupied].map(([day,code])=>`${day}${code}`).join('、')}${overLimitReason?`・公休超過8天：${overLimitReason}`:''}・${currentProfile().name} ${currentProfile().id}`);
+       toast(`${employee.name}的 ${month} 月快速排班已更新 ${occupied.size} 日；其他既有排班全部保留`);openBatch(button);refreshBehind();
+     };
+     const updateDates=new Set([...occupied.keys()].map(day=>iso(year,month,day))),untouched=savedRows.filter(row=>!updateDates.has(row.date)),finalRestDays=[...untouched.filter(row=>(row.code||'1')==='休').map(row=>Number(row.date.slice(-2))),...[...occupied].filter(([,code])=>code==='休').map(([day])=>day)].sort((a,b)=>a-b),restCount=new Set(finalRestDays).size;
+     if(restCount<=8){commit();return}
+     const overflow=restCount-8,newRestDays=[...occupied].filter(([day,code])=>code==='休'&&savedCodeByDay.get(day)!=='休').map(([day])=>day),annualCandidates=[...newRestDays,...finalRestDays.filter(day=>!newRestDays.includes(day))].slice(0,overflow);
+     openModal('公休超過8天',`${employee.name}・${month} 月目前共 ${restCount} 天公休，超過公司標準 ${overflow} 天`,`<div class="rest-limit-warning"><strong>${restCount} 天</strong><div><b>本月公休超過8天</b><span>請選擇移假、將超出日期改成年假，或填寫其他原因。</span></div></div><div class="rest-limit-days">建議改成年假的日期：${annualCandidates.map(day=>`<i>${day}日</i>`).join('')}</div><label class="form-field">其他原因<textarea id="restLimitReason" class="form-control" rows="3" placeholder="例如：本月特殊營運安排、補休核准或主管專案調整"></textarea></label><p id="restLimitError" class="form-error"></p>`,`<button class="secondary-btn" id="restLimitMove">改假／移假</button><button class="secondary-btn" id="restLimitAnnual">超出日期改年假</button><button class="primary-btn" id="restLimitOther">填原因並繼續</button>`);
+     document.getElementById('restLimitMove').onclick=()=>openChangeRest(button);
+     document.getElementById('restLimitAnnual').onclick=()=>{annualCandidates.forEach(day=>occupied.set(day,'年'));commit(`超出 ${overflow} 天改用年假`)};
+     document.getElementById('restLimitOther').onclick=()=>{const reason=document.getElementById('restLimitReason').value.trim();if(!reason){document.getElementById('restLimitError').textContent='請填寫超過8天公休的原因';return}commit(reason)};
    };
  }
  document.addEventListener('click',event=>{
@@ -398,11 +395,11 @@
  function people(){return window.BOMBHR_SCHEDULE_PARTICIPATION?.people?.()||[]}
  function defaultCode(person,date,holidayName=''){
   const setting=read()[person.employeeId]||{},mode=setting.policyMode||(setting.mode==='fixed'?'weekend':'roster'),day=new Date(`${date}T00:00:00`).getDay(),weekend=day===0||day===6;
-  if(mode==='roster')return '休';
+  if(mode==='roster')return '1';
   if(mode==='weekend')return weekend?'休':'1';
   if(mode==='holiday')return holidayName?'休':'1';
   if(mode==='weekendHoliday')return weekend||holidayName?'休':'1';
-  return '休';
+  return '1';
  }
  function policyLabel(setting={}){
   const mode=setting.policyMode||(setting.mode==='fixed'?'weekend':'roster');
