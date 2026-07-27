@@ -1,7 +1,11 @@
 /* ===== Consolidated from scheduling-import.js ===== */
 (function(){
  const KEY='bombhr-schedules-v176',CODE_KEY='bombhr-schedule-codes-v182',CODE_ORDER_KEY='bombhr-schedule-code-order-v193',COMPANY_LAYOUT_KEY='bombhr-schedule-company-layout-v184';let pending=[],editMode=false,draft=null,editBaseline=null,selectedShift='09:00-18:00',selectedCode='1';
- const HOLIDAYS_2026={'2026-01-01':'元旦','2026-02-16':'除夕','2026-02-17':'春節','2026-02-18':'春節','2026-02-19':'春節','2026-02-20':'春節補假','2026-02-27':'和平紀念日補假','2026-02-28':'和平紀念日','2026-04-03':'兒童節補假','2026-04-04':'兒童節','2026-04-05':'清明節','2026-04-06':'清明節補假','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-09':'國慶日補假','2026-10-10':'國慶日','2026-10-25':'臺灣光復節','2026-10-26':'臺灣光復節補假','2026-12-25':'行憲紀念日'};
+ const HOLIDAYS={
+  '2025-12-25':'行憲紀念日',
+  '2026-01-01':'元旦','2026-02-16':'除夕','2026-02-17':'春節','2026-02-18':'春節','2026-02-19':'春節','2026-02-20':'春節補假','2026-02-27':'和平紀念日補假','2026-02-28':'和平紀念日','2026-04-03':'兒童節補假','2026-04-04':'兒童節','2026-04-05':'清明節','2026-04-06':'清明節補假','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-09':'國慶日補假','2026-10-10':'國慶日','2026-10-25':'臺灣光復節','2026-10-26':'臺灣光復節補假','2026-12-25':'行憲紀念日',
+  '2027-01-01':'元旦','2027-02-05':'除夕','2027-02-06':'春節','2027-02-07':'春節','2027-02-08':'春節','2027-02-09':'春節補假','2027-02-10':'春節補假','2027-02-28':'和平紀念日','2027-03-01':'和平紀念日補假','2027-04-04':'兒童節','2027-04-05':'清明節','2027-04-06':'兒童節補假','2027-04-30':'勞動節補假','2027-05-01':'勞動節','2027-06-09':'端午節','2027-09-15':'中秋節','2027-09-28':'教師節','2027-10-10':'國慶日','2027-10-11':'國慶日補假','2027-10-25':'臺灣光復節','2027-12-24':'行憲紀念日補假','2027-12-25':'行憲紀念日','2027-12-31':'次年元旦補假'
+ };
  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}};
  const save=v=>localStorage.setItem(KEY,JSON.stringify(v));
  const refreshView=()=>{const pageY=window.scrollY,scroll=document.querySelector('.calendar-scroll'),left=scroll?.scrollLeft||0,top=scroll?.scrollTop||0;window.dispatchEvent(new HashChangeEvent('hashchange'));requestAnimationFrame(()=>requestAnimationFrame(()=>{window.scrollTo({top:pageY,left:0,behavior:'auto'});const next=document.querySelector('.calendar-scroll');if(next){next.scrollLeft=left;next.scrollTop=top}}))};
@@ -20,7 +24,8 @@
  const companyLayout=()=>readLayout(COMPANY_LAYOUT_KEY);
  const scheduleLayout=()=>{const company=companyLayout();try{return {...company,...JSON.parse(localStorage.getItem(userLayoutKey())||'{}')}}catch(e){return company}};
  const saveLayout=(key,value)=>localStorage.setItem(key,JSON.stringify({...defaultLayout(),...value}));
- const holidayName=date=>HOLIDAYS_2026[date]||'';
+ const holidayName=date=>HOLIDAYS[date]||'';
+ const monthlyRestQuota=(year,month)=>{const days=new Date(year,month,0).getDate(),off=new Set();for(let day=1;day<=days;day++){const date=new Date(year,month-1,day),key=`${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;if(date.getDay()===0||date.getDay()===6||holidayName(key))off.add(day)}return off.size};
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const month=d=>String(d||'').slice(0,7);
  function leaveFor(row){return approvedLeaveEvents().find(e=>e.employeeId===row.employeeId&&(Array.isArray(e.dates)&&e.dates.length?e.dates.includes(row.date):String(e.period||'').split('–')[0]<=row.date&&String(e.period||'').split('–')[1]>=row.date))}
@@ -56,7 +61,7 @@
  function bindLayoutSettings(){$$('[data-layout-editor]').forEach(editor=>$$('[data-layout-up],[data-layout-down]',editor).forEach(button=>button.onclick=()=>{const row=button.closest('[data-layout-key]'),other=button.hasAttribute('data-layout-up')?row.previousElementSibling:row.nextElementSibling;if(other){button.hasAttribute('data-layout-up')?row.parentNode.insertBefore(row,other):row.parentNode.insertBefore(other,row);$$('[data-layout-key]',editor).forEach((x,i)=>x.querySelector('span').textContent=i+1)}}));$('[data-save-company-layout]')?.addEventListener('click',()=>{if(role()!=='executive')return;saveLayout(COMPANY_LAYOUT_KEY,readLayoutEditor('company'));if(typeof addAudit==='function')addAudit('修改排班公司預設版面',`${currentProfile().name}・${currentProfile().id}`);toast('公司預設版面已儲存')});$('[data-save-user-layout]')?.addEventListener('click',()=>{saveLayout(userLayoutKey(),readLayoutEditor('user'));toast(`${currentProfile().name} 的個人排班版面已儲存`)});$('[data-reset-user-layout]')?.addEventListener('click',()=>{localStorage.removeItem(userLayoutKey());openScheduleLayoutTab();toast('已恢復公司預設版面')});$('[data-settings-add-code]')?.addEventListener('click',manageCodes);$$('[data-delete-schedule-code]').forEach(button=>button.onclick=()=>{const custom=JSON.parse(localStorage.getItem(CODE_KEY)||'[]').filter(x=>x.code!==button.dataset.deleteScheduleCode);localStorage.setItem(CODE_KEY,JSON.stringify(custom));openScheduleLayoutTab();toast('自訂排班代號已刪除')})}
  const baseSettingsView=views.settings;views.settings=()=>baseSettingsView().replace('<button data-tab="basic">基本設定</button>','<button data-tab="basic">基本設定</button><button data-tab="schedule-layout">排班與版面</button>');
  const priorBind=bindView;bindView=function(route){priorBind(route);if(route==='settings')setTimeout(()=>{(()=>{const tab=$('[data-tab="schedule-layout"]');if(tab)tab.onclick=openScheduleLayoutTab})()},0);if(route==='scheduling')setTimeout(()=>{$('[data-schedule-import]')?.addEventListener('click',importModal);$('[data-schedule-edit-start]')?.addEventListener('click',startEdit);$('[data-schedule-edit-cancel]')?.addEventListener('click',cancelEdit);$('[data-schedule-edit-save]')?.addEventListener('click',saveEdit);$('[data-schedule-code-manage]')?.addEventListener('click',manageCodes);$('#scheduleQuickCode')?.addEventListener('change',e=>{selectedCode=e.target.value;refreshView()});$('#scheduleQuickShift')?.addEventListener('change',e=>selectedShift=e.target.value);$$('[data-schedule-cell]').forEach(b=>b.onclick=()=>toggleCell(b));$$('[data-schedule-person]').forEach(b=>b.onclick=()=>quickLeaveModal(b))},0)};
- window.BOMBHR_SCHEDULING={read,parseCSV,parseRows,parseMatrixRows,parseFile,leaveFor,leaveOn,shortLeave,holidayName,canEdit,canEditHistory,canEditMonth,isHistorical,scheduleCodes,scheduleLayout,companyLayout,userLayoutKey,scheduleLayoutSettings,datesBetween,leaveCode,quickLeaveModal};
+ window.BOMBHR_SCHEDULING={read,parseCSV,parseRows,parseMatrixRows,parseFile,leaveFor,leaveOn,shortLeave,holidayName,monthlyRestQuota,canEdit,canEditHistory,canEditMonth,isHistorical,scheduleCodes,scheduleLayout,companyLayout,userLayoutKey,scheduleLayoutSettings,datesBetween,leaveCode,quickLeaveModal};
  setTimeout(()=>{if(['#scheduling','#settings'].includes(location.hash))window.dispatchEvent(new HashChangeEvent('hashchange'))},0);
 })();
 
@@ -117,8 +122,8 @@
  }
  function openBatch(button){
    const employee={id:button.dataset.employeeId,name:button.dataset.employeeName,department:button.dataset.employeeDepartment||'—'};
-   const {year,month,max}=currentMonth(),codeFields=fields(),monthPrefix=`${year}-${String(month).padStart(2,'0')}`,savedRows=read(SCHEDULE_KEY,[]).filter(row=>row.employeeId===employee.id&&String(row.date).startsWith(monthPrefix)),savedDays=code=>savedRows.filter(row=>(row.code||'1')===code).map(row=>Number(String(row.date).slice(-2))).sort((a,b)=>a-b);
-   const body=`<div class="monthly-person-example"><b>${year} 年 ${month} 月整月快速輸入</b><br>已自動帶入目前班表紀錄；本次儲存只更新輸入的日期，不會清除其他排班或外部手動修改。</div><div class="monthly-person-grid">${codeFields.map(item=>`<label class="monthly-person-field"><span><i>${esc(item.code)}</i>${esc(item.name)}</span><input class="form-control" data-monthly-code="${esc(item.code)}" inputmode="numeric" value="${savedDays(item.code).join('.')}" placeholder="${item.code==='休'?'04.08.13.18.19.24.25.30':item.code==='年'?'23.29':'輸入日期'}"><small>可輸入 1～${max} 日</small></label>`).join('')}</div><div class="monthly-person-preview" id="monthlyPersonPreview"></div><p class="form-error" id="monthlyPersonError"></p>`;
+   const {year,month,max}=currentMonth(),restQuota=window.BOMBHR_SCHEDULING?.monthlyRestQuota?.(year,month)??8,codeFields=fields(),monthPrefix=`${year}-${String(month).padStart(2,'0')}`,savedRows=read(SCHEDULE_KEY,[]).filter(row=>row.employeeId===employee.id&&String(row.date).startsWith(monthPrefix)),savedDays=code=>savedRows.filter(row=>(row.code||'1')===code).map(row=>Number(String(row.date).slice(-2))).sort((a,b)=>a-b);
+   const body=`<div class="monthly-person-example"><div><b>${year} 年 ${month} 月整月快速輸入</b><br>已自動帶入目前班表紀錄；本次儲存只更新輸入的日期，不會清除其他排班或外部手動修改。</div><span class="monthly-rest-quota"><small>本月公休額度</small><strong>${restQuota} 天</strong></span></div><div class="monthly-person-grid">${codeFields.map(item=>`<label class="monthly-person-field"><span><i>${esc(item.code)}</i>${esc(item.name)}</span><input class="form-control" data-monthly-code="${esc(item.code)}" inputmode="numeric" value="${savedDays(item.code).join('.')}" placeholder="${item.code==='休'?'04.08.13.18.19.24.25.30':item.code==='年'?'23.29':'輸入日期'}"><small>可輸入 1～${max} 日${item.code==='休'?`・本月額度 ${restQuota} 天`:''}</small></label>`).join('')}</div><div class="monthly-person-preview" id="monthlyPersonPreview"></div><p class="form-error" id="monthlyPersonError"></p>`;
    openModal('員工整月排班快速輸入',`${employee.name}・${employee.id}・${employee.department}`,body,`<button class="secondary-btn" id="changeRestDay">改假</button><button class="secondary-btn" id="useRangeLeave">改用單日／日期區間</button><button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="applyMonthlyPerson">套用到 ${month} 月班表</button>`);
    document.querySelectorAll('[data-monthly-code]').forEach(input=>input.addEventListener('input',()=>preview(max)));
    document.getElementById('changeRestDay').onclick=()=>openChangeRest(button);
@@ -142,12 +147,12 @@
      };
      const confirmCommit=(extraReason='')=>{const oldRest=savedRows.filter(row=>isQuickRow(row)&&(row.code||'1')==='休').map(row=>Number(row.date.slice(-2))),newRest=[...occupied].filter(([,code])=>code==='休').map(([day])=>day),added=newRest.filter(day=>!oldRest.includes(day)),removed=oldRest.filter(day=>!newRest.includes(day)),changed=[...occupied].filter(([day,code])=>savedCodeByDay.has(day)&&savedCodeByDay.get(day)!==code).map(([day,code])=>`${day}日 ${savedCodeByDay.get(day)}→${code}`),otherAdded=[...occupied].filter(([day,code])=>code!=='休'&&savedCodeByDay.get(day)!==code).map(([day,code])=>`${day}日 ${codeNames.get(code)||code}`),currentMonthValue=new Date().toISOString().slice(0,7),reasonRequired=monthPrefix<=currentMonthValue;openModal('確認排班異動',`${employee.name}・${monthPrefix}・儲存後保留完整異動與操作紀錄`,`<div class="schedule-diff-grid"><div><small>新增排休</small><b>${added.map(day=>`${day}日`).join('、')||'無'}</b></div><div><small>取消排休</small><b>${removed.map(day=>`${day}日`).join('、')||'無'}</b></div><div><small>代號變更</small><b>${changed.join('、')||'無'}</b></div><div><small>其他新增假別</small><b>${otherAdded.join('、')||'無'}</b></div></div>${extraReason?`<div class="policy-note">系統處理：${esc(extraReason)}</div>`:''}<label class="form-field">異動原因${reasonRequired?'（必填）':'（選填）'}<textarea id="scheduleChangeReason" class="form-control" rows="3" placeholder="例如：員工重新繳交排休、營運需求調整或主管協調">${esc(extraReason)}</textarea></label><p id="scheduleChangeError" class="form-error"></p>`,`<button class="secondary-btn" id="backMonthlyDraft">← 返回快速排班</button><button class="primary-btn" id="confirmMonthlyChanges">確認儲存異動</button>`);document.getElementById('backMonthlyDraft').onclick=()=>openBatch(button);document.getElementById('confirmMonthlyChanges').onclick=()=>{const reason=document.getElementById('scheduleChangeReason').value.trim();if(reasonRequired&&!reason){document.getElementById('scheduleChangeError').textContent='當月或歷史班表修改必須填寫原因';return}performCommit(reason)}};
      const publicRestGroup=groups.find(group=>group.item.code==='休'),finalRestDays=[...(publicRestGroup?.days||[])].sort((a,b)=>a-b),restCount=new Set(finalRestDays).size;
-     if(restCount<=8){confirmCommit();return}
-     const overflow=restCount-8,newRestDays=[...occupied].filter(([day,code])=>code==='休'&&savedCodeByDay.get(day)!=='休').map(([day])=>day),annualCandidates=[...newRestDays,...finalRestDays.filter(day=>!newRestDays.includes(day))].slice(0,overflow);
-     openModal('公休超過8天',`${employee.name}・${month} 月目前共 ${restCount} 天公休，超過公司標準 ${overflow} 天`,`<div class="rest-limit-warning"><strong>${restCount} 天</strong><div><b>本月公休超過8天</b><span>請選擇移假、將超出日期改成年假，或填寫其他原因。</span></div></div><div class="rest-limit-days">建議改成年假的日期：${annualCandidates.map(day=>`<i>${day}日</i>`).join('')}</div><label class="form-field">其他原因<textarea id="restLimitReason" class="form-control" rows="3" placeholder="例如：本月特殊營運安排、補休核准或主管專案調整"></textarea></label><p id="restLimitError" class="form-error"></p>`,`<button class="secondary-btn" id="restLimitMove">改假／移假</button><button class="secondary-btn" id="restLimitAnnual">超出日期改年假</button><button class="primary-btn" id="restLimitOther">填原因並繼續</button>`);
+     if(restCount<=restQuota){confirmCommit();return}
+     const overflow=restCount-restQuota,newRestDays=[...occupied].filter(([day,code])=>code==='休'&&savedCodeByDay.get(day)!=='休').map(([day])=>day),annualCandidates=[...newRestDays,...finalRestDays.filter(day=>!newRestDays.includes(day))].slice(0,overflow);
+     openModal('公休超過本月額度',`${employee.name}・${month} 月目前共 ${restCount} 天公休，本月額度 ${restQuota} 天，超過 ${overflow} 天`,`<div class="rest-limit-warning"><strong>${restCount} 天</strong><div><b>本月公休額度為 ${restQuota} 天</b><span>額度依本月週六、週日及官方放假／補假日自動計算；請選擇移假、將超出日期改成年假，或填寫其他原因。</span></div></div><div class="rest-limit-days">建議改成年假的日期：${annualCandidates.map(day=>`<i>${day}日</i>`).join('')}</div><label class="form-field">其他原因<textarea id="restLimitReason" class="form-control" rows="3" placeholder="例如：本月特殊營運安排、補休核准或主管專案調整"></textarea></label><p id="restLimitError" class="form-error"></p>`,`<button class="secondary-btn" id="restLimitMove">改假／移假</button><button class="secondary-btn" id="restLimitAnnual">超出日期改年假</button><button class="primary-btn" id="restLimitOther">填原因並繼續</button>`);
      document.getElementById('restLimitMove').onclick=()=>openChangeRest(button);
      document.getElementById('restLimitAnnual').onclick=()=>{annualCandidates.forEach(day=>occupied.set(day,'年'));confirmCommit(`超出 ${overflow} 天改用年假`)};
-     document.getElementById('restLimitOther').onclick=()=>{const reason=document.getElementById('restLimitReason').value.trim();if(!reason){document.getElementById('restLimitError').textContent='請填寫超過8天公休的原因';return}confirmCommit(reason)};
+     document.getElementById('restLimitOther').onclick=()=>{const reason=document.getElementById('restLimitReason').value.trim();if(!reason){document.getElementById('restLimitError').textContent=`請填寫超過本月 ${restQuota} 天公休額度的原因`;return}confirmCommit(reason)};
    };
  }
  document.addEventListener('click',event=>{
@@ -446,5 +451,27 @@
    if(location.hash==='#scheduling'&&event.target.closest('.month-nav,[data-schedule-edit-start],[data-schedule-edit-save]'))setTimeout(decorate,0);
  });
  setTimeout(decorate,0);
- window.BOMBHR_SCHEDULE_VISUAL={decorate};
+window.BOMBHR_SCHEDULE_VISUAL={decorate};
+})();
+
+/* ===== Scheduling boot guard: repaint when a hard refresh starts on #scheduling ===== */
+(function(){
+ const BUILD='V2.05.7';
+ function showBuild(){
+  if(location.hash!=='#scheduling'||document.querySelector('[data-scheduling-build]'))return;
+  const toolbar=document.querySelector('.schedule-toolbar');
+  if(!toolbar)return;
+  const badge=document.createElement('small');
+  badge.dataset.schedulingBuild='';
+  badge.className='scheduling-build-badge';
+  badge.textContent=`排班核心 ${BUILD}`;
+  toolbar.insertAdjacentElement('beforebegin',badge);
+ }
+ if(location.hash==='#scheduling'){
+  requestAnimationFrame(()=>{
+   window.dispatchEvent(new HashChangeEvent('hashchange'));
+   requestAnimationFrame(showBuild);
+  });
+ }
+ window.addEventListener('hashchange',()=>requestAnimationFrame(showBuild));
 })();
