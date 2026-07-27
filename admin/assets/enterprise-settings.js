@@ -47,6 +47,7 @@
  }
  function bind(){
   if(location.hash!=='#settings')return;
+  if(!document.querySelector('.tabs [data-tab]'))return;
   const button=document.querySelector('[data-save-settings]');
   if(button)button.onclick=save;
  }
