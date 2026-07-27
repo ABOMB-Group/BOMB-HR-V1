@@ -1,7 +1,7 @@
 (function(){
  'use strict';
  const ROLE_KEY='bombhr-role-designer-v147';
- const labels={organization:'組織管理',employees:'員工人事',attendance:'出勤與裝置',scheduling:'排班月曆',approvals:'簽核中心',payroll:'薪資管理',eventlog:'事件紀錄',permissions:'角色與權限',settings:'企業設定'};
+ const labels={organization:'組織管理',employees:'員工人事',attendance:'出勤與裝置',scheduling:'班表',approvals:'簽核中心',payroll:'薪資管理',eventlog:'事件紀錄',permissions:'角色與權限',settings:'企業設定'};
  const read=()=>{try{return JSON.parse(localStorage.getItem(ROLE_KEY)||'{}')}catch(e){return {}}};
  function roleForCurrentAccount(){
   const profile=typeof currentProfile==='function'?currentProfile():null;if(!profile)return null;
