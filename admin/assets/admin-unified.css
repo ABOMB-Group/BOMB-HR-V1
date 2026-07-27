@@ -79,6 +79,7 @@ body[data-role="supervisor"] .salary-auto-preview{display:none}.salary-pending-p
 
 /* Consolidated layout fixes */
 .sound-setting{align-items:center;gap:10px}
+.schedule-policy-time{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}.schedule-policy-time i{color:var(--muted);font-style:normal}
 .sound-setting>div{flex:1}
 .sound-test-btn{border:1px solid var(--line);border-radius:9px;padding:7px 10px;background:var(--surface2);color:var(--text);font-size:10px;font-weight:800;white-space:nowrap}
 .pop-head-row{flex-direction:row;align-items:flex-start;justify-content:space-between;gap:14px}
