@@ -294,6 +294,44 @@ html[data-theme="light"] .contact-box{background:white}.contact-box form{display
   color:var(--muted);font-size:13px;line-height:1.7
 }
 .login-help a{color:#8abaff;font-weight:700}
+
+/* V2.06.5 login clarity and calendar/time controls */
+.login-main{padding:148px 24px 64px}
+.login-shell{width:min(1160px,100%);grid-template-columns:1fr 1.12fr;border-radius:34px;border-color:rgba(111,148,212,.24);background:#09182d;box-shadow:0 38px 100px rgba(2,10,25,.34),0 0 0 1px rgba(255,255,255,.025)}
+.login-brand-panel{min-height:610px;padding:54px 56px;background:radial-gradient(circle at 18% 12%,rgba(55,133,255,.34),transparent 32%),radial-gradient(circle at 82% 86%,rgba(29,219,203,.22),transparent 34%),linear-gradient(145deg,#06152b,#0b2442 58%,#10354b)}
+.login-brand-logo{width:285px;margin-bottom:52px}.login-brand-panel h1{color:#f7fbff;text-shadow:0 5px 24px rgba(0,0,0,.2)}.login-brand-panel p{max-width:440px;color:#c4d2e4}
+.login-choice-panel{position:relative;padding:58px 54px;background:linear-gradient(155deg,#101d31,#111b2c);color:#f7f9ff}
+.login-choice-panel:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#3b82f6,#22d3ee,#8b5cf6)}
+.login-choice-panel .eyebrow{border-color:#365175;background:#122a47;color:#9fc9ff}.login-choice-panel h2{color:#fff;font-size:38px}.login-choice-panel>p{max-width:520px;color:#aebed2}
+.login-option{padding:22px 23px;border-color:#2c405d;background:linear-gradient(145deg,#17263c,#142238);box-shadow:inset 0 1px rgba(255,255,255,.035)}
+.login-option:hover{border-color:#579cff;background:linear-gradient(145deg,#1b3151,#172a47);box-shadow:0 18px 42px rgba(0,0,0,.24),0 0 0 3px rgba(74,147,255,.08)}
+.login-option-icon{background:linear-gradient(145deg,#2769c8,#32499c);border-color:#4d83d3;color:#fff;font-size:17px;font-weight:950;box-shadow:0 10px 24px rgba(20,85,190,.24)}
+.login-option h3{color:#f8fbff}.login-option p,.login-help{color:#9eafc5}.login-option-arrow{color:#74c7ff}.login-help a{color:#75caff}
+html[data-theme="light"] .login-shell{border-color:#dce5f1;background:#fff;box-shadow:0 34px 90px rgba(38,61,96,.18)}
+html[data-theme="light"] .login-choice-panel{background:linear-gradient(155deg,#fff,#f7faff);color:#172033}
+html[data-theme="light"] .login-choice-panel .eyebrow{border-color:#cfe0f7;background:#edf5ff;color:#2865ac}
+html[data-theme="light"] .login-choice-panel h2{color:#142039}html[data-theme="light"] .login-choice-panel>p{color:#65758d}
+html[data-theme="light"] .login-option{border-color:#dce6f2;background:linear-gradient(145deg,#fff,#f6f9fe);box-shadow:0 8px 24px rgba(31,62,105,.06)}
+html[data-theme="light"] .login-option:hover{border-color:#70a8ed;background:#f2f7ff;box-shadow:0 18px 42px rgba(35,73,126,.12),0 0 0 3px rgba(74,147,255,.07)}
+html[data-theme="light"] .login-option h3{color:#17233b}html[data-theme="light"] .login-option p,html[data-theme="light"] .login-help{color:#697991}
+html[data-theme="light"] .login-option-arrow,html[data-theme="light"] .login-help a{color:#286dc3}
+:where(input[type="date"],input[type="time"],input[type="month"],input[type="datetime-local"]){
+  min-height:44px;border:1px solid #40597c;border-radius:10px;
+  background:#101f34;color:#f5f9ff;color-scheme:dark
+}
+:where(input[type="date"],input[type="time"],input[type="month"],input[type="datetime-local"]):focus{
+  border-color:#63a9ff;outline:3px solid rgba(83,157,255,.18)
+}
+:where(input[type="date"],input[type="time"],input[type="month"],input[type="datetime-local"])::-webkit-calendar-picker-indicator{
+  width:20px;height:20px;padding:4px;border-radius:7px;background-color:#3e5577;
+  cursor:pointer;opacity:1;filter:invert(1) brightness(2.25) contrast(1.4)
+}
+html[data-theme="light"] :where(input[type="date"],input[type="time"],input[type="month"],input[type="datetime-local"]){
+  border-color:#bfd0e5;background:#fff;color:#17233b;color-scheme:light
+}
+html[data-theme="light"] :where(input[type="date"],input[type="time"],input[type="month"],input[type="datetime-local"])::-webkit-calendar-picker-indicator{
+  background-color:#dce9fb;filter:saturate(1.6) contrast(1.25)
+}
 @media(max-width:1100px){.btn-login{display:none}}
 @media(max-width:820px){
   .login-main{padding-top:108px}.login-shell{grid-template-columns:1fr}
