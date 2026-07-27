@@ -1,9 +1,21 @@
 /* ===== Consolidated from scheduling-import.js ===== */
 (function(){
  const KEY='bombhr-schedules-v176',CODE_KEY='bombhr-schedule-codes-v182',CODE_ORDER_KEY='bombhr-schedule-code-order-v193',COMPANY_LAYOUT_KEY='bombhr-schedule-company-layout-v184';let pending=[],editMode=false,draft=null,editBaseline=null,selectedShift='09:00-18:00',selectedCode='1';
- const SCHEDULE_RESET_KEY='bombhr-schedule-reset-v2058';
+ const SCHEDULE_RESET_KEY='bombhr-schedule-full-reset-v2060';
  if(!localStorage.getItem(SCHEDULE_RESET_KEY)){
   localStorage.setItem(KEY,'[]');
+  localStorage.setItem('bombhr-schedule-participants-v195','{}');
+  localStorage.setItem('bombhr-schedule-preferences-v188','[]');
+  localStorage.setItem('bombhr-employee-leave-ledger-v175','{}');
+  try{
+   const events=JSON.parse(localStorage.getItem('bombhr-demo-events')||'[]');
+   localStorage.setItem('bombhr-demo-events',JSON.stringify(events.filter(event=>event?.subtype!=='leave')));
+  }catch(e){localStorage.setItem('bombhr-demo-events','[]')}
+  try{
+   const payroll=JSON.parse(localStorage.getItem('bombhr-payroll-adjustments-v123')||'{}');
+   Object.keys(payroll).forEach(employeeId=>payroll[employeeId]=Array.isArray(payroll[employeeId])?payroll[employeeId].filter(item=>!String(item?.eventId||'').startsWith('LEAVE-')):[]);
+   localStorage.setItem('bombhr-payroll-adjustments-v123',JSON.stringify(payroll));
+  }catch(e){}
   localStorage.setItem(SCHEDULE_RESET_KEY,new Date().toISOString());
  }
  const HOLIDAYS={
@@ -461,7 +473,7 @@ window.BOMBHR_SCHEDULE_VISUAL={decorate};
 
 /* ===== Scheduling boot guard: repaint when a hard refresh starts on #scheduling ===== */
 (function(){
- const BUILD='V2.05.9';
+ const BUILD='V2.06.0';
  function showBuild(){
   if(location.hash!=='#scheduling'||document.querySelector('[data-scheduling-build]'))return;
   const toolbar=document.querySelector('.schedule-toolbar');
