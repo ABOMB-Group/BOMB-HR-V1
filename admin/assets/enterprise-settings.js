@@ -62,7 +62,7 @@
   if(location.hash==='#settings'){
    const tab=activeTab(),content=document.getElementById('tabContent');
    if(content&&(tab==='app'||tab==='leave'))content.innerHTML=(tab==='leave'?leaveSettings:settingsApp)();
-   bindTabs({app:settingsApp,leave:leaveSettings,notify:notifySettings,basic:basicSettings});
+   bindTabs({app:settingsApp,leave:leaveSettings,notify:notifySettings,basic:basicSettings,'schedule-layout':()=>window.BOMBHR_SCHEDULING?.scheduleLayoutSettings?.()||'<div class="empty-state">版面偏好載入中，請稍候再試。</div>'});
   }
   bind();
  },0);

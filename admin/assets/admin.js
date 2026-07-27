@@ -175,7 +175,7 @@ function bindView(route){
  $$('[data-bank-master]').forEach(b=>b.onclick=enterpriseBankModal);
  $$('[data-benefit-manage]').forEach(b=>b.onclick=benefitManageModalV2);
  $$('[data-salary-structure]').forEach(b=>b.onclick=salaryStructureModalV2);
- if(route==='attendance') bindTabs({records:attendanceRecords,devices:deviceTab,methods:methodsTab});if(route==='settings')bindTabs({basic:basicSettings});if(route==='scheduling'){$$('.calendar-head span').forEach((x,i)=>x.textContent=['日','一','二','三','四','五','六'][i]);bindScheduling()}
+ if(route==='attendance') bindTabs({records:attendanceRecords,devices:deviceTab,methods:methodsTab});if(route==='settings')bindTabs({basic:basicSettings,'schedule-layout':()=>window.BOMBHR_SCHEDULING?.scheduleLayoutSettings?.()||'<div class="empty-state">版面偏好載入中，請稍候再試。</div>'});if(route==='scheduling'){$$('.calendar-head span').forEach((x,i)=>x.textContent=['日','一','二','三','四','五','六'][i]);bindScheduling()}
  $$('.task-item input').forEach(x=>x.onchange=()=>x.closest('.task-item').classList.toggle('done',x.checked));
  if(route==='dashboard'){
   const cards=$$('.stat-card');
