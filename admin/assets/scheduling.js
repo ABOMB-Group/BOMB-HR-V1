@@ -415,14 +415,14 @@
  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
  const write=value=>localStorage.setItem(KEY,JSON.stringify(value));
  const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
- const modes={roster:'排班制',weekend:'固定週休',holiday:'國定假日休',weekendHoliday:'週休＋國定假日休'};
+ const modes={roster:'排班制',weekend:'固定週休',weekendHoliday:'週休＋國定假日休'};
+ const migrated=read();let migratedChanged=false;Object.values(migrated).forEach(setting=>{if(setting?.policyMode==='holiday'){setting.policyMode='weekendHoliday';migratedChanged=true}});if(migratedChanged)write(migrated);
  function people(){return window.BOMBHR_SCHEDULE_PARTICIPATION?.people?.()||[]}
  function shiftParts(setting={}){const [start='',end='']=String(setting.shift||'').split('-');return {start,end}}
  function defaultCode(person,date,holidayName=''){
   const setting=read()[person.employeeId]||{},mode=setting.policyMode||(setting.mode==='fixed'?'weekend':'roster'),day=new Date(`${date}T00:00:00`).getDay(),weekend=day===0||day===6;
   if(mode==='roster')return '1';
   if(mode==='weekend')return weekend?'休':'1';
-  if(mode==='holiday')return holidayName?'休':'1';
   if(mode==='weekendHoliday')return weekend||holidayName?'休':'1';
   return '1';
  }
@@ -437,7 +437,7 @@
  }
  function openPolicyManager(){
   const all=people(),records=read(),counts=Object.keys(modes).map(mode=>[mode,all.filter(person=>(records[person.employeeId]?.policyMode||(records[person.employeeId]?.mode==='fixed'?'weekend':'roster'))===mode).length]);
-  openModal('員工排班制度','制度會從預設上班 1 中，自動替換應休日期；手動調班與調休永遠優先',`<div class="schedule-policy-summary">${counts.map(([mode,count])=>`<span>${modes[mode]} <b>${count}</b></span>`).join('')}</div><label class="search-field">⌕<input id="schedulePolicySearch" placeholder="搜尋姓名、員編、部門或職位"></label><div class="schedule-policy-rows" id="schedulePolicyRows"></div><div class="schedule-participation-note"><b>套用原則：</b>所有日期原本預設為 1；固定週休只把六、日改成休，國定假日休只把官方假日改成休，未符合休假條件的日期仍保留 1。班別起訖時間可依員工自行輸入。</div>`,`<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="saveSchedulePolicies">儲存排班制度</button>`);
+  openModal('員工排班制度','制度會從預設上班 1 中，自動替換應休日期；手動調班與調休永遠優先',`<div class="schedule-policy-summary">${counts.map(([mode,count])=>`<span>${modes[mode]} <b>${count}</b></span>`).join('')}</div><label class="search-field">⌕<input id="schedulePolicySearch" placeholder="搜尋姓名、員編、部門或職位"></label><div class="schedule-policy-rows" id="schedulePolicyRows"></div><div class="schedule-participation-note"><b>套用原則：</b>所有日期原本預設為 1；固定週休只把六、日改成休；週休＋國定假日休會把六、日及官方假日改成休。未符合休假條件的日期仍保留 1，班別起訖時間可依員工自行輸入。</div>`,`<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="saveSchedulePolicies">儲存排班制度</button>`);
   renderPolicyRows();document.getElementById('schedulePolicySearch').oninput=event=>renderPolicyRows(event.target.value);
   document.getElementById('saveSchedulePolicies').onclick=()=>{const next=read();document.querySelectorAll('[data-schedule-policy-row]').forEach(row=>{const id=row.dataset.schedulePolicyRow,current=next[id]||{},policyMode=row.querySelector('[data-policy-mode]').value,start=row.querySelector('[data-policy-start]').value,end=row.querySelector('[data-policy-end]').value,shift=start&&end?`${start}-${end}`:'';next[id]={...current,mode:'participate',policyMode,shift,updatedBy:`${currentProfile().name}・${currentProfile().id}`,updatedAt:new Date().toLocaleString('zh-TW',{hour12:false})}});write(next);if(typeof addAudit==='function')addAudit('修改員工排班制度',`${currentProfile().name}・${document.querySelectorAll('[data-schedule-policy-row]').length} 位員工`);toast('員工排班制度已儲存；符合休假制度的日期已由 1 改為休');openPolicyManager();window.dispatchEvent(new HashChangeEvent('hashchange'))};
  }
@@ -473,7 +473,7 @@ window.BOMBHR_SCHEDULE_VISUAL={decorate};
 
 /* ===== Scheduling boot guard: repaint when a hard refresh starts on #scheduling ===== */
 (function(){
- const BUILD='V2.06.3';
+ const BUILD='V2.06.4';
  function showBuild(){
   if(location.hash!=='#scheduling'||document.querySelector('[data-scheduling-build]'))return;
   const toolbar=document.querySelector('.schedule-toolbar');
