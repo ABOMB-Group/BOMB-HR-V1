@@ -1,6 +1,0 @@
-.schedule-code-master>div[draggable="true"]{position:relative;cursor:grab;user-select:none;padding-left:38px;transition:transform .15s,box-shadow .15s,opacity .15s,border-color .15s}
-.schedule-code-master>div[draggable="true"]:active{cursor:grabbing}.schedule-code-master>div.dragging{opacity:.45;transform:scale(.98)}
-.schedule-code-master>div.drag-over{border-color:var(--brand);box-shadow:0 0 0 2px color-mix(in srgb,var(--brand) 28%,transparent)}
-.schedule-code-drag-handle{position:absolute;left:10px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:18px;height:26px;color:var(--muted);font-size:16px;letter-spacing:-3px}
-.schedule-code-drag-help{display:flex;align-items:center;gap:7px;margin:0 0 10px;padding:8px 10px;border-radius:10px;background:rgba(99,102,241,.08);color:var(--muted);font-size:11px}
-.schedule-code-drag-help b{color:var(--brand)}
