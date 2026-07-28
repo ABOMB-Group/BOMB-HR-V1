@@ -20,4 +20,6 @@
 .annual-unallocated-warning b,.annual-unallocated-warning small{display:block}
 .annual-unallocated-warning small{margin-top:4px;color:var(--muted);font-size:10px}
 .annual-unallocated-warning>span{color:#f59e0b;font-size:10px;font-weight:800}
+.annual-correct-button{padding:6px 9px;border:1px solid rgba(99,91,255,.45);border-radius:8px;background:rgba(99,91,255,.1);color:#7568ff;font-size:9px;font-weight:800;white-space:nowrap;cursor:pointer}
+.annual-correct-button:hover{background:#655cff;color:#fff}
 @media(max-width:700px){.annual-history-summary{grid-template-columns:1fr 1fr}}
