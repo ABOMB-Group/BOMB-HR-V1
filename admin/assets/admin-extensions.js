@@ -71,7 +71,8 @@
   if(annualUsed>annualLeave){toast(`已使用年假 ${annualUsed} 天不可超過本年度核發 ${annualLeave} 天`);return false}
   const next={};
   document.querySelectorAll('[data-employee-salary]').forEach(input=>next[input.dataset.employeeSalary]=Number(input.value||0));
-  Object.assign(next,{effectiveDate,benefitLevel:value('employeeBenefitLevel'),travelLeave:number('employeeTravelLeave'),annualLeave,laborGrade:number('employeeLaborGrade'),healthGrade:number('employeeHealthGrade'),dependents:number('employeeDependents'),occupationalRate:number('employeeOccupationalRate'),voluntaryPension:number('employeeVoluntaryPension'),updatedBy:`${currentProfile().name}・${currentProfile().id}`,updatedAt:new Date().toLocaleString('zh-TW',{hour12:false})});
+  const annualGrantTime=value('employeeAnnualGrantTime').split(':');
+  Object.assign(next,{effectiveDate,benefitLevel:value('employeeBenefitLevel'),travelLeave:number('employeeTravelLeave'),annualLeave,annualGrantMode:value('employeeAnnualGrantMode')||'company',annualGrantMonth:number('employeeAnnualGrantMonth')||1,annualGrantDay:number('employeeAnnualGrantDay')||1,annualGrantHour:Number(annualGrantTime[0]||0),annualGrantMinute:Number(annualGrantTime[1]||0),laborGrade:number('employeeLaborGrade'),healthGrade:number('employeeHealthGrade'),dependents:number('employeeDependents'),occupationalRate:number('employeeOccupationalRate'),voluntaryPension:number('employeeVoluntaryPension'),updatedBy:`${currentProfile().name}・${currentProfile().id}`,updatedAt:new Date().toLocaleString('zh-TW',{hour12:false})});
   const calc=window.bombhrInsuranceCost?window.bombhrInsuranceCost(next):{};
   next.employeeInsuranceTotal=Number(next.laborInsurance||0)+Number(next.healthInsurance||0);
   next.employerInsuranceTotal=Number(calc.employerTotal||0);next.governmentInsuranceTotal=Number(calc.governmentTotal||0);
