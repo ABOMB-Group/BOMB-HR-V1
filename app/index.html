@@ -4,13 +4,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#07111f" name="theme-color"/>
+<meta content="#f5f7fb" name="theme-color"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="BOMB HR"/>
 <link rel="manifest" href="manifest.webmanifest"/>
 <link rel="apple-touch-icon" href="../assets/bombhr-logo.png"/>
-<title>BOMB HR｜Employee App V2.03</title>
+<title>BOMB HR｜Employee App V2.08</title>
 <style>
 :root{
   --bg:#f6f8fc;
@@ -871,7 +871,7 @@ button{cursor:pointer}
 }
 </style>
 </head>
-<body class="dark">
+<body>
 <div class="app">
 <div class="statusbar">
 <span id="statusTime">9:41</span>
@@ -897,29 +897,35 @@ button{cursor:pointer}
 </button>
 </div>
 </div>
-<div class="hero">
-<small>目前時間</small>
-<h2 id="heroClock">10:45:26</h2>
-<div class="hero-location">⌖ 台中總公司</div>
-<div class="hero-chip"><span class="dot"></span>已進入打卡範圍</div>
-<button class="hero-punch-action" onclick="switchView('punchView',document.querySelector('[data-view=punchView]'))"><span>立即打卡</span><b>→</b></button>
+<div class="hero workday-card">
+<div class="workday-head">
+<div><small>今日班別</small><strong>09:00–18:00</strong></div>
+<span class="range-status"><i></i>可打卡</span>
 </div>
-<div class="section-line"><h3>今日狀態</h3><button onclick="switchView('punchView',document.querySelector('[data-view=punchView]'))">查看紀錄 ›</button></div>
-<div class="card">
-<div class="status-grid">
-<div class="status-card in">
-<div class="row"><b>上班打卡</b></div>
-<strong id="homeInTime">08:58</strong>
-<span class="pill">正常</span>
+<div class="workday-meta">
+<span>台中總公司</span>
+<span>Wi-Fi＋GPS 驗證完成</span>
 </div>
-<div class="status-card out">
-<div class="row"><b>下班打卡</b></div>
-<strong id="homeOutTime">--:--</strong>
-<span class="pill">尚未打卡</span>
+<button class="hero-punch-action" onclick="switchView('punchView',document.querySelector('[data-view=punchView]'))">
+<span><small>目前時間</small><b id="heroClock">10:45:26</b></span>
+<strong>前往打卡</strong>
+</button>
+</div>
+<div class="section-line"><h3>今日狀態</h3><button onclick="switchView('punchView',document.querySelector('[data-view=punchView]'))">查看紀錄</button></div>
+<div class="card attendance-summary">
+<div class="attendance-step completed">
+<span class="attendance-dot"></span>
+<div><small>上班打卡</small><strong id="homeInTime">08:58</strong></div>
+<span class="attendance-state">準時</span>
+</div>
+<div class="attendance-line"></div>
+<div class="attendance-step pending">
+<span class="attendance-dot"></span>
+<div><small>下班打卡</small><strong id="homeOutTime">--:--</strong></div>
+<span class="attendance-state">尚未打卡</span>
 </div>
 </div>
-</div>
-<div class="section-line"><h3>待辦事項</h3><button onclick="toast('已顯示全部待辦')">查看全部 ›</button></div>
+<div class="section-line"><h3>待辦事項</h3><button onclick="toast('已顯示全部待辦')">查看全部</button></div>
 <div class="card task-list">
 <div class="task">
 <div class="task-icon"><svg viewbox="0 0 24 24"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg></div>
@@ -1157,7 +1163,7 @@ button{cursor:pointer}
 </span>
 <span class="arrow">›</span>
 </a>
-<div class="demo-badge">● Employee APP V2.03・人事資料連動</div>
+<div class="demo-badge">● Employee APP V2.08・人事資料連動</div>
 </section>
 </div>
 <section class="subview" id="leaveSubview">
@@ -1721,7 +1727,7 @@ function loadMySettings(){
     const saved=localStorage.getItem('bombhr-'+k);
     if(el&&saved!==null)el.checked=saved==='true';
   });
-  const mode=localStorage.getItem('bombhr-theme-mode')||'dark';
+  const mode=localStorage.getItem('bombhr-theme-mode')||'light';
   const modeRadio=document.querySelector('input[name="themeMode"][value="'+mode+'"]');
   if(modeRadio)modeRadio.checked=true;
   document.getElementById('themeLabel').textContent=mode==='dark'?'深色':mode==='light'?'淺色':'跟隨系統';
@@ -2071,6 +2077,8 @@ setInterval(tick,1000);
 <link rel="stylesheet" href="employee-auth.css?v=203">
 <link rel="stylesheet" href="app-depth.css?v=2065">
 <link rel="stylesheet" href="app-depth-v206.css?v=207">
+<link rel="stylesheet" href="app-mainstream-v207.css?v=208">
+<link rel="stylesheet" href="app-clean-v208.css?v=209">
 <script src="employee-auth.js?v=203"></script>
 <script src="../assets/hr-leave-ledger.js?v=2065"></script>
 <script src="../assets/certificate-requirements.js"></script>

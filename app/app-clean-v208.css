@@ -1,0 +1,75 @@
+/* V2.08 calm, everyday Employee App UI */
+:root{
+  --bg:#f5f7fb;--surface:#fff;--surface-2:#f8fafc;--surface-3:#eef2f7;
+  --text:#182230;--muted:#738094;--line:#e5e9f0;
+  --blue:#2563eb;--blue-2:#2563eb;--green:#16a36a;
+  --shadow:0 3px 12px rgba(15,23,42,.045);--soft-shadow:0 2px 8px rgba(15,23,42,.04);
+}
+body.dark{
+  --bg:#0e1724;--surface:#162232;--surface-2:#1a2839;--surface-3:#233246;
+  --text:#f3f6fa;--muted:#9eabbb;--line:#29394d;--nav:rgba(14,23,36,.96);
+}
+.statusbar{height:34px;flex-basis:34px;padding:10px 18px 0;background:var(--bg);font-weight:800}
+.view{padding-top:12px}
+.topbar{position:relative;margin:0 0 20px;padding:0;border:0;background:transparent;backdrop-filter:none}
+.topbar h1{font-size:25px;font-weight:800;letter-spacing:-.035em}
+.topbar small{font-weight:600}
+.topbar .icon-btn{width:40px;height:40px;border-radius:12px;color:#5d6a7d}
+body.dark .topbar .icon-btn{color:#d5dce6}
+.workday-card.hero{
+  min-height:0!important;margin:0 0 22px;padding:20px!important;
+  border:1px solid #dce6f8!important;border-radius:20px!important;
+  background:linear-gradient(145deg,#f9fbff,#edf4ff)!important;color:var(--text);
+  box-shadow:0 7px 22px rgba(37,99,235,.08)!important;
+}
+body.dark .workday-card.hero{border-color:#2c405b!important;background:linear-gradient(145deg,#1b2a3d,#18263a)!important}
+.workday-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.workday-head small{display:block;margin-bottom:5px;color:var(--muted);font-size:11px;font-weight:700}
+.workday-head strong{display:block;font-size:22px;letter-spacing:-.025em}
+.range-status{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:#e4f7ed;color:#087a4a;font-size:11px;font-weight:800}
+.range-status i{width:7px;height:7px;border-radius:50%;background:#18a565}
+body.dark .range-status{background:rgba(22,163,106,.16);color:#6cdaa7}
+.workday-meta{display:flex;flex-wrap:wrap;gap:7px 14px;margin:13px 0 17px;color:var(--muted);font-size:11px;font-weight:650}
+.workday-meta span{position:relative;padding-left:11px}
+.workday-meta span::before{content:"";position:absolute;left:0;top:5px;width:4px;height:4px;border-radius:50%;background:#94a3b8}
+.hero-punch-action{position:static;width:100%;height:auto;min-height:62px;padding:10px 12px 10px 15px;border-radius:14px;background:var(--blue);color:#fff;box-shadow:0 6px 14px rgba(37,99,235,.18)}
+.hero-punch-action span{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.hero-punch-action span small{color:rgba(255,255,255,.72);font-size:10px;font-weight:650}
+.hero-punch-action span b{width:auto;height:auto;background:none;color:#fff;font-size:19px;letter-spacing:.01em}
+.hero-punch-action>strong{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border-radius:10px;background:#fff;color:#174cb8;font-size:12px;font-weight:850}
+.section-line{margin:22px 1px 10px!important}
+.section-line h3{font-size:15px!important}
+.section-line button{color:#55708f!important;font-size:11px!important;font-weight:750!important}
+body.dark .section-line button{color:#9eb7d2!important}
+.attendance-summary{display:grid;grid-template-columns:1fr 32px 1fr;align-items:center;padding:18px!important}
+.attendance-step{display:grid;grid-template-columns:9px 1fr;gap:10px;align-items:start}
+.attendance-step>div{min-width:0}
+.attendance-step small{display:block;color:var(--muted);font-size:10px;font-weight:700}
+.attendance-step strong{display:block;margin-top:5px;font-size:20px;letter-spacing:-.02em}
+.attendance-dot{width:9px;height:9px;margin-top:3px;border:2px solid #a9b5c5;border-radius:50%;background:var(--surface)}
+.attendance-step.completed .attendance-dot{border-color:#16a36a;background:#16a36a;box-shadow:0 0 0 4px rgba(22,163,106,.1)}
+.attendance-line{height:1px;margin:0 7px;background:var(--line)}
+.attendance-state{grid-column:2;margin-top:8px;color:var(--muted);font-size:10px;font-weight:750}
+.attendance-step.completed .attendance-state{color:#0d8b57}
+.task-list{padding:4px 16px!important}
+.task{gap:12px;padding:14px 0!important}
+.task-icon{width:38px!important;height:38px!important;border-radius:11px!important;background:#eef4ff!important;color:#3971d8!important}
+body.dark .task-icon{background:#203551!important;color:#83afff!important}
+.task-copy b{font-size:13px}.task-copy small{font-size:10px}
+.task-state{padding:5px 8px;border-radius:7px;background:var(--surface-3)!important;color:var(--muted)!important;font-weight:750}
+.task-state.blue{background:#edf4ff!important;color:#2563be!important}
+.task-state.purple{background:#fff5e9!important;color:#b96618!important}
+body.dark .task-state.blue{background:#203551!important;color:#83afff!important}
+body.dark .task-state.purple{background:#49331f!important;color:#ffc178!important}
+.card{margin-bottom:14px;border-color:var(--line)!important;border-radius:16px!important;box-shadow:var(--shadow)!important}
+.nav{height:70px!important;flex-basis:70px!important;padding:5px 12px max(7px,env(safe-area-inset-bottom))!important;background:var(--nav)!important;box-shadow:0 -1px 0 var(--line)!important}
+.nav button{position:relative;gap:3px;border-radius:0!important;background:transparent!important;font-size:10px}
+.nav button.active{color:var(--blue)!important;background:transparent!important}
+.nav button.active::before{content:"";position:absolute;top:0;width:22px;height:3px;border-radius:0 0 3px 3px;background:var(--blue)}
+.nav svg{width:22px;height:22px}
+body.dark .nav button.active{color:#78a7ff!important;background:transparent!important}
+.profile-card{background:var(--surface)!important}
+@media(max-width:370px){
+  .workday-card.hero{padding:17px!important}.workday-head strong{font-size:20px}
+  .attendance-summary{grid-template-columns:1fr 20px 1fr;padding:15px!important}
+}
