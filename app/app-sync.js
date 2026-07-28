@@ -94,9 +94,17 @@
     ensureBalancePanel();
     const panel=document.getElementById('appLeaveBalance');
     if(!panel||!window.BOMBHR_HR_LEDGER)return;
+    const policy=window.BOMBHR_HR_LEDGER.annualPolicy?.()||{};
+    const heading=panel.previousElementSibling;
+    if(policy.employeeCanViewBalance===false){panel.hidden=true;if(heading)heading.hidden=true;return}
+    panel.hidden=false;if(heading)heading.hidden=false;
     panel.innerHTML=window.BOMBHR_HR_LEDGER.summary(EMPLOYEE_ID).map(item=>
       '<div class="app-balance-item"><span>'+item.rule.name+'</span><b>'+item.remaining+' '+(item.rule.unit||'天')+'</b><small>已使用 '+item.used+' '+(item.rule.unit||'天')+'</small></div>'
     ).join('');
+    if(policy.employeeCanViewSettlement){
+      const records=window.BOMBHR_HR_LEDGER.annualSettlements?.().filter(x=>x.employeeId===EMPLOYEE_ID)||[];
+      records.slice(0,1).forEach(x=>panel.insertAdjacentHTML('beforeend','<div class="app-balance-item app-annual-settlement"><span>'+x.year+' 年年假結算</span><b>未休 '+x.unused+' 天</b><small>折算工資 NT$ '+Number(x.amount||0).toLocaleString('zh-TW')+'</small></div>'));
+    }
   }
 
   function renderLinkedPayroll(){
@@ -105,12 +113,13 @@
     if(!card)return;
     let linked=document.getElementById('salaryLinkedAdjustments');
     if(!linked){linked=document.createElement('div');linked.id='salaryLinkedAdjustments';card.appendChild(linked)}
-    const items=read(KEYS.payroll,{})[EMPLOYEE_ID]||[];
-    const total=items.reduce((sum,item)=>sum+Number(item.amount||0),0);
+    const policy=window.BOMBHR_HR_LEDGER?.annualPolicy?.()||{};
+    const items=(read(KEYS.payroll,{})[EMPLOYEE_ID]||[]).filter(item=>policy.employeeCanViewSettlement||!String(item.eventId||'').startsWith('ANNUAL-'));
+    const total=items.reduce((sum,item)=>sum+(item.type==='加給'?Number(item.amount||0):-Number(item.amount||0)),0);
     linked.innerHTML=items.length
-      ?items.map(item=>'<div class="info-row"><span>'+item.name+'<small class="app-linked-note">・假勤自動連動</small></span><b>-'+Number(item.amount||0).toLocaleString('zh-TW')+'</b></div>').join('')
+      ?items.map(item=>'<div class="info-row"><span>'+item.name+'<small class="app-linked-note">・假勤自動連動</small></span><b>'+(item.type==='加給'?'+':'-')+Number(item.amount||0).toLocaleString('zh-TW')+'</b></div>').join('')
       :'<div class="readonly-note">目前沒有由請假或遲到連動的薪資扣款。</div>';
-    const net=57000-total;
+    const net=57000+total;
     const netNode=label.parentElement?.querySelector('b');
     if(netNode)netNode.textContent='TWD '+net.toLocaleString('zh-TW');
   }
