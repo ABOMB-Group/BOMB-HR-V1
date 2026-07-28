@@ -1,0 +1,54 @@
+:root{
+  --depth-line:color-mix(in srgb,var(--line,#9fb4d0) 72%,transparent);
+  --depth-highlight:rgba(255,255,255,.12);
+  --depth-shadow:0 18px 44px rgba(2,8,23,.14),0 3px 10px rgba(2,8,23,.08);
+  --depth-shadow-hover:0 24px 58px rgba(2,8,23,.2),0 6px 16px rgba(73,65,255,.13);
+}
+.site-header{
+  box-shadow:0 1px 0 var(--depth-line),0 12px 34px rgba(2,8,23,.06);
+}
+.btn,.theme-toggle,.menu-toggle{
+  border-top-color:var(--depth-highlight)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 7px 16px rgba(2,8,23,.12);
+  transform:translateZ(0);
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+.btn:hover,.theme-toggle:hover,.menu-toggle:hover{
+  transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 12px 24px rgba(2,8,23,.18);
+}
+.btn:active,.theme-toggle:active,.menu-toggle:active{transform:translateY(1px)}
+.kpi,.feature-card,.module-card,.solution-card,.price-card,.case-card,.resource-card,
+.dashboard-card,.contact-form,.login-shell,.platform-console,.product-proof > *,
+.security-card,.trust-card{
+  border:1px solid var(--depth-line)!important;
+  box-shadow:inset 0 1px 0 var(--depth-highlight),var(--depth-shadow);
+  transform:translateZ(0);
+}
+.feature-card,.module-card,.solution-card,.price-card,.case-card,.resource-card,
+.dashboard-card,.product-proof > *{
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+.feature-card:hover,.module-card:hover,.solution-card:hover,.price-card:hover,
+.case-card:hover,.resource-card:hover,.dashboard-card:hover,.product-proof > *:hover{
+  transform:translateY(-5px);
+  box-shadow:inset 0 1px 0 var(--depth-highlight),var(--depth-shadow-hover);
+}
+.login-brand-panel,.hero-visual,.platform-console{
+  position:relative;
+  overflow:hidden;
+}
+.login-brand-panel::after,.hero-visual::after,.platform-console::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 34%,transparent 70%,rgba(83,218,255,.06));
+}
+input,select,textarea{
+  box-shadow:inset 0 2px 5px rgba(2,8,23,.08),0 1px 0 rgba(255,255,255,.08);
+}
+input:focus,select:focus,textarea:focus{
+  box-shadow:0 0 0 3px rgba(92,82,255,.15),inset 0 1px 3px rgba(2,8,23,.06)!important;
+}
+@media (prefers-reduced-motion:reduce){
+  .btn,.theme-toggle,.menu-toggle,.feature-card,.module-card,.solution-card,
+  .price-card,.case-card,.resource-card,.dashboard-card,.product-proof > *{transition:none}
+}

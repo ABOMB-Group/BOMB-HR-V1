@@ -1,0 +1,43 @@
+:root{
+  --app-depth-line:color-mix(in srgb,var(--line,#cbd5e1) 82%,transparent);
+  --app-depth-shadow:0 12px 28px rgba(2,8,23,.11),0 2px 7px rgba(2,8,23,.07);
+}
+.app{
+  box-shadow:0 28px 90px rgba(2,8,23,.2);
+}
+.topbar{
+  position:sticky;top:0;z-index:8;
+  padding-top:4px;
+  background:linear-gradient(to bottom,var(--bg) 76%,transparent);
+}
+.card,.apply-card,.shift-card,.leave-card,.profile-card,.summary-card,
+.preference-compact-card,.emergency-contact-panel,.supervisor-card{
+  border:1px solid var(--app-depth-line)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),var(--app-depth-shadow);
+}
+button,.apply-card,.bottom-nav button,.icon-btn,a.call-supervisor,a.line-supervisor{
+  transform:translateZ(0);
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;
+}
+button:not(:disabled):active,.apply-card:active,.bottom-nav button:active,
+a.call-supervisor:active,a.line-supervisor:active{
+  transform:translateY(1px) scale(.985);
+  box-shadow:inset 0 2px 6px rgba(2,8,23,.18);
+}
+.bottom-nav{
+  border-top:1px solid var(--app-depth-line)!important;
+  box-shadow:0 -10px 28px rgba(2,8,23,.09),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.bottom-nav button.active{
+  box-shadow:inset 0 2px 0 #6b5fff;
+}
+input,select,textarea{
+  box-shadow:inset 0 2px 5px rgba(2,8,23,.08),0 1px 0 rgba(255,255,255,.05);
+}
+input:focus,select:focus,textarea:focus{
+  box-shadow:0 0 0 3px rgba(100,88,255,.17),inset 0 1px 3px rgba(2,8,23,.06)!important;
+}
+@media (max-width:460px){.app{box-shadow:none}}
+@media (prefers-reduced-motion:reduce){
+  button,.apply-card,.bottom-nav button,.icon-btn,a.call-supervisor,a.line-supervisor{transition:none}
+}
