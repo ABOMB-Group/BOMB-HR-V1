@@ -13,9 +13,9 @@
  const fixed=p=>Number(p.base||0)+Number(p.positionAllowance||0)+Number(p.attendanceBonus||0)+Number(p.seniorityAllowance||0)+Number(p.laborPensionIncome||0);
  const deductions=p=>Number(p.healthInsurance||0)+Number(p.laborInsurance||0)+Number(p.lateDeduction||0);
  const net=row=>{const p=profile(row.id);return fixed(p)+Number(p.overtime||row.overtime||0)-deductions(p)+signedAdjustments(row.id)};
- function tabs(){
-  const active=currentTab();
-  return `<div class="payroll-workspace-tabs"><button data-payroll-workspace="settlement" class="${active==='settlement'?'active':''}"><b>月薪結算</b></button><button data-payroll-workspace="profiles" class="${active==='profiles'?'active':''}"><b>員工薪資與福利</b></button></div>`;
+ function pageActions(){
+  const active=currentTab(),buttonClass=tab=>active===tab?'primary-btn':'secondary-btn strong-action';
+  return `<button class="secondary-btn strong-action" data-bank-master>企業銀行</button><button class="secondary-btn strong-action" data-payroll-print>薪資條列印</button><button class="${buttonClass('settlement')}" data-payroll-workspace="settlement">月薪結算</button><button class="${buttonClass('profiles')}" data-payroll-workspace="profiles">開啟薪資與福利</button><button class="secondary-btn strong-action" data-payroll-export>匯出薪資</button><button class="primary-btn" data-payroll-lock>關帳本期薪資</button>`;
  }
  function rows(){
   const canEdit=currentProfile().payrollEdit;
@@ -23,12 +23,12 @@
  }
  function profileView(){
   const list=people(),ready=list.filter(row=>getEmployeeSalaryProfiles()[row.id]).length,total=list.reduce((sum,row)=>sum+net(row),0),departments=[...new Set(list.map(x=>x.department))];
-  return head('員工薪資與福利','','',`<button class="secondary-btn" data-payroll-export>匯出薪資福利</button><button class="primary-btn" data-payroll-workspace="settlement">前往本月結薪</button>`)+tabs()+`<div class="payroll-profile-stats"><div><small>在職薪資人員</small><b>${list.length}</b><span>人</span></div><div><small>薪資福利已設定</small><b>${ready}</b><span>人</span></div><div><small>待補資料</small><b>${list.length-ready}</b><span>人</span></div><div><small>本月預估實領</small><b>NT$ ${total.toLocaleString('zh-TW')}</b></div></div><section class="payroll-profile-panel"><div class="payroll-profile-panel-head"><div><h3>員工薪資與福利名冊</h3></div><div class="payroll-profile-filters"><label>⌕<input id="payrollBenefitSearch" placeholder="搜尋姓名、員編、部門或職位"></label><select id="payrollBenefitDepartment"><option value="">全部部門</option>${departments.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('')}</select><select id="payrollBenefitStatus"><option value="">全部狀態</option><option>已設定</option><option>待補資料</option></select></div></div><div class="payroll-profile-table"><table><thead><tr><th>員工</th><th>部門／職位</th><th>固定薪資</th><th>每月扣款</th><th>年假</th><th>本月異動</th><th>預估實領</th><th>狀態</th><th>操作</th></tr></thead><tbody>${rows()}</tbody></table></div></section>`;
+  return head('員工薪資與福利','','',pageActions())+`<div class="payroll-profile-stats"><div><small>在職薪資人員</small><b>${list.length}</b><span>人</span></div><div><small>薪資福利已設定</small><b>${ready}</b><span>人</span></div><div><small>待補資料</small><b>${list.length-ready}</b><span>人</span></div><div><small>本月預估實領</small><b>NT$ ${total.toLocaleString('zh-TW')}</b></div></div><section class="payroll-profile-panel"><div class="payroll-profile-panel-head"><div><h3>員工薪資與福利名冊</h3></div><div class="payroll-profile-filters"><label>⌕<input id="payrollBenefitSearch" placeholder="搜尋姓名、員編、部門或職位"></label><select id="payrollBenefitDepartment"><option value="">全部部門</option>${departments.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('')}</select><select id="payrollBenefitStatus"><option value="">全部狀態</option><option>已設定</option><option>待補資料</option></select></div></div><div class="payroll-profile-table"><table><thead><tr><th>員工</th><th>部門／職位</th><th>固定薪資</th><th>每月扣款</th><th>年假</th><th>本月異動</th><th>預估實領</th><th>狀態</th><th>操作</th></tr></thead><tbody>${rows()}</tbody></table></div></section>`;
  }
  views.payroll=()=>{
   if(currentTab()==='profiles')return profileView();
   return originalPayrollView()
-   .replace('<div class="stat-grid">',tabs()+'<div class="stat-grid">');
+   .replace(/<div class="page-actions">[\s\S]*?<\/div><\/div>/,`<div class="page-actions">${pageActions()}</div></div>`);
  };
  function refresh(){location.hash='payroll';window.dispatchEvent(new HashChangeEvent('hashchange'))}
  function openProfile(employeeId){
