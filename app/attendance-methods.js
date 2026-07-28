@@ -17,10 +17,10 @@
   if(!grid||grid.querySelector('[data-attendance-method="beacon"]'))return;
   const gps=grid.querySelector('[data-attendance-method="deviceLocation"]');
   const button=document.createElement('button');
-  button.className='method-card';
+  button.className='method-card method-card-beacon';
   button.dataset.attendanceMethod='beacon';
   button.setAttribute('onclick',"selectMethod('Beacon',this)");
-  button.innerHTML='<div class="method-icon">◌</div><b>Beacon 藍牙</b><small>接近公司 Beacon 後完成驗證</small>';
+  button.innerHTML='<div class="method-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v16M9 7l3-3 3 3M9 17l3 3 3-3"></path><path class="method-icon-signal" d="M7.4 7.5a6.2 6.2 0 0 0 0 9M16.6 7.5a6.2 6.2 0 0 1 0 9"></path></svg></div><b>Beacon 藍牙</b><small>接近公司 Beacon 後完成驗證</small>';
   grid.insertBefore(button,gps||null);
  }
  function apply(){

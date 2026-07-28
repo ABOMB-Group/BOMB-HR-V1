@@ -113,6 +113,107 @@ a.call-supervisor:active,a.line-supervisor:active{
   border-radius:21px!important;
   box-shadow:0 12px 27px rgba(17,30,66,.1),inset 0 1px 0 rgba(255,255,255,.1)!important;
 }
+.method-grid{
+  gap:13px!important;
+}
+.method-card{
+  position:relative;
+  min-height:154px;
+  padding:17px 13px 14px!important;
+  overflow:hidden;
+  text-align:center!important;
+  background:
+    radial-gradient(circle at 50% 0,color-mix(in srgb,var(--method-color,#2f6df6) 11%,transparent),transparent 52%),
+    linear-gradient(155deg,var(--surface),color-mix(in srgb,var(--surface-2) 82%,var(--surface)))!important;
+  border-color:color-mix(in srgb,var(--method-color,#2f6df6) 20%,var(--line))!important;
+}
+.method-card:before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:linear-gradient(145deg,rgba(255,255,255,.12),transparent 42%);
+  pointer-events:none;
+}
+.method-card.active{
+  border-color:color-mix(in srgb,var(--method-color,#2f6df6) 72%,white)!important;
+  box-shadow:
+    0 14px 30px color-mix(in srgb,var(--method-color,#2f6df6) 18%,transparent),
+    0 0 0 3px color-mix(in srgb,var(--method-color,#2f6df6) 12%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.22)!important;
+}
+.method-card.active:after{
+  content:"";
+  position:absolute;right:11px;top:11px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--method-color,#2f6df6);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--method-color,#2f6df6) 14%,transparent),0 0 13px var(--method-color,#2f6df6);
+}
+.method-card .method-icon{
+  position:relative;
+  width:62px!important;height:62px!important;
+  margin:0 auto 12px!important;
+  border-radius:50%!important;
+  display:grid;place-items:center;
+  color:white;
+  background:
+    radial-gradient(circle at 32% 24%,rgba(255,255,255,.38),transparent 29%),
+    linear-gradient(145deg,color-mix(in srgb,var(--method-color) 75%,white),color-mix(in srgb,var(--method-color) 74%,#06172c))!important;
+  border:1px solid color-mix(in srgb,var(--method-color) 54%,white);
+  box-shadow:
+    0 10px 22px color-mix(in srgb,var(--method-color) 27%,transparent),
+    inset 0 1px 1px rgba(255,255,255,.52),
+    inset 0 -5px 10px rgba(3,12,30,.24);
+}
+.method-card .method-icon:before{
+  content:"";
+  position:absolute;inset:5px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.15);
+}
+.method-card .method-icon svg{
+  position:relative;z-index:1;
+  width:31px;height:31px;
+  fill:none;stroke:currentColor;stroke-width:2.1;
+  stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));
+}
+.method-card-qr .method-icon svg{stroke-width:1.8}
+.method-card .method-icon .method-icon-fill{fill:currentColor;stroke:none}
+.method-card .method-icon .method-icon-signal{opacity:.7;stroke-width:1.5}
+.method-card b{
+  position:relative;
+  font-size:14px!important;
+  letter-spacing:-.01em;
+}
+.method-card small{
+  position:relative;
+  max-width:145px;
+  margin:6px auto 0!important;
+  font-size:10.5px!important;
+  line-height:1.45!important;
+}
+.method-card-wifi{--method-color:#0aa7d8}
+.method-card-nfc{--method-color:#16a36a}
+.method-card-qr{--method-color:#3975f4}
+.method-card-gps{--method-color:#ef8b24}
+.method-card-beacon{--method-color:#7657e8}
+.method-panel{
+  position:relative;
+  padding:15px 16px 15px 48px!important;
+  background:color-mix(in srgb,var(--surface-2) 78%,var(--surface))!important;
+}
+.method-panel:before{
+  content:"";
+  position:absolute;left:18px;top:18px;
+  width:12px;height:12px;border-radius:50%;
+  background:#20b77a;
+  box-shadow:0 0 0 5px rgba(32,183,122,.13),0 0 14px rgba(32,183,122,.35);
+}
+body.dark .method-card{
+  background:
+    radial-gradient(circle at 50% 0,color-mix(in srgb,var(--method-color,#2f6df6) 16%,transparent),transparent 54%),
+    linear-gradient(155deg,#14243a,#0c192b)!important;
+  border-color:color-mix(in srgb,var(--method-color,#2f6df6) 28%,#31425b)!important;
+}
 .module-card,.apply-card{min-height:126px!important;padding:21px 17px!important}
 .module-card b,.apply-card b{font-size:16px!important}
 .calendar{gap:5px!important}.calendar .day{min-height:39px;border-radius:12px!important}.calendar .day.shift{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--blue) 24%,transparent)}
