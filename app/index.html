@@ -945,18 +945,17 @@ button{cursor:pointer}
 <svg viewbox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5 8.5 8.5 0 1 0 20.5 14.3Z"></path></svg>
 </button>
 </div>
-<div class="card">
-<div class="punch-ring">
-<button class="punch-core" id="punchCore" onclick="punch()">
-<div><b>上班打卡</b><small id="punchClock">08:58:26</small></div>
+<div class="hero punch-hero">
+<small>目前時間</small>
+<h2 id="punchClock">08:58:26</h2>
+<div class="hero-context">
+<button class="hero-location" onclick="toast('目前位於台中總公司')">
+<svg viewBox="0 0 24 24"><path d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"></path><circle cx="12" cy="10" r="2.1"></circle></svg>
+<span>台中總公司</span>
 </button>
+<div class="hero-chip"><span class="dot"></span><b id="activeMethodText">WiFi + GPS</b><span>已就緒</span></div>
 </div>
-<button class="secondary" onclick="toast('目前位於台中總公司')">⌖ 台中總公司</button>
-<div class="punch-meta">
-<div class="meta-row"><span>上班時間</span><b>09:00</b></div>
-<div class="meta-row"><span>下班時間</span><b>18:00</b></div>
-<div class="meta-row"><span>目前驗證</span><b id="activeMethodText">WiFi + GPS</b></div>
-</div>
+<button class="hero-punch-action" id="punchCore" onclick="punch()"><span id="punchActionLabel">上班打卡</span><b>→</b></button>
 </div>
 <div class="section-line"><h3 id="recordMonthTitle">選擇驗證方式</h3><button onclick="toast('正式 APP 會自動判斷可用方式')">自動判斷</button></div>
 <div class="card">
@@ -1487,25 +1486,22 @@ function toast(msg){
   clearTimeout(window.toastTimer);
   window.toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
 }
-function punchButtonMarkup(label,time,completed=false){
-  return '<div><b>'+label+'</b><small id="punchClock">'+time+'</small></div>';
-}
 function punch(){
   const core=document.getElementById('punchCore');
+  const label=document.getElementById('punchActionLabel');
   const time=nowTime().slice(0,5);
   if(punchState===0){
     punchState=1;
     core.classList.add('checkout');
-    core.innerHTML=punchButtonMarkup('下班打卡',nowTime());
+    label.textContent='下班打卡';
     document.getElementById('homeInTime').textContent=time;
     {const person=currentAppEmployee();pushBombHREvent({category:'attendance',action:'clock-in',employee:person.name,employeeId:person.employeeId,time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});}
     toast(activeMethod+' 驗證完成，上班打卡成功');
   }else if(punchState===1){
     punchState=2;
     core.classList.remove('checkout');core.classList.add('done');
-    core.innerHTML=punchButtonMarkup('今日完成',nowTime(),true);
+    label.textContent='今日完成';
     core.disabled=true;
-    core.style.opacity='.68';
     document.getElementById('homeOutTime').textContent=time;
     {const person=currentAppEmployee();pushBombHREvent({category:'attendance',action:'clock-out',employee:person.name,employeeId:person.employeeId,time:new Date().toISOString(),displayTime:time,method:activeMethod,status:'正常'});}
     toast(activeMethod+' 驗證完成，下班打卡成功');
@@ -1897,7 +1893,7 @@ function updateLiveDateTime(){
   if(hero)hero.textContent=formatTime(now,true);
   if(punch)punch.textContent=formatTime(now,true);
   if(homeDate)homeDate.textContent=formatZhDate(now,true);
-  if(punchDate)punchDate.textContent=formatZhDate(now,false);
+  if(punchDate)punchDate.textContent=formatZhDate(now,true);
   if(greeting)greeting.textContent=greetingForHour(now.getHours())+'，'+currentAppEmployee().name+' 👋';
 }
 
@@ -2078,7 +2074,7 @@ setInterval(tick,1000);
 <link rel="stylesheet" href="app-module-sync.css?v=203">
 <link rel="stylesheet" href="employee-auth.css?v=203">
 <link rel="stylesheet" href="app-depth.css?v=2065">
-<link rel="stylesheet" href="app-depth-v206.css?v=208">
+<link rel="stylesheet" href="app-depth-v206.css?v=209">
 <script src="employee-auth.js?v=203"></script>
 <script src="../assets/hr-leave-ledger.js?v=2065"></script>
 <script src="../assets/certificate-requirements.js"></script>

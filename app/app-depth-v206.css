@@ -59,6 +59,49 @@
   box-shadow:0 13px 28px rgba(18,20,80,.25);
 }
 .hero-punch-action b{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:#6657ff;color:white;font-size:16px}
+.punch-hero{
+  min-height:244px!important;
+}
+.punch-hero .hero-context{
+  position:relative;z-index:2;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:4px;
+}
+.punch-hero .hero-location{
+  width:auto;height:auto;margin:0;padding:7px 10px;
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(5,13,47,.2);color:white;
+  box-shadow:none;font:inherit;
+}
+.punch-hero .hero-location svg{
+  width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.punch-hero .hero-chip{
+  position:static!important;
+  display:inline-flex;margin:0!important;padding:7px 10px!important;
+  background:rgba(255,255,255,.14)!important;
+  border:1px solid rgba(255,255,255,.12);
+}
+.punch-hero .hero-chip b{font-size:11px}
+.punch-hero .hero-chip span:last-child{font-size:10px;opacity:.78}
+.punch-hero .hero-punch-action.checkout{
+  color:#9a4d08;
+}
+.punch-hero .hero-punch-action.checkout b{
+  background:linear-gradient(145deg,#f59e0b,#ea580c);
+}
+.punch-hero .hero-punch-action.done{
+  color:#167252;
+  cursor:default;
+}
+.punch-hero .hero-punch-action.done b{
+  background:#20a978;
+}
+.punch-hero .hero-punch-action:disabled{
+  opacity:.86;
+}
 .section-line{margin:25px 2px 11px!important}
 .section-line h3{font-size:16px!important;letter-spacing:-.02em}
 .section-line button{padding:7px 10px!important;border-radius:9px!important;background:color-mix(in srgb,var(--blue) 9%,transparent)!important}
