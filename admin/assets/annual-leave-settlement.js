@@ -34,6 +34,26 @@
   if(typeof addAudit==='function')addAudit('執行年假年度結算',`${year} 年・${profiles().length} 位員工`);
   toast(`${year} 年年假已結算，未休額度已轉入薪資紀錄`);window.dispatchEvent(new HashChangeEvent('hashchange'));
  }
+ function transactionMonth(item){
+  const dates=String(item.period||item.usageDate||item.date||'').match(/\d{4}-\d{2}-\d{2}/g)||[];
+  return [...new Set(dates.map(date=>date.slice(0,7).replace('-','／')))].join(' → ')||'—';
+ }
+ function transactionStatus(item){
+  return item.status==='approved'?'已核准':item.status==='cancelled'?'已取消':item.status==='reversed'?'額度已恢復':item.status==='adjusted'?'人事已確認':item.status||'已記錄';
+ }
+ function enhanceEmployeeAnnualControls(employeeId){
+  const annualInput=document.getElementById('employeeAnnualLeave'),grid=annualInput?.closest('.salary-field-grid');
+  if(!grid||grid.querySelector('#employeeAnnualUsageDate'))return;
+  const reason=document.getElementById('employeeAnnualReason')?.closest('label'),dateLabel=document.createElement('label');
+  dateLabel.innerHTML=`年假使用／調整日期<input id="employeeAnnualUsageDate" type="date" value="${new Date().toISOString().slice(0,10)}" ${annualInput.disabled?'disabled':''}>`;
+  grid.insertBefore(dateLabel,reason||null);
+  const button=document.createElement('button');button.type='button';button.className='secondary-btn annual-history-button';button.dataset.annualHistoryEmployee=employeeId;button.textContent='查看年假使用明細';grid.closest('section')?.append(button);
+ }
+ function openAnnualHistory(employeeId){
+  const employee=(typeof getEmployeeRecord==='function'?getEmployeeRecord(employeeId):null)||profiles().find(x=>x.id===employeeId)||{name:employeeId},summary=api.summary(employeeId).find(x=>x.rule.id==='annual')||{rule:{quota:0},used:0,remaining:0},history=api.annualHistory(employeeId),usedRows=history.filter(x=>Number(x.days)>0&&!['cancelled','reversed'].includes(x.status));
+  openModal('年假使用明細',`${employee.name}・${employeeId}｜依實際休假日期自動歸入月份`,`<div class="annual-history-summary"><div><small>本年度核發</small><b>${summary.rule.quota} 天</b></div><div><small>已使用</small><b>${summary.used} 天</b></div><div><small>目前剩餘</small><b>${summary.remaining} 天</b></div><div><small>使用紀錄</small><b>${usedRows.length} 筆</b></div></div><div class="annual-history-note">核准請假與班表排假會自動寫入；人事手動調整必須保存日期及原因。跨月假期會同時標示兩個月份。</div><div class="annual-history-table">${history.length?`<table><thead><tr><th>使用月份</th><th>日期／期間</th><th>異動天數</th><th>來源</th><th>狀態</th><th>原因／操作人</th></tr></thead><tbody>${history.map(item=>`<tr class="${item.status==='cancelled'||item.status==='reversed'?'is-reversed':''}"><td>${transactionMonth(item)}</td><td>${esc(item.period||item.usageDate||String(item.date||'').slice(0,10)||'—')}</td><td class="${Number(item.days)<0?'negative':''}">${Number(item.days)>0?'+':''}${Number(item.days||0)} 天</td><td>${esc(item.type||item.source||'系統紀錄')}</td><td><span>${transactionStatus(item)}</span></td><td><b>${esc(item.note||item.cancelReason||'—')}</b><small>${esc(item.operator||item.cancelledBy||'系統')}</small></td></tr>`).join('')}</tbody></table>`:'<div class="annual-empty">目前尚無年假使用紀錄。核准年假或由人事調整後會自動出現在這裡。</div>'}</div>`,`<button class="secondary-btn" data-annual-history-back="${employeeId}">← 返回員工人事資料</button><button class="primary-btn" data-modal-close>完成</button>`);
+  document.querySelector('[data-annual-history-back]')?.addEventListener('click',()=>{closeModal();employeeModal(employeeId,false);enhanceEmployeeSalaryPage(employeeId);document.querySelector('[data-employee-page="salary"]')?.click();setTimeout(()=>enhanceEmployeeAnnualControls(employeeId),0)});
+ }
  function bind(){
   document.querySelector('[data-annual-save]')?.addEventListener('click',save);
   document.querySelector('[data-annual-reset]')?.addEventListener('click',()=>window.dispatchEvent(new HashChangeEvent('hashchange')));
@@ -41,6 +61,12 @@
   document.querySelector('[data-annual-search]')?.addEventListener('input',e=>document.querySelectorAll('[data-annual-person]').forEach(row=>row.hidden=!row.dataset.search.includes(e.target.value.trim().toLowerCase())));
   document.querySelectorAll('[data-person-group]').forEach(select=>select.addEventListener('change',()=>{const row=select.closest('[data-annual-person]'),p=api.annualPolicy(),g=p.groups.find(x=>x.id===select.value);if(!row.querySelector('[data-person-custom]').checked)row.querySelector('[data-person-quota]').value=g?.quota||0}));
  }
+ document.addEventListener('click',event=>{
+  const employeeTrigger=event.target.closest('[data-view-employee],[data-edit-employee]');
+  if(employeeTrigger){const employeeId=employeeTrigger.dataset.viewEmployee||employeeTrigger.dataset.editEmployee;setTimeout(()=>enhanceEmployeeAnnualControls(employeeId),100)}
+  const historyButton=event.target.closest('[data-annual-history-employee]');
+  if(historyButton){event.preventDefault();openAnnualHistory(historyButton.dataset.annualHistoryEmployee)}
+ },true);
  const oldView=window.BOMBHR_LEAVE_RULE_ADMIN?.view,oldBind=window.BOMBHR_LEAVE_RULE_ADMIN?.bind;
  if(oldView&&oldBind){window.BOMBHR_LEAVE_RULE_ADMIN.view=()=>oldView()+policyPanel();window.BOMBHR_LEAVE_RULE_ADMIN.bind=()=>{oldBind();bind()}}
 })();
