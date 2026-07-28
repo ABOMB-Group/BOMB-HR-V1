@@ -902,6 +902,7 @@ button{cursor:pointer}
 <h2 id="heroClock">10:45:26</h2>
 <div class="hero-location">⌖ 台中總公司</div>
 <div class="hero-chip"><span class="dot"></span>已進入打卡範圍</div>
+<button class="hero-punch-action" onclick="switchView('punchView',document.querySelector('[data-view=punchView]'))"><span>立即打卡</span><b>→</b></button>
 </div>
 <div class="section-line"><h3>今日狀態</h3><button onclick="switchView('punchView',document.querySelector('[data-view=punchView]'))">查看紀錄 ›</button></div>
 <div class="card">
@@ -2069,7 +2070,7 @@ setInterval(tick,1000);
 <link rel="stylesheet" href="app-module-sync.css?v=203">
 <link rel="stylesheet" href="employee-auth.css?v=203">
 <link rel="stylesheet" href="app-depth.css?v=2065">
-<link rel="stylesheet" href="app-depth-v206.css?v=206">
+<link rel="stylesheet" href="app-depth-v206.css?v=207">
 <script src="employee-auth.js?v=203"></script>
 <script src="../assets/hr-leave-ledger.js?v=2065"></script>
 <script src="../assets/certificate-requirements.js"></script>
