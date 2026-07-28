@@ -77,7 +77,7 @@
   next.employerInsuranceTotal=Number(calc.employerTotal||0);next.governmentInsuranceTotal=Number(calc.governmentTotal||0);
   const profiles=readProfiles();profiles[id]=next;
   try{localStorage.setItem(storageKey,JSON.stringify(profiles));const verified=readProfiles()[id];if(!verified||verified.laborGrade!==next.laborGrade||verified.healthGrade!==next.healthGrade)throw new Error('verification failed')}catch(error){toast('儲存失敗，瀏覽器無法寫入資料');return false}
-  const annualResult=window.BOMBHR_HR_LEDGER?.setAnnualUsed(id,annualUsed,value('employeeAnnualReason'),`${currentProfile().name}・${currentProfile().id}`,value('employeeAnnualUsageDate'));
+  const annualResult=window.BOMBHR_HR_LEDGER?.setAnnualUsed(id,annualUsed,value('employeeAnnualReason'),`${currentProfile().name}・${currentProfile().id}`);
   if(annualResult&&!annualResult.ok){toast(annualResult.message);return false}
   addAudit('修改員工薪資、福利與年假',`${getEmployeeRecord(id)?.name||id}・年假核發 ${annualLeave} 天・已用 ${annualUsed} 天・剩餘 ${Math.max(0,annualLeave-annualUsed)} 天`);
   let status=document.getElementById('salarySaveVerified');if(!status){status=document.createElement('div');status.id='salarySaveVerified';status.className='salary-save-verified';document.querySelector('.salary-page-actions')?.prepend(status)}

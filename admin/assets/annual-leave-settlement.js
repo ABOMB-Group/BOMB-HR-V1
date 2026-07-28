@@ -44,11 +44,11 @@
  }
  function enhanceEmployeeAnnualControls(employeeId){
   const annualInput=document.getElementById('employeeAnnualLeave'),grid=annualInput?.closest('.salary-field-grid');
-  if(!grid||grid.querySelector('#employeeAnnualUsageDate'))return;
-  const reason=document.getElementById('employeeAnnualReason')?.closest('label'),dateLabel=document.createElement('label');
-  dateLabel.innerHTML=`年假使用／調整日期<input id="employeeAnnualUsageDate" type="date" value="${new Date().toISOString().slice(0,10)}" ${annualInput.disabled?'disabled':''}>`;
-  grid.insertBefore(dateLabel,reason||null);
-  const button=document.createElement('button');button.type='button';button.className='secondary-btn annual-history-button';button.dataset.annualHistoryEmployee=employeeId;button.textContent='查看年假使用明細';grid.closest('section')?.append(button);
+  if(!grid)return;
+  const effective=document.getElementById('employeeSalaryEffective')?.closest('label'),salaryGrid=document.querySelector('.employee-salary-page>section .salary-field-grid');
+  if(effective&&salaryGrid&&effective.closest('.salary-field-grid')===grid){effective.childNodes[0].textContent='薪資調整生效日';salaryGrid.append(effective)}
+  if(!grid.querySelector('.annual-auto-grant-status')){const status=document.createElement('div');status.className='annual-auto-grant-status';status.innerHTML='<span>年假自動核發</span><b>每年 1 月 1 日 00:00</b><small>適用符合公司年資資格的人員</small>';grid.insertBefore(status,document.getElementById('employeeAnnualReason')?.closest('label')||null)}
+  if(!grid.closest('section')?.querySelector('[data-annual-history-employee]')){const button=document.createElement('button');button.type='button';button.className='secondary-btn annual-history-button';button.dataset.annualHistoryEmployee=employeeId;button.textContent='查看年假使用明細';grid.closest('section')?.append(button)}
  }
  function openAnnualHistory(employeeId){
   const employee=(typeof getEmployeeRecord==='function'?getEmployeeRecord(employeeId):null)||profiles().find(x=>x.id===employeeId)||{name:employeeId},summary=api.summary(employeeId).find(x=>x.rule.id==='annual')||{rule:{quota:0},used:0,remaining:0},history=api.annualHistory(employeeId),usedRows=history.filter(x=>Number(x.days)>0&&!['cancelled','reversed'].includes(x.status)),pending=api.annualUnallocated(employeeId);
