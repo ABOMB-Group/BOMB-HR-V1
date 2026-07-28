@@ -324,7 +324,53 @@
  document.addEventListener('dragend',()=>{rows().forEach(row=>row.classList.remove('dragging','drag-over'));dragging=null});
  const observer=new MutationObserver(()=>prepare());observer.observe(document.getElementById('content'),{childList:true,subtree:true});
  prepare();
- window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
+window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
+})();
+
+/* ===== Supervisor calendar memos ===== */
+(function(){
+ 'use strict';
+ const KEY='bombhr-supervisor-schedule-memos-v206';
+ const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}};
+ const write=value=>localStorage.setItem(KEY,JSON.stringify(value));
+ const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+ const currentMonth=()=>`${scheduleCursor.getFullYear()}-${String(scheduleCursor.getMonth()+1).padStart(2,'0')}`;
+ const allowed=()=>['executive','hradmin','supervisor'].includes(currentRole());
+ function visible(){
+  const month=currentMonth(),profile=currentProfile();
+  return read().filter(item=>item.month===month&&(currentRole()!=='supervisor'||item.createdById===profile.id||item.department===profile.department));
+ }
+ function panel(){
+  if((window.BOMBHR_SCHEDULE_SECTION||'calendar')!=='calendar')return '';
+  const items=visible();
+  return `<section class="supervisor-memo-panel"><div class="supervisor-memo-head"><div><span>SUPERVISOR MEMO</span><h3>主管備忘錄</h3><small>${esc(currentMonth())}・新增後立即顯示在班表日期與本清單</small></div>${allowed()?'<button class="primary-btn" data-add-supervisor-memo>＋ 新增備忘錄</button>':''}</div>${items.length?`<div class="supervisor-memo-list">${items.sort((a,b)=>a.date.localeCompare(b.date)).map(item=>`<article class="priority-${esc(item.priority)}"><time>${esc(item.date.slice(5).replace('-','/'))}</time><div><b>${esc(item.title)}</b><p>${esc(item.content||'沒有補充內容')}</p><small>${esc(item.createdBy)}・${esc(item.department||'全公司')}</small></div>${allowed()?`<button data-delete-supervisor-memo="${esc(item.id)}" aria-label="刪除備忘錄">×</button>`:''}</article>`).join('')}</div>`:'<div class="supervisor-memo-empty">本月尚無主管備忘錄。新增後會固定保留，重新整理也不會消失。</div>'}</section>`;
+ }
+ function openCreate(){
+  const month=currentMonth(),today=new Date(),suggested=today.toISOString().slice(0,7)===month?today.toISOString().slice(0,10):`${month}-01`;
+  openModal('新增主管備忘錄',`${month} 班表・儲存後立即顯示`, `<div class="form-grid"><label class="form-field">日期<input id="supervisorMemoDate" class="form-control" type="date" min="${month}-01" max="${month}-${String(new Date(scheduleCursor.getFullYear(),scheduleCursor.getMonth()+1,0).getDate()).padStart(2,'0')}" value="${suggested}"></label><label class="form-field">重要程度<select id="supervisorMemoPriority" class="form-control"><option value="normal">一般</option><option value="important">重要</option><option value="urgent">緊急</option></select></label><label class="form-field full">標題<input id="supervisorMemoTitle" class="form-control" maxlength="40" placeholder="例如：月會、盤點、活動準備"></label><label class="form-field full">備忘內容<textarea id="supervisorMemoContent" class="form-control" rows="4" maxlength="300" placeholder="輸入要提醒主管的事項"></textarea></label></div><p id="supervisorMemoError" class="form-error"></p>`, '<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="saveSupervisorMemo">儲存並顯示</button>');
+  document.getElementById('saveSupervisorMemo').onclick=()=>{
+   const date=document.getElementById('supervisorMemoDate').value,title=document.getElementById('supervisorMemoTitle').value.trim(),content=document.getElementById('supervisorMemoContent').value.trim(),priority=document.getElementById('supervisorMemoPriority').value,error=document.getElementById('supervisorMemoError');
+   if(!date||date.slice(0,7)!==month||!title){error.textContent='請選擇本月日期並輸入標題';return}
+   const profile=currentProfile(),all=read();all.unshift({id:`MEMO-${Date.now()}`,month,date,title,content,priority,department:profile.department||'全公司',createdById:profile.id,createdBy:`${profile.name}・${profile.id}`,createdAt:new Date().toISOString()});write(all);
+   if(typeof addAudit==='function')addAudit('新增主管備忘錄',`${date}・${title}・${profile.name}`);
+   closeModal();toast('主管備忘錄已儲存並顯示在班表');window.dispatchEvent(new HashChangeEvent('hashchange'));
+  };
+ }
+ function markCalendar(){
+  const items=visible();
+  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,count=items.filter(item=>item.date===date).length;if(count){cell.classList.add('has-supervisor-memo');cell.insertAdjacentHTML('beforeend',`<span class="supervisor-memo-dot" title="${count} 則主管備忘錄">${count}</span>`)}})
+ }
+ function bind(){
+  document.querySelector('[data-add-supervisor-memo]')?.addEventListener('click',openCreate);
+  document.querySelectorAll('[data-delete-supervisor-memo]').forEach(button=>button.onclick=()=>{const all=read(),item=all.find(row=>row.id===button.dataset.deleteSupervisorMemo);if(!item)return;if(!confirm(`確定刪除「${item.title}」？`))return;write(all.filter(row=>row.id!==item.id));if(typeof addAudit==='function')addAudit('刪除主管備忘錄',`${item.date}・${item.title}`);toast('主管備忘錄已刪除');window.dispatchEvent(new HashChangeEvent('hashchange'))});
+  markCalendar();
+ }
+ const previousView=schedulingView;
+ schedulingView=function(){const html=previousView();return (window.BOMBHR_SCHEDULE_SECTION||'calendar')==='calendar'?html+panel():html};
+ const previousBind=bindView;
+ bindView=function(route){previousBind(route);if(route==='scheduling')setTimeout(bind,0)};
+ window.addEventListener('storage',event=>{if(event.key===KEY&&location.hash==='#scheduling')window.dispatchEvent(new HashChangeEvent('hashchange'))});
+ window.BOMBHR_SUPERVISOR_MEMOS={read,visible,panel};
 })();
 
 /* ===== Consolidated from schedule-page-layout-v194.js ===== */
