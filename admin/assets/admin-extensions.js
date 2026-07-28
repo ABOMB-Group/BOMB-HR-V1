@@ -67,20 +67,24 @@
   if(!id){toast('找不到目前員工，請關閉視窗後重新點選查看');return false}
   const effectiveDate=value('employeeSalaryEffective');
   if(!effectiveDate){toast('請先設定薪資生效日');return false}
+  const annualLeave=number('employeeAnnualLeave'),annualUsed=number('employeeAnnualUsed');
+  if(annualUsed>annualLeave){toast(`已使用年假 ${annualUsed} 天不可超過本年度核發 ${annualLeave} 天`);return false}
   const next={};
   document.querySelectorAll('[data-employee-salary]').forEach(input=>next[input.dataset.employeeSalary]=Number(input.value||0));
-  Object.assign(next,{effectiveDate,benefitLevel:value('employeeBenefitLevel'),travelLeave:number('employeeTravelLeave'),annualLeave:number('employeeAnnualLeave'),laborGrade:number('employeeLaborGrade'),healthGrade:number('employeeHealthGrade'),dependents:number('employeeDependents'),occupationalRate:number('employeeOccupationalRate'),voluntaryPension:number('employeeVoluntaryPension'),updatedBy:`${currentProfile().name}・${currentProfile().id}`,updatedAt:new Date().toLocaleString('zh-TW',{hour12:false})});
+  Object.assign(next,{effectiveDate,benefitLevel:value('employeeBenefitLevel'),travelLeave:number('employeeTravelLeave'),annualLeave,laborGrade:number('employeeLaborGrade'),healthGrade:number('employeeHealthGrade'),dependents:number('employeeDependents'),occupationalRate:number('employeeOccupationalRate'),voluntaryPension:number('employeeVoluntaryPension'),updatedBy:`${currentProfile().name}・${currentProfile().id}`,updatedAt:new Date().toLocaleString('zh-TW',{hour12:false})});
   const calc=window.bombhrInsuranceCost?window.bombhrInsuranceCost(next):{};
   next.employeeInsuranceTotal=Number(next.laborInsurance||0)+Number(next.healthInsurance||0);
   next.employerInsuranceTotal=Number(calc.employerTotal||0);next.governmentInsuranceTotal=Number(calc.governmentTotal||0);
   const profiles=readProfiles();profiles[id]=next;
   try{localStorage.setItem(storageKey,JSON.stringify(profiles));const verified=readProfiles()[id];if(!verified||verified.laborGrade!==next.laborGrade||verified.healthGrade!==next.healthGrade)throw new Error('verification failed')}catch(error){toast('儲存失敗，瀏覽器無法寫入資料');return false}
-  addAudit('修改員工薪資與勞健保',`${getEmployeeRecord(id)?.name||id}・勞保 ${next.laborGrade.toLocaleString()}・健保 ${next.healthGrade.toLocaleString()}`);
+  const annualResult=window.BOMBHR_HR_LEDGER?.setAnnualUsed(id,annualUsed,value('employeeAnnualReason'),`${currentProfile().name}・${currentProfile().id}`);
+  if(annualResult&&!annualResult.ok){toast(annualResult.message);return false}
+  addAudit('修改員工薪資、福利與年假',`${getEmployeeRecord(id)?.name||id}・年假核發 ${annualLeave} 天・已用 ${annualUsed} 天・剩餘 ${Math.max(0,annualLeave-annualUsed)} 天`);
   let status=document.getElementById('salarySaveVerified');if(!status){status=document.createElement('div');status.id='salarySaveVerified';status.className='salary-save-verified';document.querySelector('.salary-page-actions')?.prepend(status)}
   status.textContent=`✓ 已儲存並核對｜勞保級距 ${next.laborGrade.toLocaleString()}｜健保級距 ${next.healthGrade.toLocaleString()}｜${next.updatedAt}`;
   const button=document.getElementById('saveEmployeeSalaryProfile');if(button){button.textContent='已儲存，可關閉後重新查看';button.classList.add('saved')}
   const employees=getCustomEmployees(),employee=employees.find(item=>item.employeeId===id);if(employee){employee.salaryStatus='configured';employee.salary={...next,position:employee.position};localStorage.setItem('bombhr-custom-employees',JSON.stringify(employees))}const events=getSharedEvents(),task=events.find(item=>item.subtype==='salary-profile-missing'&&item.employeeId===id&&item.status==='pending');if(task){task.status='completed';task.statusText='薪資架構已補齊';task.completedAt=new Date().toISOString();saveSharedEvents(events)}
-  toast(`${getEmployeeRecord(id)?.name||id}的薪資、級距與扣款已確實儲存`);return true;
+  window.dispatchEvent(new CustomEvent('bombhr-demo-update'));toast(`${getEmployeeRecord(id)?.name||id}已儲存：年假 ${annualLeave} 天・已用 ${annualUsed} 天・剩餘 ${Math.max(0,annualLeave-annualUsed)} 天`);return true;
  }
  document.addEventListener('click',event=>{const trigger=event.target.closest('[data-view-employee],[data-edit-employee]');if(trigger)activeEmployeeId=trigger.dataset.viewEmployee||trigger.dataset.editEmployee||'';const button=event.target.closest('#saveEmployeeSalaryProfile');if(!button)return;event.preventDefault();event.stopImmediatePropagation();saveCurrentEmployee()},true);
  function syncOfficialDeductions(force=false){
