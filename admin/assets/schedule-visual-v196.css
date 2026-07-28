@@ -1,8 +1,0 @@
-.schedule-date-cell.saturday{background:linear-gradient(145deg,#047b86,#0891b2)!important}
-.schedule-date-cell.holiday{z-index:2;background:linear-gradient(145deg,#9a3412,#ea580c)!important;box-shadow:inset 0 -4px 0 #fde047!important}
-.schedule-date-cell.holiday b{display:grid;place-items:center;min-width:25px;height:25px;padding:0 5px;border-radius:8px;background:#fef3c7;color:#7c2d12;box-shadow:0 3px 10px rgba(69,26,3,.25)}
-.schedule-date-cell.holiday em{display:none!important}
-.schedule-date-cell.holiday::after{content:attr(data-holiday);position:absolute;z-index:30;left:50%;top:calc(100% + 7px);width:max-content;max-width:180px;padding:7px 10px;border:1px solid rgba(251,191,36,.55);border-radius:9px;background:#1e293b;color:#fff;font-size:11px;font-style:normal;font-weight:750;line-height:1.35;box-shadow:0 10px 28px rgba(2,6,23,.32);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-4px);transition:.16s ease}
-.schedule-date-cell.holiday:hover::after,.schedule-date-cell.holiday:focus-within::after{opacity:1;visibility:visible;transform:translate(-50%,0)}
-.schedule-month-row.header,.schedule-date-cell{overflow:visible}
-.schedule-toolbar .schedule-table-tool-group button{line-height:1;letter-spacing:0}
