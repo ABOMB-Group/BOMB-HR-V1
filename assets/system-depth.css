@@ -298,6 +298,61 @@ input,select,textarea{
 input:focus,select:focus,textarea:focus{
   box-shadow:0 0 0 3px rgba(92,82,255,.15),inset 0 1px 3px rgba(2,8,23,.06)!important;
 }
+.is-clickable{cursor:pointer}
+.is-clickable:focus-visible,
+.library-stack button:focus-visible,
+.support-screen button:focus-visible{
+  outline:3px solid color-mix(in srgb,var(--blue) 72%,white);
+  outline-offset:4px;
+}
+.resource-card[hidden]{display:none!important}
+.resource-search-status{
+  margin-top:14px!important;
+  color:var(--cyan)!important;
+  font-weight:800;
+}
+.library-search{
+  display:flex!important;
+  align-items:center;
+  gap:10px;
+}
+.library-search input{
+  width:100%;
+  padding:0!important;
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  color:inherit!important;
+  font:inherit;
+  box-shadow:none!important;
+}
+.library-search input::placeholder{color:inherit;opacity:.84}
+.library-stack button{
+  width:100%;
+  appearance:none;
+  text-align:left;
+  color:inherit;
+  font:inherit;
+  cursor:pointer;
+}
+.mock-action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:inherit;
+}
+.footer-bottom .legal-links{display:inline-flex;gap:14px;flex-wrap:wrap}
+.footer-bottom .legal-links a{color:inherit;text-decoration:none}
+.footer-bottom .legal-links a:hover{text-decoration:underline}
+.legal-hero{padding:160px 0 70px;text-align:center}
+.legal-hero h1{font-size:clamp(42px,6vw,72px);margin:20px 0 14px}
+.legal-hero p{max-width:760px;margin:auto;color:var(--muted);font-size:18px;line-height:1.8}
+.legal-content{padding:20px 0 110px}
+.legal-content .container{max-width:920px;display:grid;gap:24px}
+.legal-content article{scroll-margin-top:110px;padding:34px;border:1px solid var(--depth-line);border-radius:24px;background:var(--panel);box-shadow:var(--depth-shadow)}
+.legal-content h2{margin:10px 0 14px;font-size:30px}
+.legal-content p{color:var(--muted);line-height:1.9}
 @media (prefers-reduced-motion:reduce){
   .btn,.theme-toggle,.menu-toggle,.feature-card,.module-card,.solution-card,
   .price-card,.case-card,.resource-card,.dashboard-card,.product-proof > *{transition:none}
