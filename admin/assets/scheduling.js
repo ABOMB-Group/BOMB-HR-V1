@@ -338,7 +338,12 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
  const allowed=()=>['executive','hradmin','supervisor'].includes(currentRole());
  function visible(){
   const month=currentMonth(),profile=currentProfile();
-  return read().filter(item=>item.month===month&&(currentRole()!=='supervisor'||item.createdById===profile.id||item.department===profile.department));
+  const normalize=value=>String(value||'').replace(/財務\/人事|財務人事行政|部門|部/g,'').trim();
+  return read().filter(item=>{
+   const itemMonth=item.month||String(item.date||'').slice(0,7);
+   const sameScope=item.createdById===profile.id||normalize(item.department)===normalize(profile.department);
+   return itemMonth===month&&(currentRole()!=='supervisor'||sameScope);
+  });
  }
  function panel(){
   if((window.BOMBHR_SCHEDULE_SECTION||'calendar')!=='calendar')return '';
@@ -353,12 +358,12 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
    if(!date||date.slice(0,7)!==month||!title){error.textContent='請選擇本月日期並輸入標題';return}
    const profile=currentProfile(),all=read();all.unshift({id:`MEMO-${Date.now()}`,month,date,title,content,priority,department:profile.department||'全公司',createdById:profile.id,createdBy:`${profile.name}・${profile.id}`,createdAt:new Date().toISOString()});write(all);
    if(typeof addAudit==='function')addAudit('新增主管備忘錄',`${date}・${title}・${profile.name}`);
-   closeModal();toast('主管備忘錄已儲存並顯示在班表');window.dispatchEvent(new HashChangeEvent('hashchange'));
+   closeModal();window.BOMBHR_SCHEDULE_SECTION='calendar';window.dispatchEvent(new HashChangeEvent('hashchange'));toast('主管備忘錄已儲存，已顯示於班表上方與指定日期');
   };
  }
  function markCalendar(){
   const items=visible();
-  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,count=items.filter(item=>item.date===date).length;if(count){cell.classList.add('has-supervisor-memo');cell.insertAdjacentHTML('beforeend',`<span class="supervisor-memo-dot" title="${count} 則主管備忘錄">${count}</span>`)}})
+  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,matched=items.filter(item=>item.date===date),count=matched.length;if(count){const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';cell.classList.add('has-supervisor-memo',`memo-${priority}`);cell.insertAdjacentHTML('beforeend',`<span class="supervisor-memo-dot priority-${priority}" title="${count} 則主管備忘錄">備忘 ${count}</span>`)}})
  }
  function bind(){
   document.querySelector('[data-add-supervisor-memo]')?.addEventListener('click',openCreate);
@@ -366,7 +371,7 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
   markCalendar();
  }
  const previousView=schedulingView;
- schedulingView=function(){const html=previousView();return (window.BOMBHR_SCHEDULE_SECTION||'calendar')==='calendar'?html+panel():html};
+ schedulingView=function(){const html=previousView();if((window.BOMBHR_SCHEDULE_SECTION||'calendar')!=='calendar')return html;const memo=panel();return html.includes('<div class="calendar-scroll">')?html.replace('<div class="calendar-scroll">',memo+'<div class="calendar-scroll">'):memo+html};
  const previousBind=bindView;
  bindView=function(route){previousBind(route);if(route==='scheduling')setTimeout(bind,0)};
  window.addEventListener('storage',event=>{if(event.key===KEY&&location.hash==='#scheduling')window.dispatchEvent(new HashChangeEvent('hashchange'))});
