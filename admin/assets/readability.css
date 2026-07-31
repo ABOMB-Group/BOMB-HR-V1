@@ -19,3 +19,12 @@ th{font-size:11px}td{font-size:13px}.person small{font-size:11px}
 .sidebar nav::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#58657b,#39455a);border:2px solid var(--side);border-radius:99px}
 .sidebar nav::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#756dff,#4f65e8)}
 @media(max-width:560px){.page-head h1{font-size:25px}.nav-item span{font-size:14px}td{font-size:12px}}
+
+/* Personnel data readability */
+.person b{font-size:14px;line-height:1.45}.person small{margin-top:3px;font-size:12px;line-height:1.45}
+.employee-profile-banner b{font-size:16px;line-height:1.4}.employee-profile-banner small{font-size:12px!important;line-height:1.5}
+.employee-linked-data small{font-size:11px!important;line-height:1.5}.employee-linked-data b{font-size:13px!important;line-height:1.55}
+.modal:has(.employee-record-tabs) .detail-box small{font-size:12px}.modal:has(.employee-record-tabs) .detail-box b{font-size:15px;line-height:1.55}
+.modal:has(.employee-record-tabs) .section-heading b{font-size:14px}.modal:has(.employee-record-tabs) .section-heading small{font-size:11px;line-height:1.5}
+.modal:has(.employee-record-tabs) .salary-field-grid label{font-size:11px}.modal:has(.employee-record-tabs) .salary-field-grid input,.modal:has(.employee-record-tabs) .salary-field-grid select{font-size:13px}
+.employee-form-section>b{font-size:14px}.employee-form-section .form-field{font-size:12px}
