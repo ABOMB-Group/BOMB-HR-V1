@@ -389,8 +389,18 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
   });
  }
  function markCalendar(){
-  const items=visible();
-  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,matched=items.filter(item=>item.date===date),count=matched.length;if(count){const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';cell.classList.add('has-supervisor-memo',`memo-${priority}`);cell.dataset.openSupervisorMemoDate=date;cell.title=`點擊查看 ${count} 則主管備忘錄`;cell.setAttribute('aria-label',`${day} 日，有 ${count} 則主管備忘錄`)}})
+  const items=visible(),matrix=document.querySelector('.schedule-month-matrix'),header=matrix?.querySelector('.schedule-month-row.header');
+  if(!matrix||!header)return;
+  matrix.querySelector('.schedule-month-row.supervisor-memo-row')?.remove();
+  const days=header.querySelectorAll('.schedule-date-cell').length;
+  const cells=Array.from({length:days},(_,index)=>{
+   const date=`${currentMonth()}-${String(index+1).padStart(2,'0')}`,matched=items.filter(item=>item.date===date);
+   if(!matched.length)return '<div class="supervisor-memo-day-cell is-empty" aria-hidden="true"></div>';
+   const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';
+   const label=matched.length>1?`${matched[0].title} ＋${matched.length-1}`:matched[0].title;
+   return `<button type="button" class="supervisor-memo-day-cell priority-${priority}" data-open-supervisor-memo-date="${date}" title="點擊查看或編輯：${esc(matched.map(item=>item.title).join('、'))}"><span>${esc(label)}</span></button>`;
+  }).join('');
+  header.insertAdjacentHTML('afterend',`<div class="schedule-month-row supervisor-memo-row"><div class="schedule-person-cell"><b>主管備忘錄</b><small>${items.length?`${items.length} 則・點日期內容可查看或編輯`:'本月尚無備忘錄'}</small></div>${cells}</div>`);
  }
  function bind(){
   document.querySelectorAll('[data-add-supervisor-memo]').forEach(button=>button.onclick=openCreate);
