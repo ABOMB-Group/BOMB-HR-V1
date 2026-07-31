@@ -1,0 +1,70 @@
+/* V2.15 login visual refinement */
+.login-brand img {
+  display: block;
+  width: 186px;
+  height: 78px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 8px 18px rgba(35, 207, 255, 0.13));
+}
+
+.login-submit {
+  height: 50px;
+  padding: 8px 10px 8px 16px;
+  box-shadow: 0 12px 28px rgba(70, 78, 238, 0.22);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(70, 78, 238, 0.32);
+}
+
+.login-submit-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.login-submit-label svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.login-submit-arrow {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.login-submit-arrow svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.login-submit:hover .login-submit-arrow {
+  transform: translateX(2px);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+@media (max-width: 560px) {
+  .login-brand img {
+    width: 138px;
+    height: 62px;
+  }
+}
