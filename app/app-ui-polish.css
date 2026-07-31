@@ -2,16 +2,29 @@
 .topbar .actions{gap:8px}
 .topbar .actions .icon-btn{
   width:43px!important;height:43px!important;border-radius:14px!important;
-  background-position:center!important;background-repeat:no-repeat!important;background-size:30px 30px!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 9px 20px rgba(15,23,42,.12)!important;
+  position:relative;color:#fff!important;border-color:rgba(255,255,255,.18)!important;
+  background-image:none!important;background:linear-gradient(145deg,#655cf2,#4338ca)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 9px 20px rgba(61,53,190,.3)!important;
 }
 .topbar .actions .icon-btn svg{display:none}
-.topbar .actions .icon-btn:first-child{background-image:url("../admin/assets/nav-icons/announcements-3d.png?v=22")!important}
-.topbar .actions .icon-btn:last-child{background-image:url("../admin/assets/nav-icons/settings-3d.png?v=22")!important}
+.topbar .actions .icon-btn:before,.topbar>.icon-btn:before{
+  display:grid;place-items:center;width:100%;height:100%;font-size:20px;line-height:1;
+  text-shadow:0 2px 4px rgba(0,0,0,.2);
+}
+.topbar .actions .icon-btn:first-child:before{content:"🔔";font-size:19px}
+.topbar .actions .icon-btn:last-child:before,.topbar>.icon-btn:before{content:"☾"}
+body.dark .topbar .actions .icon-btn:last-child:before,body.dark .topbar>.icon-btn:before{content:"☀"}
+.topbar .actions .icon-btn:last-child,.topbar>.icon-btn{
+  background:linear-gradient(145deg,#665cf4,#4338ca)!important;
+}
+body.dark .topbar .actions .icon-btn:last-child,body.dark .topbar>.icon-btn{
+  background:linear-gradient(145deg,#ffb52e,#f07818)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 9px 20px rgba(240,120,24,.3)!important;
+}
 .topbar>.icon-btn{
-  width:43px!important;height:43px!important;border-radius:14px!important;font-size:0!important;
-  background:url("../admin/assets/nav-icons/settings-3d.png?v=22") center/30px 30px no-repeat!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 9px 20px rgba(15,23,42,.12)!important;
+  width:43px!important;height:43px!important;border-radius:14px!important;font-size:0!important;color:#fff!important;
+  border:1px solid rgba(255,255,255,.18)!important;background:linear-gradient(145deg,#655cf2,#4338ca)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 9px 20px rgba(61,53,190,.3)!important;
 }
 .nav button{position:relative;overflow:hidden;padding-top:8px!important}
 .nav button svg{display:none}
@@ -30,4 +43,16 @@
   background:radial-gradient(circle at 88% 12%,rgba(108,92,255,.1),transparent 34%),linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--surface-2) 78%,var(--surface)))!important;
 }
 .profile-card,.summary-card,.status-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 14px 31px rgba(17,30,66,.12)!important}
-body.dark .topbar .actions .icon-btn{background-color:color-mix(in srgb,var(--surface) 90%,#7370ff)!important}
+.status-grid{padding:0!important;border:0!important;background:transparent!important}
+.status-grid .status-card{
+  border:1px solid color-mix(in srgb,var(--line) 72%,#6b63f2)!important;
+  background:linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--surface-2) 72%,var(--surface)))!important;
+}
+.view>.card:has(.status-grid){
+  border-color:color-mix(in srgb,var(--line) 78%,#6b63f2)!important;
+  background:linear-gradient(150deg,var(--surface),color-mix(in srgb,var(--surface-2) 82%,var(--surface)))!important;
+}
+body.dark .topbar .actions .icon-btn:first-child{background:linear-gradient(145deg,#7668ff,#4938c8)!important}
+@media(max-width:520px){
+  .topbar{position:relative!important;top:auto!important}
+}
