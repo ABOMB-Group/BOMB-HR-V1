@@ -111,3 +111,11 @@
 .supervisor-memo-list time{min-height:34px;border-radius:8px;font-size:10px}.supervisor-memo-list b{font-size:11px}.supervisor-memo-list p{margin:2px 0;font-size:9px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.supervisor-memo-list small{font-size:8px}.supervisor-memo-list article>button{width:23px;height:23px;border-radius:7px}
 .supervisor-memo-empty{margin-top:8px;padding:9px 12px;border-radius:10px;font-size:10px;text-align:left}
 @media(max-width:720px){.supervisor-memo-head{align-items:center;flex-direction:row}.supervisor-memo-head>div{display:block}.supervisor-memo-head small{display:none}.supervisor-memo-head button{width:auto}.supervisor-memo-list{display:flex}}
+
+/* Single-row memo bar */
+.supervisor-memo-panel{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:14px;padding:10px 12px 10px 16px;min-height:64px;background:linear-gradient(100deg,color-mix(in srgb,var(--surface) 91%,#655cff),var(--surface))}
+.supervisor-memo-head{min-width:150px}.supervisor-memo-head>div{display:block}.supervisor-memo-head span,.supervisor-memo-head small{display:none}.supervisor-memo-head h3{font-size:14px}.supervisor-memo-head .primary-btn{margin-left:10px}
+.supervisor-memo-list{min-width:0;margin:0;padding:0;overflow-x:auto}
+.supervisor-memo-list article{flex:1 0 310px;min-height:42px;max-width:none;grid-template-columns:46px minmax(0,1fr) 24px;align-items:center;padding:7px 9px;background:color-mix(in srgb,var(--surface2) 90%,#655cff);box-shadow:none}
+.supervisor-memo-list article>div{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;min-width:0}.supervisor-memo-list article b{white-space:nowrap}.supervisor-memo-list article p{margin:0}.supervisor-memo-list article small{white-space:nowrap}.supervisor-memo-empty{margin:0}
+@media(max-width:900px){.supervisor-memo-panel{grid-template-columns:1fr;gap:7px}.supervisor-memo-head{min-width:0}.supervisor-memo-list article>div{grid-template-columns:1fr}.supervisor-memo-list article small{display:none}}
