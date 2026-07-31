@@ -211,6 +211,14 @@
         people: people.filter((person) => person.department === department),
       })
     );
+    const supervisorNames = [
+      ...new Set([
+        ...people.map((person) => person.manager),
+        ...people
+          .filter((person) => /老闆|副理|經理|主管/.test(person.position || ""))
+          .map((person) => person.name),
+      ].filter((name) => name && !["—", "未設定", "無"].includes(name))),
+    ];
     return (
       head(
         "公司、據點與組織管理",
@@ -222,7 +230,7 @@
         ${stat("公司", "ABOMB", "台中總公司")}
         ${stat("在職人數", String(people.length), "即時連動人事主檔")}
         ${stat("部門數", String(groups.length), groups.map((group) => group.department).join("、") || "尚未建立部門")}
-        ${stat("資料來源", "HR", "員工編號唯一連動")}
+        ${stat("主管人數", String(supervisorNames.length), supervisorNames.slice(0, 3).join("、") || "尚未設定部門主管")}
       </div>
       ${panel(
         "ABOMB 組織架構",

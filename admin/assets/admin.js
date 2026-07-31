@@ -52,7 +52,7 @@ function navIcon(route){
 }
 function navVisual(route){
  const routes=['dashboard','organization','employees','attendance','scheduling','approvals','payroll','reports','learning','skills','performance','talent','recruitment','analytics','announcements','eventlog','permissions','settings'];
- return routes.includes(route)?`<img src="assets/nav-icons/${route}-3d.png" alt="">`:navIcon(route);
+ return routes.includes(route)?`<img src="assets/nav-icons/${route}-3d.png?v=22" alt="">`:navIcon(route);
 }
 function moduleIconRoute(text='',fallback='dashboard'){
  const rules=[
@@ -66,14 +66,14 @@ function moduleIconRoute(text='',fallback='dashboard'){
  return rules.find(([pattern])=>pattern.test(text))?.[1]||fallback;
 }
 function moduleIconMarkup(route,cls='module-section-icon'){
- return `<span class="${cls}" aria-hidden="true"><img src="assets/nav-icons/${route}-3d.png" alt=""></span>`;
+ return `<span class="${cls}" aria-hidden="true"><img src="assets/nav-icons/${route}-3d.png?v=22" alt=""></span>`;
 }
 function decorateIconNodes(root,fallback='settings'){
  if(!root)return;
  root.querySelectorAll('.report-symbol,.report-entry>i,.setting-symbol,.leave-rule-symbol,.identity-card>i,.file-icon').forEach(node=>{
   if(node.querySelector('img'))return;
   const route=node.matches('.leave-rule-symbol')?'approvals':node.matches('.identity-card>i')?'permissions':node.matches('.file-icon')?'reports':moduleIconRoute(node.closest('button,article,div')?.textContent||'',fallback);
-  node.classList.add('module-inline-3d');node.innerHTML=`<img src="assets/nav-icons/${route}-3d.png" alt="">`;
+  node.classList.add('module-inline-3d');node.innerHTML=`<img src="assets/nav-icons/${route}-3d.png?v=22" alt="">`;
  });
 }
 function decorateBackendIcons(route=location.hash.slice(1)||'dashboard'){
@@ -89,9 +89,11 @@ function decorateBackendIcons(route=location.hash.slice(1)||'dashboard'){
 }
 function statVisual(label){
  const key=label.includes('在職')?'people':label.includes('出勤')||label.includes('打卡')?'attendance':label.includes('請假')||label.includes('假')?'leave':label.includes('待處理')||label.includes('待簽')?'pending':label.includes('薪資')||label.includes('金額')?'money':'metric';
- const icons={people:'<path d="M16 19v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V19M9.5 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 8v6M14 11h6"/>',attendance:'<circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/>',leave:'<path d="M5 4h14v16H5zM8 2v4M16 2v4M5 9h14M9 13h6M9 16h4"/>',pending:'<path d="M12 4 3.5 19h17L12 4Z"/><path d="M12 9v4M12 16h.01"/>',money:'<path d="M16 7c-.8-1-2-1.5-4-1.5-2.2 0-4 1.1-4 3s1.8 2.6 4 3 4 1.1 4 3-1.8 3-4 3c-2 0-3.4-.7-4.3-1.8M12 3v18"/>',metric:'<path d="M4 18V9M10 18V5M16 18v-7M22 18H2"/>'};
- const raster={people:'people-3d.png',attendance:'attendance-3d.png',leave:'leave-3d.png',pending:'pending-3d.png'};
- return {key,svg:raster[key]?`<span class="stat-icon stat-icon-raster" aria-hidden="true"><img src="assets/dashboard-icons/${raster[key]}" alt=""></span>`:`<span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[key]}</svg></span>`};
+ const dashboardRaster={people:'assets/dashboard-icons/people-3d.png?v=22',attendance:'assets/dashboard-icons/attendance-3d.png?v=22',leave:'assets/dashboard-icons/leave-3d.png?v=22',pending:'assets/dashboard-icons/pending-3d.png?v=22'};
+ const fallbackRoute=location.hash.slice(1)||'dashboard';
+ const route=/資料來源/.test(label)?'reports':/最高權限/.test(label)?'permissions':/完成|紀錄/.test(label)?'eventlog':/異常|提醒/.test(label)?'announcements':key==='money'?'payroll':moduleIconRoute(label,fallbackRoute);
+ const source=dashboardRaster[key]||`assets/nav-icons/${route}-3d.png?v=22`;
+ return {key,svg:`<span class="stat-icon stat-icon-raster" aria-hidden="true"><img src="${source}" alt=""></span>`};
 }
 if($('#loginForm')){
  $('#loginForm').insertAdjacentHTML('afterbegin',`<label>Demo 登入身份 Role<select id="demoRole" class="form-control">${Object.entries(roleProfiles).map(([k,v])=>`<option value="${k}">${v.label}・${v.id}</option>`).join('')}</select></label>`);$('#demoRole').onchange=e=>{$('#employeeId').value=roleProfiles[e.target.value].id;$('#password').value='bombhr'};$('#employeeId').value=roleProfiles.executive.id;
