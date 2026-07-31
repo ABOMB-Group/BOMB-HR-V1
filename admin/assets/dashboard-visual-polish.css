@@ -153,6 +153,122 @@ body.sidebar-collapsed .nav-item.active {
   box-shadow: none;
 }
 
+.nav-submenu-arrow {
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(151, 167, 199, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.nav-submenu-arrow svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-item.submenu-open .nav-submenu-arrow {
+  color: #fff;
+  border-color: rgba(133, 121, 255, 0.45);
+  background: rgba(106, 91, 243, 0.18);
+  transform: rotate(180deg);
+}
+
+body.sidebar-collapsed .nav-submenu-arrow {
+  display: none;
+}
+
+.nav-icon-tooltip {
+  position: fixed;
+  z-index: 500;
+  min-width: 142px;
+  padding: 10px 12px;
+  border: 1px solid rgba(131, 139, 255, 0.35);
+  border-radius: 12px;
+  color: #f7f9ff;
+  background: linear-gradient(145deg, rgba(20, 27, 43, 0.98), rgba(12, 17, 28, 0.98));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35), inset 0 1px rgba(255, 255, 255, 0.06);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(8px, -50%) scale(0.96);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.nav-icon-tooltip::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-left: 1px solid rgba(131, 139, 255, 0.35);
+  border-bottom: 1px solid rgba(131, 139, 255, 0.35);
+  background: #111827;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.nav-icon-tooltip.show {
+  opacity: 1;
+  transform: translate(0, -50%) scale(1);
+}
+
+.nav-icon-tooltip b,
+.nav-icon-tooltip small {
+  display: block;
+}
+
+.nav-icon-tooltip b {
+  font-size: 13px;
+}
+
+.nav-icon-tooltip small {
+  margin-top: 3px;
+  color: #8898b2;
+  font-size: 10px;
+}
+
+.full-detail-summary {
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--brand) 24%, var(--line));
+  border-radius: 14px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--brand) 9%, var(--surface)), var(--surface));
+}
+
+.full-detail-summary span,
+.full-detail-summary b,
+.full-detail-summary small {
+  display: block;
+}
+
+.full-detail-summary span {
+  color: var(--brand);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.full-detail-summary b {
+  margin: 5px 0 3px;
+  font-size: 18px;
+}
+
+.full-detail-summary small {
+  color: var(--muted);
+}
+
+.full-detail-table table {
+  min-width: 560px;
+}
+
 @media (max-width: 560px) {
   .stat-card {
     min-height: 116px;
