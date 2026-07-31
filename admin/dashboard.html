@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="assets/system-depth.css?v=206">
 <link rel="stylesheet" href="assets/dashboard-visual-polish.css?v=220">
 <link rel="stylesheet" href="assets/reports-linkage.css?v=216">
+<link rel="stylesheet" href="assets/topbar-polish.css?v=221">
 </head>
 <body class="admin-body">
 <div class="app-shell">
@@ -53,7 +54,7 @@
 </div>
 </div>
 <div class="top-actions">
-<button class="scope-switch" id="scopeBtn">
+<button class="scope-switch" id="scopeBtn" title="切換公司與資料範圍">
 <span>AB</span>
 <div>
 <small>公司／據點</small>
@@ -61,10 +62,11 @@
 </div>
 <i>⌄</i>
 </button>
-<button class="icon-btn" id="searchBtn" aria-label="搜尋">⌕</button>
-<button class="icon-btn" id="themeToggle" aria-label="切換深淺色">◐</button>
-<button class="icon-btn has-badge" id="notificationBtn" aria-label="通知">♢<em>7</em>
-</button>
+<div class="top-tool-group" aria-label="系統工具">
+<button class="icon-btn top-tool top-search" id="searchBtn" aria-label="全站搜尋" title="全站搜尋"><span>搜尋</span></button>
+<button class="icon-btn top-tool top-theme" id="themeToggle" aria-label="切換深淺色" title="切換深色／淺色模式"><span>外觀</span></button>
+<button class="icon-btn top-tool top-notification has-badge" id="notificationBtn" aria-label="通知與待辦" title="通知與待辦"><span>通知</span><em>7</em></button>
+</div>
 <button class="profile-btn" id="profileBtn">
 <span>O</span>
 <div>

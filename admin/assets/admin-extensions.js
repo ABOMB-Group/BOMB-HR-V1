@@ -34,7 +34,7 @@
  const labels={executive:'經營管理',supervisor:'部門主管',hradmin:'財務人事行政',system:'系統管理'};
  const roleDescriptions={executive:'全部查看與編輯',supervisor:'人事、出勤、排班及簽核；薪資唯讀',hradmin:'人事、薪資、福利、出勤、排班、簽核及報表',system:'帳號、角色、功能與系統設定；薪資不可見'};
  function addRoleSwitcher(){
-  if(!$('#profileBtn')||$('#roleSwitchBtn'))return;const role=currentRole(),button=document.createElement('button');button.id='roleSwitchBtn';button.className='role-switch-btn';button.innerHTML=`<i>⇄</i><span><small>目前權限</small><b>${labels[role]||currentProfile().label}</b></span>`;$('#profileBtn').before(button);
+  if(!$('#profileBtn')||$('#roleSwitchBtn'))return;const role=currentRole(),button=document.createElement('button');button.id='roleSwitchBtn';button.className='role-switch-btn';button.title='切換後台權限身份';button.innerHTML=`<i aria-hidden="true"></i><span><small>目前權限</small><b>${labels[role]||currentProfile().label}</b></span>`;$('#profileBtn').before(button);
   button.onclick=()=>{openModal('切換後台權限身份','Demo 模式可隨時切換；畫面與左側功能會立即依新權限重新載入',`<div class="role-switch-grid">${Object.entries(roleProfiles).map(([key,p])=>`<button data-switch-role="${key}" class="${key===currentRole()?'active':''}"><span>${p.name[0]}</span><div><b>${labels[key]||p.label}</b><small>${p.name}・${p.id}</small><p>${roleDescriptions[key]||''}</p></div>${key===currentRole()?'<em>目前使用</em>':'<em>切換 →</em>'}</button>`).join('')}</div>`,`<button class="secondary-btn" data-modal-close>取消</button>`);$$('[data-switch-role]').forEach(item=>item.onclick=()=>{sessionStorage.setItem('bombhr-admin-role',item.dataset.switchRole);sessionStorage.setItem('bombhr-admin','1');location.hash='dashboard';location.reload()})};
  }
  function csvCell(value){const s=String(value??'').replace(/\s+/g,' ').trim();return `"${s.replace(/"/g,'""')}"`}
