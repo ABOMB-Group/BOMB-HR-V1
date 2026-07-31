@@ -29,7 +29,17 @@
 .top-tool>span:before{content:"";position:absolute;left:50%;bottom:100%;transform:translateX(-50%);border:4px solid transparent;border-bottom-color:#111827}
 .top-tool:hover>span,.top-tool:focus-visible>span{opacity:1;transform:translate(-50%,0)}
 .top-search{background-image:url("nav-icons/reports-3d.png?v=22")}
-.top-theme{background-image:url("nav-icons/settings-3d.png?v=22")}
+.top-theme{
+  background-image:none!important;color:#fff!important;
+  background:linear-gradient(145deg,#665cf4,#4338ca)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 6px 14px rgba(67,56,202,.25)!important;
+}
+.top-theme:before{content:"☾";font-size:19px;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+html[data-theme=dark] .top-theme{
+  background:linear-gradient(145deg,#ffb52e,#f07818)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 6px 15px rgba(240,120,24,.3)!important;
+}
+html[data-theme=dark] .top-theme:before{content:"☀";color:#fff7cf}
 .top-notification{background-image:url("nav-icons/announcements-3d.png?v=22")}
 .top-tool.has-badge em{right:-2px;top:-3px;min-width:17px;text-align:center}
 .role-switch-btn{height:46px!important;padding:5px 11px 5px 6px!important;background:var(--surface)!important}
@@ -56,3 +66,68 @@ html[data-theme=dark] .top-tool>span:before{border-bottom-color:#eef2ff}
   .profile-btn{min-width:0}.profile-btn div{display:none}
 }
 @media(max-width:560px){.top-tool-group{display:none}.profile-btn{display:flex}}
+
+/* Global search dialog */
+.command{padding-top:9vh}
+.command-box{width:min(680px,calc(100vw - 32px));border-radius:20px!important;overflow:hidden}
+.command-head{min-height:66px;padding:9px 10px 9px 18px!important;background:var(--surface)}
+.command-head>label{padding:0!important;gap:12px!important;color:var(--brand);font-size:18px!important}
+.command-head input{
+  height:44px;padding:0 4px!important;border:0!important;background:transparent!important;
+  color:var(--text)!important;font-size:15px!important;box-shadow:none!important;
+}
+.command-head input::placeholder{color:var(--muted);opacity:.8}
+.command-head>[data-command-close]{flex:0 0 40px;width:40px;height:40px;border-radius:12px}
+#searchResults{display:grid;gap:7px;padding:12px;max-height:min(470px,60vh);overflow:auto}
+#searchResults:empty:after{
+  content:"沒有符合的搜尋結果";display:block;padding:38px;text-align:center;color:var(--muted);font-size:13px;
+}
+#searchResults .search-result{
+  width:100%;min-height:58px;margin:0;padding:10px 12px;border:1px solid var(--line)!important;
+  border-radius:13px!important;display:grid!important;grid-template-columns:38px minmax(0,1fr) auto;
+  align-items:center;gap:11px;text-align:left;color:var(--text)!important;
+  background:linear-gradient(145deg,var(--surface2),var(--surface))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+#searchResults .search-result:before{
+  content:"";width:38px;height:38px;border-radius:11px;background-position:center;background-repeat:no-repeat;
+  background-size:31px 31px;background-color:color-mix(in srgb,var(--brand) 10%,var(--surface));
+}
+#searchResults .search-result[data-search-route="dashboard"]:before{background-image:url("nav-icons/dashboard-3d.png?v=22")}
+#searchResults .search-result[data-search-route="employees"]:before{background-image:url("nav-icons/employees-3d.png?v=22")}
+#searchResults .search-result[data-search-route="attendance"]:before{background-image:url("nav-icons/attendance-3d.png?v=22")}
+#searchResults .search-result[data-search-route="approvals"]:before{background-image:url("nav-icons/approvals-3d.png?v=22")}
+#searchResults .search-result[data-search-route="permissions"]:before{background-image:url("nav-icons/permissions-3d.png?v=22")}
+#searchResults .search-result[data-search-route="settings"]:before{background-image:url("nav-icons/settings-3d.png?v=22")}
+#searchResults .search-result>span{min-width:0;font-size:13px;font-weight:800;color:var(--text)!important}
+#searchResults .search-result>small{
+  padding:6px 9px;border-radius:9px;color:var(--brand)!important;
+  background:color-mix(in srgb,var(--brand) 9%,var(--surface));font-size:10px;font-weight:800;
+}
+#searchResults .search-result:hover,#searchResults .search-result:focus-visible{
+  border-color:color-mix(in srgb,var(--brand) 52%,var(--line))!important;
+  background:color-mix(in srgb,var(--brand) 7%,var(--surface))!important;
+  transform:translateY(-1px);
+}
+.command-box>small{padding:10px 16px 13px!important;border-top:1px solid var(--line);background:var(--surface);color:var(--muted)}
+
+/* Role switcher: use role icons instead of employee initials. */
+.role-switch-grid>button>span{
+  color:transparent!important;font-size:0!important;
+  background-position:center!important;background-repeat:no-repeat!important;background-size:36px 36px!important;
+  border:1px solid color-mix(in srgb,var(--brand) 30%,var(--line));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 8px 18px rgba(48,42,150,.2);
+}
+.role-switch-grid>button[data-switch-role="executive"]>span{
+  background-image:url("nav-icons/permissions-3d.png?v=22")!important;
+  background-color:#5b52e8!important;
+}
+.role-switch-grid>button[data-switch-role="hradmin"]>span{
+  background-image:url("nav-icons/payroll-3d.png?v=22")!important;
+  background-color:#0f9f83!important;
+}
+.role-switch-grid>button[data-switch-role^="supervisor"]>span{
+  background-image:url("nav-icons/organization-3d.png?v=22")!important;
+  background-color:#3369d6!important;
+}
+.role-switch-grid>button.active>span{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 0 0 3px color-mix(in srgb,var(--brand) 20%,transparent),0 9px 20px rgba(48,42,150,.25)}
