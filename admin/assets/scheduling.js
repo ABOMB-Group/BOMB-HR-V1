@@ -376,7 +376,7 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
  }
  function markCalendar(){
   const items=visible();
-  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,matched=items.filter(item=>item.date===date),count=matched.length;if(count){const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';cell.classList.add('has-supervisor-memo',`memo-${priority}`);cell.insertAdjacentHTML('beforeend',`<button type="button" class="supervisor-memo-dot priority-${priority}" data-open-supervisor-memo-date="${date}" title="查看 ${count} 則主管備忘錄" aria-label="查看 ${count} 則主管備忘錄"><span></span></button>`)}})
+  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,matched=items.filter(item=>item.date===date),count=matched.length;if(count){const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';cell.classList.add('has-supervisor-memo',`memo-${priority}`);cell.dataset.openSupervisorMemoDate=date;cell.title=`點擊查看 ${count} 則主管備忘錄`;cell.setAttribute('aria-label',`${day} 日，有 ${count} 則主管備忘錄`)}})
  }
  function bind(){
   document.querySelectorAll('[data-add-supervisor-memo]').forEach(button=>button.onclick=openCreate);
