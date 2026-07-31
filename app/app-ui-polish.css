@@ -1,0 +1,33 @@
+/* Shared BOMB HR visual language: dimensional controls adapted for touch. */
+.topbar .actions{gap:8px}
+.topbar .actions .icon-btn{
+  width:43px!important;height:43px!important;border-radius:14px!important;
+  background-position:center!important;background-repeat:no-repeat!important;background-size:30px 30px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 9px 20px rgba(15,23,42,.12)!important;
+}
+.topbar .actions .icon-btn svg{display:none}
+.topbar .actions .icon-btn:first-child{background-image:url("../admin/assets/nav-icons/announcements-3d.png?v=22")!important}
+.topbar .actions .icon-btn:last-child{background-image:url("../admin/assets/nav-icons/settings-3d.png?v=22")!important}
+.topbar>.icon-btn{
+  width:43px!important;height:43px!important;border-radius:14px!important;font-size:0!important;
+  background:url("../admin/assets/nav-icons/settings-3d.png?v=22") center/30px 30px no-repeat!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 9px 20px rgba(15,23,42,.12)!important;
+}
+.nav button{position:relative;overflow:hidden;padding-top:8px!important}
+.nav button svg{display:none}
+.nav button:before{
+  content:"";width:32px;height:32px;display:block;margin:0 auto 1px;border-radius:11px;
+  background-position:center;background-repeat:no-repeat;background-size:29px 29px;
+  filter:drop-shadow(0 4px 6px rgba(15,23,42,.18));
+}
+.nav button[data-view="homeView"]:before{background-image:url("../admin/assets/nav-icons/dashboard-3d.png?v=22")}
+.nav button[data-view="punchView"]:before{background-image:url("../admin/assets/nav-icons/attendance-3d.png?v=22")}
+.nav button[data-view="scheduleView"]:before{background-image:url("../admin/assets/nav-icons/scheduling-3d.png?v=22")}
+.nav button[data-view="myView"]:before{background-image:url("../admin/assets/nav-icons/employees-3d.png?v=22")}
+.nav button.active:before{background-color:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.24)}
+.nav button span{font-size:10px!important;font-weight:800!important}
+.module-card,.apply-card{
+  background:radial-gradient(circle at 88% 12%,rgba(108,92,255,.1),transparent 34%),linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--surface-2) 78%,var(--surface)))!important;
+}
+.profile-card,.summary-card,.status-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 14px 31px rgba(17,30,66,.12)!important}
+body.dark .topbar .actions .icon-btn{background-color:color-mix(in srgb,var(--surface) 90%,#7370ff)!important}
