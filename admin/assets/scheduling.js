@@ -381,9 +381,9 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
  function bind(){
   document.querySelectorAll('[data-add-supervisor-memo]').forEach(button=>button.onclick=openCreate);
   document.querySelectorAll('[data-calendar-note]').forEach(button=>{button.textContent=`主管備忘錄${visible().length?`（${visible().length}）`:''}`;button.onclick=()=>openManager()});
+  markCalendar();
   document.querySelectorAll('[data-open-supervisor-memo-date]').forEach(button=>button.onclick=event=>{event.stopPropagation();openManager(button.dataset.openSupervisorMemoDate)});
   document.querySelectorAll('[data-delete-supervisor-memo]').forEach(button=>button.onclick=()=>{const all=read(),item=all.find(row=>row.id===button.dataset.deleteSupervisorMemo);if(!item)return;if(!confirm(`確定刪除「${item.title}」？`))return;write(all.filter(row=>row.id!==item.id));if(typeof addAudit==='function')addAudit('刪除主管備忘錄',`${item.date}・${item.title}`);toast('主管備忘錄已刪除');window.dispatchEvent(new HashChangeEvent('hashchange'))});
-  markCalendar();
  }
  const previousView=schedulingView;
  schedulingView=function(){
@@ -392,6 +392,7 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
  };
  const previousBind=bindView;
  bindView=function(route){previousBind(route);if(route==='scheduling')setTimeout(bind,0)};
+ document.addEventListener('click',event=>{const target=event.target.closest?.('[data-open-supervisor-memo-date]');if(!target||location.hash!=='#scheduling')return;event.preventDefault();event.stopPropagation();openManager(target.dataset.openSupervisorMemoDate)},true);
  window.addEventListener('storage',event=>{if(event.key===KEY&&location.hash==='#scheduling')window.dispatchEvent(new HashChangeEvent('hashchange'))});
  window.BOMBHR_SUPERVISOR_MEMOS={read,visible,panel,openManager};
 })();
