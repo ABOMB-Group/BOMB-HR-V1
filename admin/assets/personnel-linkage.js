@@ -14,16 +14,84 @@
       }))
       .filter((person) => !["停用", "離職"].includes(person.status));
 
+  function localDateKey(date = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(date);
+    const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return `${value.year}-${value.month}-${value.day}`;
+  }
+
+  function eventOccursOn(event, date = localDateKey()) {
+    if (Array.isArray(event.dates) && event.dates.includes(date)) return true;
+    const source = [
+      event.date,
+      event.requestedDate,
+      event.startDate,
+      event.endDate,
+      event.period,
+      event.createdAt,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    const dates = source.match(/\d{4}-\d{2}-\d{2}/g) || [];
+    if (dates.length >= 2) return dates[0] <= date && dates[dates.length - 1] >= date;
+    return dates[0] === date;
+  }
+
   const attendanceEvents = () =>
-    getSharedEvents().filter((event) => event.category === "attendance");
+    getSharedEvents().filter(
+      (event) => event.category === "attendance" && eventOccursOn(event)
+    );
 
   const leaveEvents = () =>
     getSharedEvents().filter(
       (event) =>
         event.category === "approval" &&
         event.subtype === "leave" &&
-        ["approved", "review"].includes(event.status)
+        event.status === "approved" &&
+        eventOccursOn(event)
     );
+
+  function scheduleRows() {
+    try {
+      return JSON.parse(localStorage.getItem("bombhr-schedules-v176") || "[]");
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function todaySchedule() {
+    const date = localDateKey();
+    const day = new Date(`${date}T12:00:00`).getDay();
+    const rows = scheduleRows().filter((row) => row.date === date);
+    return livePeople()
+      .filter(
+        (person) =>
+          window.BOMBHR_SCHEDULE_PARTICIPATION?.isIncluded?.(
+            person,
+            date.slice(0, 7)
+          ) !== false
+      )
+      .map((person) => {
+        const row = rows.find((item) => item.employeeId === person.employeeId);
+        const defaultCode =
+          window.BOMBHR_SCHEDULE_PARTICIPATION?.defaultCode?.(person, date, "") ||
+          (day === 0 || day === 6 ? "休" : "1");
+        return {
+          ...person,
+          schedule: row,
+          code: row?.code || defaultCode,
+          shift:
+            row?.start && row?.end
+              ? `${row.start}–${row.end}`
+              : person.shift || "尚未設定班別",
+        };
+      })
+      .filter((person) => person.code === "1");
+  }
 
   function personById(id) {
     return livePeople().find((person) => person.employeeId === id);
@@ -36,6 +104,7 @@
 
   function liveDashboard() {
     const people = livePeople();
+    const scheduled = todaySchedule();
     const events = attendanceEvents();
     const clockedIds = new Set(
       events
@@ -43,13 +112,18 @@
         .map((event) => event.employeeId)
         .filter(Boolean)
     );
-    const normal = people.filter((person) => clockedIds.has(person.employeeId)).length;
+    const normal = scheduled.filter((person) =>
+      clockedIds.has(person.employeeId)
+    ).length;
     const leave = leaveEvents();
     const leaveIds = new Set(leave.map((event) => event.employeeId).filter(Boolean));
     const pending = pendingApprovalCounts();
-    const notClocked = Math.max(0, people.length - clockedIds.size - leaveIds.size);
-    const attendanceRate = people.length
-      ? ((normal / people.length) * 100).toFixed(1)
+    const scheduledLeave = scheduled.filter((person) =>
+      leaveIds.has(person.employeeId)
+    ).length;
+    const notClocked = Math.max(0, scheduled.length - normal - scheduledLeave);
+    const attendanceRate = scheduled.length
+      ? ((normal / scheduled.length) * 100).toFixed(1)
       : "0.0";
     const leaveNames = leave.slice(0, 3).map(displayName).join("、");
     const recentPeople = people.slice(0, 7);
@@ -70,7 +144,7 @@
         '<button class="secondary-btn" data-export>匯出摘要</button><button class="primary-btn" data-route-go="approvals">處理待簽核</button>'
       ) +
       `<div class="stat-grid">
-        ${stat("今日在職人數", String(people.length), "依人事主檔即時計算", "trend up")}
+        ${stat("今日應上班人數", String(scheduled.length), "依今日班表即時計算", "trend up")}
         ${stat("今日正常出勤", String(normal), `出勤率 ${attendanceRate}%`, normal ? "trend up" : "")}
         ${stat("今日請假人數", String(leaveIds.size), leaveNames ? `目前：${leaveNames}` : "目前無請假人員", leaveIds.size ? "trend warn" : "trend up")}
         ${stat("待處理事項", String(pending.total), pending.total ? `${pending.total} 件簽核需要處理` : "簽核案件已全部完成", pending.total ? "trend warn" : "trend up")}
@@ -94,7 +168,7 @@
             "異常與人力提醒",
             "依人事、出勤與簽核即時產生",
             `<div class="alert-list">
-              ${notClocked ? `<div class="alert-item"><i>!</i><div><b>${notClocked} 位在職員工尚未完成上班打卡</b><small>已排除目前請假人員・點擊前往出勤管理</small></div>${badge("需處理")}</div>` : ""}
+              ${notClocked ? `<div class="alert-item"><i>!</i><div><b>${notClocked} 位今日應上班員工尚未完成打卡</b><small>已排除今日核准請假人員・點擊前往出勤管理</small></div>${badge("需處理")}</div>` : ""}
               ${pending.total ? `<div class="alert-item"><i>✓</i><div><b>${pending.total} 件申請等待處理</b><small>來自 Employee App 與後台簽核事件</small></div>${badge("待確認")}</div>` : ""}
               ${!people.length ? `<div class="alert-item"><i>!</i><div><b>尚未建立在職員工</b><small>請先至員工人事主檔建立資料</small></div>${badge("異常")}</div>` : ""}
               ${people.length && !notClocked && !pending.total ? '<div class="empty-state compact-empty">目前沒有需要處理的人力異常</div>' : ""}
@@ -190,6 +264,28 @@
 
   window.statFullRows = function (label) {
     const people = livePeople();
+    if (label.includes("上班")) {
+      const events = attendanceEvents();
+      const leaveIds = new Set(
+        leaveEvents().map((event) => event.employeeId).filter(Boolean)
+      );
+      return todaySchedule().map((person) => {
+        const clockIn = events.find(
+          (event) =>
+            event.employeeId === person.employeeId && event.action === "clock-in"
+        );
+        return [
+          person.name,
+          person.employeeId,
+          person.shift,
+          leaveIds.has(person.employeeId)
+            ? "今日請假"
+            : clockIn
+              ? clockIn.status || "已打卡"
+              : "未打卡",
+        ];
+      });
+    }
     if (label.includes("請假")) {
       return leaveEvents().map((event) => [
         displayName(event),
