@@ -366,12 +366,18 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
   document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,matched=items.filter(item=>item.date===date),count=matched.length;if(count){const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';cell.classList.add('has-supervisor-memo',`memo-${priority}`);cell.insertAdjacentHTML('beforeend',`<span class="supervisor-memo-dot priority-${priority}" title="${count} 則主管備忘錄">備忘 ${count}</span>`)}})
  }
  function bind(){
-  document.querySelector('[data-add-supervisor-memo]')?.addEventListener('click',openCreate);
+  document.querySelectorAll('[data-add-supervisor-memo],[data-calendar-note]').forEach(button=>button.onclick=openCreate);
   document.querySelectorAll('[data-delete-supervisor-memo]').forEach(button=>button.onclick=()=>{const all=read(),item=all.find(row=>row.id===button.dataset.deleteSupervisorMemo);if(!item)return;if(!confirm(`確定刪除「${item.title}」？`))return;write(all.filter(row=>row.id!==item.id));if(typeof addAudit==='function')addAudit('刪除主管備忘錄',`${item.date}・${item.title}`);toast('主管備忘錄已刪除');window.dispatchEvent(new HashChangeEvent('hashchange'))});
   markCalendar();
  }
  const previousView=schedulingView;
- schedulingView=function(){const html=previousView();if((window.BOMBHR_SCHEDULE_SECTION||'calendar')!=='calendar')return html;const memo=panel();return html.includes('<div class="calendar-scroll">')?html.replace('<div class="calendar-scroll">',memo+'<div class="calendar-scroll">'):memo+html};
+ schedulingView=function(){
+  let html=previousView().replace('2025/11～2027/12 快速檢視、農曆、主管備註與跨據點人力支援','');
+  if((window.BOMBHR_SCHEDULE_SECTION||'calendar')!=='calendar')return html;
+  const memo=panel(),anchors=['<div class="schedule-import-note"','<div class="schedule-edit-toolbar"','<div class="schedule-toolbar"'];
+  const anchor=anchors.find(value=>html.includes(value));
+  return anchor?html.replace(anchor,memo+anchor):memo+html;
+ };
  const previousBind=bindView;
  bindView=function(route){previousBind(route);if(route==='scheduling')setTimeout(bind,0)};
  window.addEventListener('storage',event=>{if(event.key===KEY&&location.hash==='#scheduling')window.dispatchEvent(new HashChangeEvent('hashchange'))});
