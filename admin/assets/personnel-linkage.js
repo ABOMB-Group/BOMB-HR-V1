@@ -143,7 +143,17 @@
         `${new Date().toLocaleDateString("zh-TW")}・人事主檔即時連動`,
         '<button class="secondary-btn" data-export>匯出摘要</button><button class="primary-btn" data-route-go="approvals">處理待簽核</button>'
       ) +
-      `<div class="stat-grid">
+      `<div class="dashboard-v3">
+      <section class="dashboard-status-strip">
+        <div class="dashboard-live-state"><i></i><div><b>營運資料即時同步</b><small>人事、班表、出勤與簽核皆為最新狀態</small></div></div>
+        <div class="dashboard-scope-state"><span>資料範圍</span><b>ABOMB 台中總公司</b></div>
+        <div class="dashboard-quick-links">
+          <button data-route-go="employees">員工主檔</button>
+          <button data-route-go="attendance">出勤管理</button>
+          <button data-route-go="scheduling">查看班表</button>
+        </div>
+      </section>
+      <div class="stat-grid">
         ${stat("今日應上班人數", String(scheduled.length), "依今日班表即時計算", "trend up")}
         ${stat("今日正常出勤", String(normal), `出勤率 ${attendanceRate}%`, normal ? "trend up" : "")}
         ${stat("今日請假人數", String(leaveIds.size), leaveNames ? `目前：${leaveNames}` : "目前無請假人員", leaveIds.size ? "trend warn" : "trend up")}
@@ -180,7 +190,7 @@
             '<div class="notice-list"><div class="notice-item"><i>◎</i><div><b>第三季教育訓練開放報名</b><small>人力資源部・今天 08:00</small></div></div><div class="notice-item"><i>♧</i><div><b>颱風期間出勤與居家辦公規範</b><small>營運管理部・昨天 16:20</small></div></div></div>'
           )}
         </div>
-      </div>`
+      </div></div>`
     );
   }
 
