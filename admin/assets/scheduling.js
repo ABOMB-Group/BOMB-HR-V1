@@ -361,27 +361,39 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
    closeModal();window.BOMBHR_SCHEDULE_SECTION='calendar';window.dispatchEvent(new HashChangeEvent('hashchange'));toast('主管備忘錄已儲存，已顯示於班表上方與指定日期');
   };
  }
+ function openManager(filterDate=''){
+  const items=visible().filter(item=>!filterDate||item.date===filterDate);
+  const title=filterDate?`${filterDate.slice(5).replace('-','/')} 主管備忘錄`:'主管備忘錄';
+  const list=items.length?`<div class="supervisor-memo-modal-list">${items.sort((a,b)=>a.date.localeCompare(b.date)).map(item=>`<article class="priority-${esc(item.priority)}"><time>${esc(item.date.slice(5).replace('-','/'))}</time><div><b>${esc(item.title)}</b><p>${esc(item.content||'沒有補充內容')}</p><small>${esc(item.createdBy)}・${esc(item.department||'全公司')}</small></div>${allowed()?`<button data-modal-delete-supervisor-memo="${esc(item.id)}" aria-label="刪除備忘錄">刪除</button>`:''}</article>`).join('')}</div>`:'<div class="supervisor-memo-modal-empty">目前沒有主管備忘錄。</div>';
+  openModal(title,`${esc(currentMonth())}・${items.length} 則備忘錄`,list,`<button class="secondary-btn" data-modal-close>關閉</button>${allowed()?'<button class="primary-btn" id="modalAddSupervisorMemo">＋ 新增備忘錄</button>':''}`);
+  document.getElementById('modalAddSupervisorMemo')?.addEventListener('click',openCreate);
+  document.querySelectorAll('[data-modal-delete-supervisor-memo]').forEach(button=>button.onclick=()=>{
+   const all=read(),item=all.find(row=>row.id===button.dataset.modalDeleteSupervisorMemo);if(!item)return;
+   if(!confirm(`確定刪除「${item.title}」？`))return;
+   write(all.filter(row=>row.id!==item.id));if(typeof addAudit==='function')addAudit('刪除主管備忘錄',`${item.date}・${item.title}`);
+   toast('主管備忘錄已刪除');openManager(filterDate);
+  });
+ }
  function markCalendar(){
   const items=visible();
-  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,matched=items.filter(item=>item.date===date),count=matched.length;if(count){const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';cell.classList.add('has-supervisor-memo',`memo-${priority}`);cell.insertAdjacentHTML('beforeend',`<span class="supervisor-memo-dot priority-${priority}" title="${count} 則主管備忘錄">備忘 ${count}</span>`)}})
+  document.querySelectorAll('.schedule-date-cell').forEach(cell=>{const day=Number(cell.querySelector('b')?.textContent||0),date=`${currentMonth()}-${String(day).padStart(2,'0')}`,matched=items.filter(item=>item.date===date),count=matched.length;if(count){const priority=matched.some(item=>item.priority==='urgent')?'urgent':matched.some(item=>item.priority==='important')?'important':'normal';cell.classList.add('has-supervisor-memo',`memo-${priority}`);cell.insertAdjacentHTML('beforeend',`<button type="button" class="supervisor-memo-dot priority-${priority}" data-open-supervisor-memo-date="${date}" title="查看 ${count} 則主管備忘錄" aria-label="查看 ${count} 則主管備忘錄"><span></span></button>`)}})
  }
  function bind(){
-  document.querySelectorAll('[data-add-supervisor-memo],[data-calendar-note]').forEach(button=>button.onclick=openCreate);
+  document.querySelectorAll('[data-add-supervisor-memo]').forEach(button=>button.onclick=openCreate);
+  document.querySelectorAll('[data-calendar-note]').forEach(button=>{button.textContent=`主管備忘錄${visible().length?`（${visible().length}）`:''}`;button.onclick=()=>openManager()});
+  document.querySelectorAll('[data-open-supervisor-memo-date]').forEach(button=>button.onclick=event=>{event.stopPropagation();openManager(button.dataset.openSupervisorMemoDate)});
   document.querySelectorAll('[data-delete-supervisor-memo]').forEach(button=>button.onclick=()=>{const all=read(),item=all.find(row=>row.id===button.dataset.deleteSupervisorMemo);if(!item)return;if(!confirm(`確定刪除「${item.title}」？`))return;write(all.filter(row=>row.id!==item.id));if(typeof addAudit==='function')addAudit('刪除主管備忘錄',`${item.date}・${item.title}`);toast('主管備忘錄已刪除');window.dispatchEvent(new HashChangeEvent('hashchange'))});
   markCalendar();
  }
  const previousView=schedulingView;
  schedulingView=function(){
   let html=previousView().replace('2025/11～2027/12 快速檢視、農曆、主管備註與跨據點人力支援','');
-  if((window.BOMBHR_SCHEDULE_SECTION||'calendar')!=='calendar')return html;
-  const memo=panel(),anchors=['<div class="schedule-import-note"','<div class="schedule-edit-toolbar"','<div class="schedule-toolbar"'];
-  const anchor=anchors.find(value=>html.includes(value));
-  return anchor?html.replace(anchor,memo+anchor):memo+html;
+  return html;
  };
  const previousBind=bindView;
  bindView=function(route){previousBind(route);if(route==='scheduling')setTimeout(bind,0)};
  window.addEventListener('storage',event=>{if(event.key===KEY&&location.hash==='#scheduling')window.dispatchEvent(new HashChangeEvent('hashchange'))});
- window.BOMBHR_SUPERVISOR_MEMOS={read,visible,panel};
+ window.BOMBHR_SUPERVISOR_MEMOS={read,visible,panel,openManager};
 })();
 
 /* ===== Consolidated from schedule-page-layout-v194.js ===== */
