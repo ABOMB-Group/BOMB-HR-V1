@@ -352,21 +352,35 @@ window.BOMBHR_SCHEDULE_CODE_DRAG={prepare,save,rows};
  }
  function openCreate(){
   const month=currentMonth(),today=new Date(),suggested=today.toISOString().slice(0,7)===month?today.toISOString().slice(0,10):`${month}-01`;
-  openModal('新增主管備忘錄',`${month} 班表・儲存後立即顯示`, `<div class="form-grid"><label class="form-field">日期<input id="supervisorMemoDate" class="form-control" type="date" min="${month}-01" max="${month}-${String(new Date(scheduleCursor.getFullYear(),scheduleCursor.getMonth()+1,0).getDate()).padStart(2,'0')}" value="${suggested}"></label><label class="form-field">重要程度<select id="supervisorMemoPriority" class="form-control"><option value="normal">一般</option><option value="important">重要</option><option value="urgent">緊急</option></select></label><label class="form-field full">標題<input id="supervisorMemoTitle" class="form-control" maxlength="40" placeholder="例如：月會、盤點、活動準備"></label><label class="form-field full">備忘內容<textarea id="supervisorMemoContent" class="form-control" rows="4" maxlength="300" placeholder="輸入要提醒主管的事項"></textarea></label></div><p id="supervisorMemoError" class="form-error"></p>`, '<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="saveSupervisorMemo">儲存並顯示</button>');
+  openModal('新增主管備忘錄',`${month} 班表・儲存後立即顯示`, `<div class="form-grid"><label class="form-field">日期<input id="supervisorMemoDate" class="form-control" type="date" min="${month}-01" max="${month}-${String(new Date(scheduleCursor.getFullYear(),scheduleCursor.getMonth()+1,0).getDate()).padStart(2,'0')}" value="${suggested}"></label><label class="form-field">重要程度<select id="supervisorMemoPriority" class="form-control"><option value="normal">一般</option><option value="important">重要</option><option value="urgent">緊急</option></select></label><label class="form-field full">標題<input id="supervisorMemoTitle" class="form-control" maxlength="40" placeholder="例如：月會、盤點、活動準備"></label></div><p id="supervisorMemoError" class="form-error"></p>`, '<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="saveSupervisorMemo">儲存並顯示</button>');
   document.getElementById('saveSupervisorMemo').onclick=()=>{
-   const date=document.getElementById('supervisorMemoDate').value,title=document.getElementById('supervisorMemoTitle').value.trim(),content=document.getElementById('supervisorMemoContent').value.trim(),priority=document.getElementById('supervisorMemoPriority').value,error=document.getElementById('supervisorMemoError');
+   const date=document.getElementById('supervisorMemoDate').value,title=document.getElementById('supervisorMemoTitle').value.trim(),priority=document.getElementById('supervisorMemoPriority').value,error=document.getElementById('supervisorMemoError');
    if(!date||date.slice(0,7)!==month||!title){error.textContent='請選擇本月日期並輸入標題';return}
-   const profile=currentProfile(),all=read();all.unshift({id:`MEMO-${Date.now()}`,month,date,title,content,priority,department:profile.department||'全公司',createdById:profile.id,createdBy:`${profile.name}・${profile.id}`,createdAt:new Date().toISOString()});write(all);
+   const profile=currentProfile(),all=read();all.unshift({id:`MEMO-${Date.now()}`,month,date,title,priority,department:profile.department||'全公司',createdById:profile.id,createdBy:`${profile.name}・${profile.id}`,createdAt:new Date().toISOString()});write(all);
    if(typeof addAudit==='function')addAudit('新增主管備忘錄',`${date}・${title}・${profile.name}`);
    closeModal();window.BOMBHR_SCHEDULE_SECTION='calendar';window.dispatchEvent(new HashChangeEvent('hashchange'));toast('主管備忘錄已儲存，已顯示於班表上方與指定日期');
+  };
+ }
+ function openEdit(id){
+  const all=read(),item=all.find(row=>row.id===id);if(!item)return;
+  const month=currentMonth(),lastDay=String(new Date(scheduleCursor.getFullYear(),scheduleCursor.getMonth()+1,0).getDate()).padStart(2,'0');
+  openModal('編輯主管備忘錄',`${month} 班表・修改後立即更新`, `<div class="form-grid"><label class="form-field">日期<input id="supervisorMemoDate" class="form-control" type="date" min="${month}-01" max="${month}-${lastDay}" value="${esc(item.date)}"></label><label class="form-field">重要程度<select id="supervisorMemoPriority" class="form-control"><option value="normal"${item.priority==='normal'?' selected':''}>一般</option><option value="important"${item.priority==='important'?' selected':''}>重要</option><option value="urgent"${item.priority==='urgent'?' selected':''}>緊急</option></select></label><label class="form-field full">標題<input id="supervisorMemoTitle" class="form-control" maxlength="40" value="${esc(item.title)}"></label></div><p id="supervisorMemoError" class="form-error"></p>`, '<button class="secondary-btn" data-modal-close>取消</button><button class="primary-btn" id="updateSupervisorMemo">儲存修改</button>');
+  document.getElementById('updateSupervisorMemo').onclick=()=>{
+   const date=document.getElementById('supervisorMemoDate').value,title=document.getElementById('supervisorMemoTitle').value.trim(),priority=document.getElementById('supervisorMemoPriority').value,error=document.getElementById('supervisorMemoError');
+   if(!date||date.slice(0,7)!==month||!title){error.textContent='請選擇本月日期並輸入標題';return}
+   const profile=currentProfile(),index=all.findIndex(row=>row.id===id);if(index<0)return;
+   all[index]={...all[index],month,date,title,priority,content:'',updatedById:profile.id,updatedBy:`${profile.name}・${profile.id}`,updatedAt:new Date().toISOString()};write(all);
+   if(typeof addAudit==='function')addAudit('編輯主管備忘錄',`${date}・${title}・${profile.name}`);
+   closeModal();window.dispatchEvent(new HashChangeEvent('hashchange'));toast('主管備忘錄已更新');
   };
  }
  function openManager(filterDate=''){
   const items=visible().filter(item=>!filterDate||item.date===filterDate);
   const title=filterDate?`${filterDate.slice(5).replace('-','/')} 主管備忘錄`:'主管備忘錄';
-  const list=items.length?`<div class="supervisor-memo-modal-list">${items.sort((a,b)=>a.date.localeCompare(b.date)).map(item=>`<article class="priority-${esc(item.priority)}"><time>${esc(item.date.slice(5).replace('-','/'))}</time><div><b>${esc(item.title)}</b><p>${esc(item.content||'沒有補充內容')}</p><small>${esc(item.createdBy)}・${esc(item.department||'全公司')}</small></div>${allowed()?`<button data-modal-delete-supervisor-memo="${esc(item.id)}" aria-label="刪除備忘錄">刪除</button>`:''}</article>`).join('')}</div>`:'<div class="supervisor-memo-modal-empty">目前沒有主管備忘錄。</div>';
+  const list=items.length?`<div class="supervisor-memo-modal-list">${items.sort((a,b)=>a.date.localeCompare(b.date)).map(item=>`<article class="priority-${esc(item.priority)}"><time>${esc(item.date.slice(5).replace('-','/'))}</time><div><b>${esc(item.title)}</b><small>${item.updatedBy?`最後修改：${esc(item.updatedBy)}`:esc(item.createdBy)}・${esc(item.department||'全公司')}</small></div>${allowed()?`<div class="supervisor-memo-modal-actions"><button data-modal-edit-supervisor-memo="${esc(item.id)}">編輯</button><button class="danger" data-modal-delete-supervisor-memo="${esc(item.id)}">刪除</button></div>`:''}</article>`).join('')}</div>`:'<div class="supervisor-memo-modal-empty">目前沒有主管備忘錄。</div>';
   openModal(title,`${esc(currentMonth())}・${items.length} 則備忘錄`,list,`<button class="secondary-btn" data-modal-close>關閉</button>${allowed()?'<button class="primary-btn" id="modalAddSupervisorMemo">＋ 新增備忘錄</button>':''}`);
   document.getElementById('modalAddSupervisorMemo')?.addEventListener('click',openCreate);
+  document.querySelectorAll('[data-modal-edit-supervisor-memo]').forEach(button=>button.onclick=()=>openEdit(button.dataset.modalEditSupervisorMemo));
   document.querySelectorAll('[data-modal-delete-supervisor-memo]').forEach(button=>button.onclick=()=>{
    const all=read(),item=all.find(row=>row.id===button.dataset.modalDeleteSupervisorMemo);if(!item)return;
    if(!confirm(`確定刪除「${item.title}」？`))return;
