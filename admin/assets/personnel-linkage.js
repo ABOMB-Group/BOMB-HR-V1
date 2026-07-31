@@ -126,15 +126,24 @@
       ? ((normal / scheduled.length) * 100).toFixed(1)
       : "0.0";
     const leaveNames = leave.slice(0, 3).map(displayName).join("、");
-    const recentPeople = people.slice(0, 7);
-    const bars = recentPeople.length
-      ? recentPeople
-          .map(
-            (person, index) =>
-              `<i style="height:${48 + ((index * 11) % 42)}%" data-value="${person.name}"></i>`
-          )
+    const departmentMap = people.reduce((groups, person) => {
+      const department = person.department || "未設定部門";
+      groups[department] = (groups[department] || 0) + 1;
+      return groups;
+    }, {});
+    const departments = Object.entries(departmentMap).sort((a, b) => b[1] - a[1]);
+    const departmentMax = Math.max(1, ...departments.map((item) => item[1]));
+    const departmentRows = departments.length
+      ? departments
+          .map(([department, count], index) => {
+            const shortName = department.replace("財務人事行政", "財務人事").replace(/部$/, "");
+            return `<button class="department-workforce-row" data-route-go="employees" style="--department-width:${Math.max(12,(count / departmentMax) * 100)}%;--department-index:${index}">
+              <span><b>${shortName}</b><small>${count} 人</small></span>
+              <i><em></em></i>
+            </button>`;
+          })
           .join("")
-      : '<i style="height:8%" data-value="尚無員工資料"></i>';
+      : '<div class="empty-state compact-empty">目前尚無在職人員資料</div>';
 
     return (
       head(
@@ -168,9 +177,9 @@
              <div class="legend"><span><i style="background:#27a17b"></i>正常 ${normal}</span><span><i style="background:#f2a93b"></i>遲到 0</span><span><i style="background:#ef5b67"></i>缺勤 0</span><span><i style="background:#8792a5"></i>未打卡 ${notClocked}</span></div>`
           )}
           ${panel(
-            "人事資料概況",
-            "目前人事主檔中的在職人員",
-            `<div class="mini-chart">${bars}</div><div class="chart-labels">${recentPeople.map((person) => `<span>${person.name.slice(0, 1)}</span>`).join("")}</div>`
+            "部門人力分布",
+            `目前共 ${people.length} 位在職人員・依人事主檔即時統計`,
+            `<div class="department-workforce">${departmentRows}</div>`
           )}
         </div>
         <div>
@@ -178,16 +187,16 @@
             "異常與人力提醒",
             "依人事、出勤與簽核即時產生",
             `<div class="alert-list">
-              ${notClocked ? `<div class="alert-item"><i>!</i><div><b>${notClocked} 位今日應上班員工尚未完成打卡</b><small>已排除今日核准請假人員・點擊前往出勤管理</small></div>${badge("需處理")}</div>` : ""}
-              ${pending.total ? `<div class="alert-item"><i>✓</i><div><b>${pending.total} 件申請等待處理</b><small>來自 Employee App 與後台簽核事件</small></div>${badge("待確認")}</div>` : ""}
-              ${!people.length ? `<div class="alert-item"><i>!</i><div><b>尚未建立在職員工</b><small>請先至員工人事主檔建立資料</small></div>${badge("異常")}</div>` : ""}
+              ${notClocked ? `<div class="alert-item"><i><img src="assets/dashboard-icons/attendance-3d.png" alt=""></i><div><b>${notClocked} 位今日應上班員工尚未完成打卡</b><small>已排除今日核准請假人員・點擊前往出勤管理</small></div>${badge("需處理")}</div>` : ""}
+              ${pending.total ? `<div class="alert-item"><i><img src="assets/dashboard-icons/pending-3d.png" alt=""></i><div><b>${pending.total} 件申請等待處理</b><small>來自 Employee App 與後台簽核事件</small></div>${badge("待確認")}</div>` : ""}
+              ${!people.length ? `<div class="alert-item"><i><img src="assets/nav-icons/employees-3d.png" alt=""></i><div><b>尚未建立在職員工</b><small>請先至員工人事主檔建立資料</small></div>${badge("異常")}</div>` : ""}
               ${people.length && !notClocked && !pending.total ? '<div class="empty-state compact-empty">目前沒有需要處理的人力異常</div>' : ""}
             </div>`
           )}
           ${panel(
             "重要公告",
             "發布給全公司",
-            '<div class="notice-list"><div class="notice-item"><i>◎</i><div><b>第三季教育訓練開放報名</b><small>人力資源部・今天 08:00</small></div></div><div class="notice-item"><i>♧</i><div><b>颱風期間出勤與居家辦公規範</b><small>營運管理部・昨天 16:20</small></div></div></div>'
+            '<div class="notice-list"><div class="notice-item"><i><img src="assets/nav-icons/learning-3d.png" alt=""></i><div><b>第三季教育訓練開放報名</b><small>人力資源部・今天 08:00</small></div></div><div class="notice-item"><i><img src="assets/nav-icons/announcements-3d.png" alt=""></i><div><b>颱風期間出勤與居家辦公規範</b><small>營運管理部・昨天 16:20</small></div></div></div>'
           )}
         </div>
       </div></div>`
